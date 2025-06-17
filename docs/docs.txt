@@ -1,0 +1,6 @@
+Phase 1: Planning & Design
+
+Problem statement.
+
+Functional requirements. 
+User Stories for Account Management
