@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .managers import CustomUserManager
+
 # Extening AbstractUser, use email instead of username, add role, version custom fields.
 
 class User(AbstractUser):
@@ -43,6 +45,8 @@ class User(AbstractUser):
     # --- Set the login field to email ---
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
+
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.email
