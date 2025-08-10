@@ -33,8 +33,9 @@ ALLOWED_HOSTS = ['*']  # for dev only, allow any host
 
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
-    'rest_framework',  
-    'rest_framework_simplejwt', 
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -141,4 +143,8 @@ REST_FRAMEWORK = {
     )
 }
 
-
+# --- CORS Configuration ---
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173", # Vite dev server
+    "http://127.0.0.1:5173",
+]
