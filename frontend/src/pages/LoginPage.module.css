@@ -1,0 +1,55 @@
+.loginPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.loginBox {
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #0070d2;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #005fb2;
+}
