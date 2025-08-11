@@ -4,8 +4,22 @@ from rest_framework.response import Response
 from users.models import User
 from users.serializers import UserSerializer
 
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.decorators import permission_classes
 
 # Create your views here.
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user(request, format=None):
+    # return user who made this request
+    
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
+
 
 @api_view(['GET','POST'])
 def users_list(request, format=None):
