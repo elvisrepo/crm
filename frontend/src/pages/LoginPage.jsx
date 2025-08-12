@@ -1,46 +1,34 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../auth/useAuth';
+
 import styles from './LoginPage.module.css';
 
 // It's a good practice to create an axios instance for your API
-const api = axios.create({
-  baseURL: 'http://localhost:8001/api', // Adjust if your backend port is different
-});
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
     try {
-      const response = await api.post('/token/', {
-        email: email,
-        password: password,
-      });
-      // Store tokens in localStorage
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      
-      // Set authorization header for subsequent requests
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-      
-      // Redirect to the dashboard
-      navigate('/');
-
+      await login(email, password);
+      const redirectTo = location.state?.from?.pathname || '/';
+      navigate(redirectTo, { replace: true });
     } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setError('Invalid email or password.');
-      } else {
-        setError('An unexpected error occurred. Please try again.');
-      }
-      console.error('Login error:', err);
+      if (err?.response?.status === 401) setError('Invalid email or password.');
+      else setError('An unexpected error occurred. Please try again.');
     }
   };
+
 
   return (
     <div className={styles.loginPage}>
