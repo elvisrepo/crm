@@ -71,7 +71,7 @@ class CookieTokenRefreshView(TokenRefreshView):
         return response
      
 
-class LogoutVIew(APIView):
+class LogoutView(APIView):
      permission_classes = [AllowAny]
 
      def post(self, request):
