@@ -20,7 +20,9 @@ COOKIE_KWARGS_DEV = dict(
     path= "/api/token/refresh/",
     max_age=int(timedelta(days=1).total_seconds()),
 )
-
+# takes user credentials and returns an access and refresh JSON token pair
+# set refresh token in HTTP-only cookie, then delete the refresh token,
+# we return the acces token
 class CookieTokenObtainPairView(TokenObtainPairView):
     permission_classes  = [AllowAny]
 
@@ -32,3 +34,47 @@ class CookieTokenObtainPairView(TokenObtainPairView):
               response.set_cookie(REFRESH_COOKIE_NAME,refresh, **COOKIE_KWARGS_DEV)
               del response.data["refresh"]
         return response
+
+# takes a refresh JSON token, and returns an access token if the refresh token is valid
+'''
+    check whether we have refresh token
+    if we dont, call a new refresh token?
+    else use the refresh token to get a new access token?
+    validation is handled by the JWT library's built-in serializer, 
+    which does all the cryptographic verification for us.
+'''
+class CookieTokenRefreshView(TokenRefreshView):
+     permission_classes = [AllowAny]
+
+     def post(self, request, *args, **kwargs):
+        data = request.data.copy()
+
+        if "refresh" not in data:
+               cookie_refresh  = request.COOKIES.get(REFRESH_COOKIE_NAME)
+               if not cookie_refresh:
+                    return Response({"detail": "No refresh token"}, 
+        status=status.HTTP_401_UNAUTHORIZED)
+               data["refresh"] = cookie_refresh
+
+        # expects data like: {"refresh": "token_string_here"}
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        #serializer.validated_data contains the new access token
+        # If rotation is enabled, it also contains a new refresh token
+        response = Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+        new_refresh = serializer.validated_data.get("refresh")
+        if new_refresh:
+             response.set_cookie(REFRESH_COOKIE_NAME, new_refresh, **COOKIE_KWARGS_DEV)
+             del response.data["refresh"]
+        return response
+     
+
+class LogoutVIew(APIView):
+     permission_classes = [AllowAny]
+
+     def post(self, request):
+          response = Response(status=status.HTTP_204_NO_CONTENT)
+          response.delete_cookie(REFRESH_COOKIE_NAME, path="/api/token/refresh/")
+          return response
