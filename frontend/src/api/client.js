@@ -20,7 +20,7 @@ export function getAccessToken() {
 //  withCredentials: true - Sends cookies with the request (your refresh token cookie!)
 async function refreshAccessToken() {
     if (!refreshPromise) {
-        refreshPromise = axios.post('http://localhost:8001/api/token/refresh/', {},
+        refreshPromise = api.post('/token/refresh/', {},
             { withCredentials: true }
         ).then(res => {
             const newAccess = res.data?.access;
@@ -82,7 +82,7 @@ export async function loginAndGetAccessToken({ email, password }) {
 
 export async function logoutOnServer() {
     try {
-        await axios.post('http://localhost:8001/api/logout/', {}, { withCredentials: true });
+        await api.post('/logout/', {}, { withCredentials: true });
     } catch { }
     setAccessToken(null);
 }
