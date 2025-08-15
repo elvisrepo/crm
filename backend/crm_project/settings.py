@@ -163,3 +163,29 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': { # how log messages look - DEBUG, users, 'Actual message content'
+        'simple': {
+            'format': '[{levelname}] {name}: {message}',
+            'style': '{',
+        },
+    },
+    # use simple format and send the messages to the console
+    'handlers': { # where log messages go
+        'console': {
+            'class': 'logging.StreamHandler', # print to terminal
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'users': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

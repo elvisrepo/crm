@@ -6,6 +6,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import AllowAny
 
+import logging
+logger = logging.getLogger('users')
+
 ## send back a cookie - key:value pair
 
 REFRESH_COOKIE_NAME = "refresh_token"
@@ -23,10 +26,23 @@ COOKIE_KWARGS_DEV = dict(
 # takes user credentials and returns an access and refresh JSON token pair
 # set refresh token in HTTP-only cookie, then delete the refresh token,
 # we return the acces token
+
+def debug_http_request(request):
+    print("=== RAW HTTP REQUEST ===")
+    print(f"Method: {request.method}")
+    print(f"Path: {request.path}")
+    print(f"Content-Type: {request.META.get('CONTENT_TYPE')}")
+    print(f"Raw body: {request.body}")
+    print(f"Parsed data: {request.data}")
+    print(f"Cookies: {dict(request.COOKIES)}")
+    print(f"Auth header: {request.META.get('HTTP_AUTHORIZATION', 'None')}")
+
+
 class CookieTokenObtainPairView(TokenObtainPairView):
     permission_classes  = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        debug_http_request(request)
         response = super().post(request,*args, **kwargs)
         refresh = response.data.get("refresh")
         # set cookie
@@ -47,6 +63,8 @@ class CookieTokenRefreshView(TokenRefreshView):
      permission_classes = [AllowAny]
 
      def post(self, request, *args, **kwargs):
+        debug_http_request(request)
+    
         data = request.data.copy()
 
         if "refresh" not in data:
