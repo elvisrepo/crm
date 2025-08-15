@@ -37,18 +37,31 @@ def debug_http_request(request):
     print(f"Cookies: {dict(request.COOKIES)}")
     print(f"Auth header: {request.META.get('HTTP_AUTHORIZATION', 'None')}")
 
+def quick_response_debug(response):
+    print("=== RAW HTTP Response ===")
+    print(f"Status: {response.status_code}")
+    print(f"Data: {getattr(response, 'data', 'No data attr')}")
+    print(f"Cookies: {list(response.cookies.keys()) if hasattr(response, 'cookies') else 'None'}")
 
 class CookieTokenObtainPairView(TokenObtainPairView):
     permission_classes  = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         debug_http_request(request)
+        # 1. Get response from parent (TokenObtainPairView)
+         # response.data = {'access': '...', 'refresh': '...'}
         response = super().post(request,*args, **kwargs)
+        quick_response_debug(response)
+        
+        # 2. Extract refresh token
         refresh = response.data.get("refresh")
-        # set cookie
+        # set cookie - 3. Move refresh token to cookie
         if refresh:
-              response.set_cookie(REFRESH_COOKIE_NAME,refresh, **COOKIE_KWARGS_DEV)
-              del response.data["refresh"]
+              response.set_cookie(REFRESH_COOKIE_NAME,refresh, **COOKIE_KWARGS_DEV) # Adds to response.cookies
+              del response.data["refresh"]   # Removes from response.data
+              # 4. Return modified response
+        # Now: response.data = {'access': '...'} 
+        # And: response.cookies = {'refresh_token': '...'}
         return response
 
 # takes a refresh JSON token, and returns an access token if the refresh token is valid
