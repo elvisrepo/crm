@@ -26,3 +26,23 @@ class UserManagerTests(TestCase):
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
         self.assertEqual(user.role, 'USER')
+
+    def test_create_superUser(self):
+
+        """
+        Test that the custom user manager can create a superuser correctly.
+        """
+        superuser = User.objects.create_superuser(
+            email='superuser@example.com',
+            password='password123',
+            first_name='Super',
+            last_name='User'
+        )
+
+        self.assertEqual(superuser.email, 'superuser@example.com')
+        self.assertTrue(superuser.check_password('password123'))
+        self.assertTrue(superuser.is_staff)
+        self.assertTrue(superuser.is_superuser)
+        self.assertEqual(superuser.role, 'ADMIN')
+
+   
