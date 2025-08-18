@@ -3,6 +3,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 
+from django.urls import reverse
+from rest_framework.test import APIClient
+
 User = get_user_model()
 
 # Create your tests here.
@@ -108,3 +111,24 @@ class UserModelTests(TestCase):
         self.assertEqual(self.user.role, User.Role.USER)
         self.assertEqual(self.user.version, 1)
         self.assertTrue(self.user.is_active)
+
+class AuthAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user_data = {
+            'email': 'test@example.com',
+            'password': 'password123',
+            'first_name': 'Test',
+            'last_name': 'User'
+        }
+        self.user = User.objects.create_user(**self.user_data)
+
+        # client.login(username='lauren', password='secret')     client.logout()
+
+    def test_login_success(self):
+            """Test successful login and token retrieval."""
+            url = reverse('token_obtain_pair')
+            response = self.client.post(url, self.user_data, format='json')
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('access', response.data)
+            self.assertIn('refresh_token', response.cookies)
