@@ -166,5 +166,33 @@ class AuthAPITests(TestCase):
         self.assertEqual(response.cookies['refresh_token'].value, '')
 
 
+class UserAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email='test@example.com',
+            password='password123',
+            first_name='Test',
+            last_name='User'
+        )
+        self.admin = User.objects.create_superuser(
+            email='admin@example.com',
+            password='password123',
+            first_name='Admin',
+            last_name='User'
+        )
 
+    def test_get_users_list_authenticated(self):
+        """Test that authenticated users can list users."""
+        url = reverse('users_list')
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(url)
+        print(f'get users list auth: {response.data}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
 
+    def test_get_users_list_unauthenticated(self):
+        """Test that unauthenticated users cannot list users."""
+        url = reverse('users_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 401)

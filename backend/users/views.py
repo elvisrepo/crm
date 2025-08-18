@@ -22,6 +22,7 @@ def current_user(request, format=None):
 
 
 @api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
 def users_list(request, format=None):
      '''
         List of all users, create a new user
@@ -41,6 +42,7 @@ def users_list(request, format=None):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def user_detail(request, pk, format=None):
     '''
         Retrieve or delete a user
