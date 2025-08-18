@@ -144,3 +144,16 @@ class AuthAPITests(TestCase):
         response = self.client.post(url, data, format='json')
         print(response.status_code, response.data)
         self.assertEqual(response.status_code, 401)
+
+    ## when we have refresh token, and when we don't have it in cookie - return 401
+    def test_refresh_token(self):
+        """Test token refresh."""
+        login_url = reverse('token_obtain_pair')
+        login_response = self.client.post(login_url, self.user_data, format='json')
+        refresh_cookie = login_response.cookies['refresh_token']
+
+        refresh_url = reverse('token_refresh')
+        self.client.cookies['refresh_token'] = refresh_cookie.value
+        response = self.client.post(refresh_url, {}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('access', response.data)
