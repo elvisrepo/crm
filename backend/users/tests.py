@@ -157,3 +157,14 @@ class AuthAPITests(TestCase):
         response = self.client.post(refresh_url, {}, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertIn('access', response.data)
+
+    def test_logout(self):
+        """Test logout and cookie deletion."""
+        url = reverse('logout')
+        response = self.client.post(url, {}, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.cookies['refresh_token'].value, '')
+
+
+
+
