@@ -45,4 +45,13 @@ class UserManagerTests(TestCase):
         self.assertTrue(superuser.is_superuser)
         self.assertEqual(superuser.role, 'ADMIN')
 
-   
+    def test_user_no_email(self):
+        """Test creating a user without an email raises a ValueError."""
+
+        with self.assertRaises(ValueError):
+            User.objects.create_user(
+                email='',
+                password='password123',
+                first_name='Super',
+                last_name='User'
+            )
