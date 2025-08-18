@@ -9,91 +9,90 @@ User = get_user_model()
 
 class UserManagerTests(TestCase):
 
+    def setUp(self):
+        self.user_data = {
+            'email': 'test@example.com',
+            'password': 'password123',
+            'first_name': 'Test',
+            'last_name': 'User'
+        }
+
+        self.superuser_data = {
+            'email': 'superuser@example.com',
+            'password': 'password123',
+            'first_name': 'Super',
+            'last_name': 'User'
+        }
+
     def test_create_user(self):
         '''
             Test that the custom user manager can create a user correctly.
         '''
         
-        user = User.objects.create_user(
-            email='test@example.com',
-            password='password123',
-            first_name='Test',
-            last_name='User'
-        )
+        user = User.objects.create_user(**self.user_data)
 
         ## assertions
         self.assertEqual(user.email, 'test@example.com')
         self.assertTrue(user.check_password('password123'))
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
-        self.assertEqual(user.role, 'USER')
+        self.assertEqual(user.role, User.Role.USER) # defualt User role is 'User'
 
-    def test_create_superUser(self):
+    def test_create_superuser(self):
 
         """
         Test that the custom user manager can create a superuser correctly.
         """
-        superuser = User.objects.create_superuser(
-            email='superuser@example.com',
-            password='password123',
-            first_name='Super',
-            last_name='User'
-        )
+        superuser = User.objects.create_superuser(**self.superuser_data)
 
         self.assertEqual(superuser.email, 'superuser@example.com')
         self.assertTrue(superuser.check_password('password123'))
         self.assertTrue(superuser.is_staff)
         self.assertTrue(superuser.is_superuser)
-        self.assertEqual(superuser.role, 'ADMIN')
+        self.assertEqual(superuser.role, User.Role.ADMIN)
 
     def test_user_no_email(self):
         """Test creating a user without an email raises a ValueError."""
 
+        data = self.user_data.copy()
+        data['email'] = ''
+
         with self.assertRaises(ValueError):
-            User.objects.create_user(
-                email='',
-                password='password123',
-                first_name='Super',
-                last_name='User'
-            )
+            User.objects.create_user(**data)
 
     def test_create_superuser_is_staff_false(self):
         '''Test is_staff is true '''
 
+        data = self.superuser_data.copy()
+        data['is_staff']  = False
+
         with self.assertRaises(ValueError):
-            User.objects.create_superuser(
-                email='superuser@example.com',
-                password='password123',
-                first_name='Super',
-                last_name='User',
-                is_staff = False
-            )
+            User.objects.create_superuser(**data)
 
 class UserModelTests(TestCase):
     """Essential tests for User model"""
 
-    def test_user_str_representation(self):
-        """Test the string representation of User model."""
-        user = User.objects.create_user(
+    def setUp(self):
+        """Create a user that can be reused across tests."""
+        self.user = User.objects.create_user(
             email='test@example.com',
             password='password123',
             first_name='Test',
             last_name='User'
         )
-        self.assertEqual(str(user), 'test@example.com')
+
+
+    def test_user_str_representation(self):
+        """Test the string representation of User model."""
+       
+        self.assertEqual(str(self.user), 'test@example.com')
 
     def test_email_unique_constraint(self):
         """Test that email field has unique constraint."""
-        User.objects.create_user(
-            email='test@example.com',
-            password='password123',
-            first_name='Test',
-            last_name='User'
-        )
-        
+        # User already created in setUp(),  create another with same email
         with self.assertRaises(IntegrityError):
             User.objects.create_user(
-                email='test@example.com',  # Same email
+                email=self.user.email,  # Same email as existing user
                 password='different_password',
                 first_name='Another',
                 last_name='User'
@@ -105,12 +104,7 @@ class UserModelTests(TestCase):
 
     def test_default_values(self):
         """Test that model fields have correct default values."""
-        user = User.objects.create_user(
-            email='test@example.com',
-            password='password123',
-            first_name='Test',
-            last_name='User'
-        )
-        self.assertEqual(user.role, User.Role.USER)
-        self.assertEqual(user.version, 1)
-        self.assertTrue(user.is_active)
+       
+        self.assertEqual(self.user.role, User.Role.USER)
+        self.assertEqual(self.user.version, 1)
+        self.assertTrue(self.user.is_active)
