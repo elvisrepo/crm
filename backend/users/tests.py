@@ -132,3 +132,15 @@ class AuthAPITests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('access', response.data)
             self.assertIn('refresh_token', response.cookies)
+
+    def test_login_failure(self):
+        ''' test failing login'''
+
+        ## try to login with wrong email e.g.
+        url = reverse('token_obtain_pair')
+        data = self.user_data.copy()
+        data['password'] = 'wrongpass'
+
+        response = self.client.post(url, data, format='json')
+        print(response.status_code, response.data)
+        self.assertEqual(response.status_code, 401)
