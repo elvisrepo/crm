@@ -206,3 +206,19 @@ class UserAPITests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
         self.assertEqual(response.data['email'], self.user.email)
+
+    
+    def test_delete_user_permission_denied(self):
+        """Test that a non-admin user cannot delete another user."""
+        url = reverse('user_detail', kwargs={'pk': self.admin.pk})
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_delete_user(self):
+        """Test admin deleting a user."""
+        url = reverse('user_detail', kwargs={'pk': self.user.pk})
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(User.objects.filter(pk=self.user.pk).exists())

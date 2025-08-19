@@ -57,13 +57,21 @@ def user_detail(request, pk, format=None):
          return Response(serializer.data)
      
     elif request.method == 'PUT':
-    
+         # Check if user can update this profile (admin or self)
+        # who has permissions, admin can delete all, user can delete only their account, guard clause
+         if not(request.user.role == 'ADMIN' or request.user == user):
+            return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+         
          serializer =  UserSerializer(user, data=request.data)
          if serializer.is_valid():
               serializer.save()
               return Response(serializer.data)
-         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+         # Check if user can delete this profile (admin or self)
+         if not(request.user.role == 'ADMIN' or request.user == user):
+            return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+         
+         user.delete()
+         return Response(status=status.HTTP_204_NO_CONTENT)
