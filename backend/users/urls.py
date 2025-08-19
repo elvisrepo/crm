@@ -5,7 +5,7 @@ from users import views
 urlpatterns = [
     path('users/me/', views.current_user, name="current_user"),
     path('users/', views.users_list, name="users_list"),
-    path('users/<int:pk>', views.user_detail),
+    path('users/<int:pk>', views.user_detail, name='user_detail'),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework"))
 ]
 

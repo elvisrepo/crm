@@ -196,3 +196,13 @@ class UserAPITests(TestCase):
         url = reverse('users_list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 401)
+
+    
+    def test_get_user_detail(self):
+        """Test retrieving a single user's details."""
+
+        url = reverse('user_detail', kwargs = {'pk':self.user.pk})
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.data['email'], self.user.email)
