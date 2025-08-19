@@ -222,3 +222,36 @@ class UserAPITests(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
         self.assertFalse(User.objects.filter(pk=self.user.pk).exists())
+
+    def test_update_other_user_permission_denied(self):
+        """Test that a user cannot update another user's details."""
+        url = reverse('user_detail', kwargs={'pk': self.admin.pk})
+        self.client.force_authenticate(user=self.user)
+        data = {'first_name': 'Updated'}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, 403)
+
+    def test_update_user_patch(self):
+        """Test updating a user's details."""
+        url = reverse('user_detail', kwargs={'pk': self.user.pk})
+        self.client.force_authenticate(user=self.user)
+        data = {'first_name': 'Updated'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, 'Updated')
+
+    def test_update_user_put(self):
+        """Test updating a user's details."""
+        url = reverse('user_detail', kwargs={'pk': self.user.pk})
+        self.client.force_authenticate(user=self.user)
+        data = {
+                'first_name': 'Updated',
+                'last_name': self.user.last_name,
+                'email': self.user.email,
+                'version': self.user.version
+            }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, 'Updated')

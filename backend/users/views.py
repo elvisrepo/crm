@@ -41,7 +41,7 @@ def users_list(request, format=None):
 
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'PATCH' , 'DELETE'])
 @permission_classes([IsAuthenticated])
 def user_detail(request, pk, format=None):
     '''
@@ -51,27 +51,24 @@ def user_detail(request, pk, format=None):
         user = User.objects.get(pk=pk)
     except User.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+    if not(request.user.role == 'ADMIN' or request.user == user):
+            return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
      
     if request.method == 'GET':
          serializer = UserSerializer(user)
          return Response(serializer.data)
      
-    elif request.method == 'PUT':
-         # Check if user can update this profile (admin or self)
-        # who has permissions, admin can delete all, user can delete only their account, guard clause
-         if not(request.user.role == 'ADMIN' or request.user == user):
-            return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
-         
-         serializer =  UserSerializer(user, data=request.data)
+    elif request.method in ['PUT', 'PATCH']:
+         # partial=True for PATCH, full update for PUT
+         partial = request.method == 'PATCH'
+         serializer =  UserSerializer(user, data=request.data, partial=partial)
          if serializer.is_valid():
               serializer.save()
               return Response(serializer.data)
          return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-         # Check if user can delete this profile (admin or self)
-         if not(request.user.role == 'ADMIN' or request.user == user):
-            return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
-         
          user.delete()
          return Response(status=status.HTTP_204_NO_CONTENT)
