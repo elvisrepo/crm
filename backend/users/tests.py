@@ -255,3 +255,12 @@ class UserAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, 'Updated')
+
+
+    def test_get_current_user(self):
+        """Test the /users/me/ endpoint."""
+        url = reverse('current_user')
+        self.client.force_authenticate(user = self.user)
+        response =  self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['email'], self.user.email)
