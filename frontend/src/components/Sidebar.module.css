@@ -1,0 +1,29 @@
+.sidebar {
+  grid-area: sidebar;
+  background-color: #0d1a2e;
+  padding: 1rem;
+  color: white;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav ul li a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: #1d2d44;
+}
+
+.sidebar nav ul li a.active {
+  background-color: #0070d2;
+}

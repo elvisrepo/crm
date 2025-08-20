@@ -1,0 +1,17 @@
+.appLayout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  grid-template-rows: 60px 1fr;
+  grid-template-columns: 240px 1fr;
+  height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.mainContent {
+  grid-area: main;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
