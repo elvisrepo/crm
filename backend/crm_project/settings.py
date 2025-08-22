@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']  # for dev only, allow any host
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     'users.apps.UsersConfig',
     'rest_framework',
     'rest_framework_simplejwt',
