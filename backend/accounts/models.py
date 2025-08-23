@@ -40,7 +40,7 @@ class Account(models.Model):
     )
 
     owner = models.ForeignKey(
-        'User',
+        User,
         on_delete=models.PROTECT,
         related_name='accounts'
     )

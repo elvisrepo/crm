@@ -9,6 +9,7 @@ from users.views_auth import (
 
 urlpatterns = [
     path('', include('users.urls')),
+    path('', include('accounts.urls')),
     path("admin/", admin.site.urls),
 
     
