@@ -39,6 +39,8 @@ class Account(models.Model):
         related_name='child_accounts'
     )
 
+    description = models.TextField(blank=True)
+
     owner = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
