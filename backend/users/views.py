@@ -10,6 +10,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from .permissions import IsAdminOrIsSelf
 
+
+from rest_framework import generics
+
 # Create your views here.
 
 @api_view(['GET'])
@@ -36,8 +39,14 @@ class UserList(APIView):
                serializer.save()
                return Response(serializer.data, status=status.HTTP_201_CREATED)
           return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+     
+class UserList2(generics.ListCreateAPIView):
+     queryset = User.objects.all()
+     serializer_class = UserSerializer
+    
+class UserDetail2(generics.RetrieveUpdateDestroyAPIView):
+     queryset = User.objects.all()
+     serializer_class = UserSerializer
     
 class UserDetail(APIView):
     '''Retreive, update or delete a user instance'''
@@ -53,11 +62,13 @@ class UserDetail(APIView):
           
     def get(self, request,pk, format = None):
          user = self.get_object(pk)
+         self.check_object_permissions(self.request, user)
          serializer = UserSerializer(user)
          return Response(serializer.data)
 
     def put(self, request, pk, format=None):
          user = self.get_object(pk)
+         self.check_object_permissions(self.request, user)
          serializer = UserSerializer(user, data = request.data)
          if serializer.is_valid():
               serializer.save()
@@ -66,6 +77,7 @@ class UserDetail(APIView):
     
     def patch(self, request, pk, format=None):
          user = self.get_object(pk)
+         self.check_object_permissions(self.request, user)
          serializer = UserSerializer(user, data=request.data, partial= True)
          if serializer.is_valid():
               serializer.save()
@@ -74,5 +86,6 @@ class UserDetail(APIView):
     
     def delete(self, request, pk, format=None):
          user = self.get_object(pk)
+         self.check_object_permissions(self.request, user)
          user.delete()
          return Response(status=status.HTTP_204_NO_CONTENT)
