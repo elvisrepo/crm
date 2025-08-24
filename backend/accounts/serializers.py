@@ -9,8 +9,8 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = [
             'id', 'name', 'phone', 'website', 'type', 'description',
-            'billing_address', 'shipping_address', 'parent_account',
-            'owner', 'is_active', 'version', 'created_at', 'updated_at'
+            'billing_address', 'shipping_address', 'parent_account','owner',
+            'is_active', 'version', 'created_at', 'updated_at'
         ]
         
-        read_only_fields = ['id', 'created_at', 'updated_at', 'version']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'version','owner']

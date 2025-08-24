@@ -9,8 +9,5 @@ class IsAdminOrIsSelf(permissions.BasePermission):
             - view that is being accessed
             - objectobj - Database object that the request is targetting (User instance)
         '''
-
-        if request.method in permissions.SAFE_METHODS:
-            return True
         
         return request.user.role == 'ADMIN' or request.user == obj
