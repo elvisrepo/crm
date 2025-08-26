@@ -50,3 +50,11 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        """Increment version for optimistic locking on updates."""
+        if self.pk:  # If updating existing record
+            self.version += 1
+        super().save(*args, **kwargs)
+    
+   
