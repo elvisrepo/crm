@@ -219,7 +219,8 @@ class UserAPITests(TestCase):
         """Test admin deleting a user."""
         url = reverse('user_detail', kwargs={'pk': self.user.pk})
         self.client.force_authenticate(user=self.admin)
-        response = self.client.delete(url)
+        data = {'version': self.user.version}
+        response = self.client.delete(url, data, format='json')
         self.assertEqual(response.status_code, 204)
         self.assertFalse(User.objects.filter(pk=self.user.pk).exists())
 
@@ -235,7 +236,7 @@ class UserAPITests(TestCase):
         """Test updating a user's details."""
         url = reverse('user_detail', kwargs={'pk': self.user.pk})
         self.client.force_authenticate(user=self.user)
-        data = {'first_name': 'Updated'}
+        data = {'first_name': 'Updated', 'version': self.user.version}
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, 200)
         self.user.refresh_from_db()
@@ -264,3 +265,34 @@ class UserAPITests(TestCase):
         response =  self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['email'], self.user.email)
+
+    def test_optimistic_locking_update_conflict(self):
+        """Test that optimistic locking prevents concurrent updates."""
+        url = reverse('user_detail', kwargs={'pk': self.user.pk})
+        self.client.force_authenticate(user=self.user)
+        
+        # Use an outdated version number
+        data = {'first_name': 'Updated', 'version': self.user.version - 1}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 409)  # Conflict
+        self.assertIn('Conflict', response.data['error'])
+
+    def test_optimistic_locking_delete_conflict(self):
+        """Test that optimistic locking prevents concurrent deletes."""
+        url = reverse('user_detail', kwargs={'pk': self.user.pk})
+        self.client.force_authenticate(user=self.admin)
+        
+        # Use an outdated version number
+        data = {'version': self.user.version - 1}
+        response = self.client.delete(url, data, format='json')
+        self.assertEqual(response.status_code, 409)  # Conflict
+        self.assertIn('Conflict', response.data['error'])
+
+    def test_update_without_version_fails(self):
+        """Test that updates without version field fail."""
+        url = reverse('user_detail', kwargs={'pk': self.user.pk})
+        self.client.force_authenticate(user=self.user)
+        data = {'first_name': 'Updated'}  # No version field
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Version field is required', response.data['error'])

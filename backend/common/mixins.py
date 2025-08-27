@@ -87,7 +87,8 @@ class OptimisticLockingMixin:
             return check_result
 
         locked_instance = check_result
-        return self.perform_destroy(locked_instance)
+        self.perform_destroy(locked_instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class OptimisticLockingSoftDeleteMixin(OptimisticLockingMixin):
     """
