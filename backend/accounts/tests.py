@@ -198,6 +198,17 @@ class AccountAPITests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 401)
 
+    def test_get_accounts_list_authenticated(self):
+        """Test that authenticated users can list accounts."""
+
+        url = reverse('accounts_list')
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(len(response.data),1)
+        self.assertEqual(response.data[0]['name'], 'Test Company')
+        self.assertEqual(response.data[0]['owner'], self.user.id)  
+
 
     def test_get_account_detail(self):
 
