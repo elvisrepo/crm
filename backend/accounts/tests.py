@@ -79,9 +79,35 @@ class AccountModelTests(TestCase):
         )
         
         self.assertEqual(child_account.parent_account, parent_account)
-        print(f"Child accounts: {list(parent_account.child_accounts.all())}")
         self.assertIn(child_account, parent_account.child_accounts.all())
+
+    def test_child_accounts_count_property(self):
+        """Test the child_accounts_count property."""
+        parent_account = Account.objects.create(
+            name='Parent Company',
+            owner=self.user
+        )
         
+        # Initially no children
+        self.assertEqual(parent_account.child_accounts_count, 0)
+        
+        # Add active child
+        child1 = Account.objects.create(
+            name='Child 1',
+            parent_account=parent_account,
+            owner=self.user
+        )
+        self.assertEqual(parent_account.child_accounts_count, 1)
+        
+        # Add inactive child (should not be counted)
+        child2 = Account.objects.create(
+            name='Child 2',
+            parent_account=parent_account,
+            owner=self.user,
+            is_active=False
+        )
+        print(f"Child accounts: {list(parent_account.child_accounts.all())}")
+        self.assertEqual(parent_account.child_accounts_count, 1)  # Still 1, not 2
 
-    
 
+   
