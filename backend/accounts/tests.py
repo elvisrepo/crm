@@ -65,4 +65,23 @@ class AccountModelTests(TestCase):
         self.assertEqual(account.owner, self.user)
         self.assertEqual(account.version, 1)
 
+    def test_parent_child_account_relationship(self):
+        """Test parent-child account relationship."""
+        parent_account = Account.objects.create(
+            name='Parent Company',
+            owner=self.user
+        )
+        
+        child_account = Account.objects.create(
+            name='Child Company',
+            parent_account=parent_account,
+            owner=self.user
+        )
+        
+        self.assertEqual(child_account.parent_account, parent_account)
+        print(f"Child accounts: {list(parent_account.child_accounts.all())}")
+        self.assertIn(child_account, parent_account.child_accounts.all())
+        
+
     
+
