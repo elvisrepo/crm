@@ -133,4 +133,21 @@ class AccountModelTests(TestCase):
         )
         self.assertEqual(grandchild_account.hiearchy_path, 'Root Company->Child Company->Grandchild Company')
 
+    def test_account_version_increment_on_save(self):
+        """Test that version increments when account is updated."""
+        account = Account.objects.create(
+            name='Test Company',
+            owner=self.user
+        )
+        
+        initial_version = account.version
+        self.assertEqual(initial_version, 1)
+        
+        # Update the account
+        account.name = 'Updated Company'
+        account.save()
+        
+        # Version should increment
+        self.assertEqual(account.version, initial_version + 1)
+
 
