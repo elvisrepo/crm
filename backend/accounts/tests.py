@@ -42,4 +42,27 @@ class AccountModelTests(TestCase):
         
         self.assertEqual(str(account), 'Test Company')
 
+    def test_account_creation_with_all_fields(self):
+        """Test creating an account with all optional fields."""
+        account = Account.objects.create(
+            name='Full Company',
+            phone='+1234567890',
+            website='https://example.com',
+            type='customer',
+            billing_address='123 Main St, City, State',
+            shipping_address='456 Oak Ave, City, State',
+            description='A test company with all fields',
+            owner=self.user
+        )
+        
+        self.assertEqual(account.name, 'Full Company')
+        self.assertEqual(account.phone, '+1234567890')
+        self.assertEqual(account.website, 'https://example.com')
+        self.assertEqual(account.type, 'customer')
+        self.assertEqual(account.billing_address, '123 Main St, City, State')
+        self.assertEqual(account.shipping_address, '456 Oak Ave, City, State')
+        self.assertEqual(account.description, 'A test company with all fields')
+        self.assertEqual(account.owner, self.user)
+        self.assertEqual(account.version, 1)
+
     
