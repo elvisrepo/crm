@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+from rest_framework.test import APIClient
 from accounts.models import Account
 
 User = get_user_model()
@@ -162,3 +164,33 @@ class AccountModelTests(TestCase):
         account_names = [account.name for account in accounts]
         
         self.assertEqual(account_names, ['Alpha Company', 'Beta Company', 'Zebra Company'])
+    
+   
+
+
+class AccountAPITests(TestCase):
+    """Tests for Account API endpoints"""
+
+    def setUp(self):
+        """Set up test data."""
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email='test@example.com',
+            password='password123',
+            first_name='Test',
+            last_name='User'
+        )
+        self.admin = User.objects.create_superuser(
+            email='admin@example.com',
+            password='password123',
+            first_name='Admin',
+            last_name='User'
+        )
+
+    def test_get_accounts_list_unauthenticated(self):
+        """Test that unauthenticated users cannot list accounts."""
+        url = reverse('accounts_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+
