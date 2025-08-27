@@ -106,8 +106,31 @@ class AccountModelTests(TestCase):
             owner=self.user,
             is_active=False
         )
-        print(f"Child accounts: {list(parent_account.child_accounts.all())}")
         self.assertEqual(parent_account.child_accounts_count, 1)  # Still 1, not 2
 
+    def test_hierarchy_path_property(self):
+        """Test the hierarchy_path property."""
+        # Single account (no parent)
+        root_account = Account.objects.create(
+            name='Root Company',
+            owner=self.user
+        )
+        self.assertEqual(root_account.hiearchy_path, 'Root Company')
+        
+        # Two-level hierarchy
+        child_account = Account.objects.create(
+            name='Child Company',
+            parent_account=root_account,
+            owner=self.user
+        )
+        self.assertEqual(child_account.hiearchy_path, 'Root Company->Child Company')
+        
+        # Three-level hierarchy
+        grandchild_account = Account.objects.create(
+            name='Grandchild Company',
+            parent_account=child_account,
+            owner=self.user
+        )
+        self.assertEqual(grandchild_account.hiearchy_path, 'Root Company->Child Company->Grandchild Company')
 
-   
+
