@@ -150,4 +150,15 @@ class AccountModelTests(TestCase):
         # Version should increment
         self.assertEqual(account.version, initial_version + 1)
 
-
+    def test_account_ordering(self):
+        """Test that accounts are ordered by name."""
+        # Create accounts in non-alphabetical order
+        Account.objects.create(name='Zebra Company', owner=self.user)
+        Account.objects.create(name='Alpha Company', owner=self.user)
+        Account.objects.create(name='Beta Company', owner=self.user)
+        
+        # Get all accounts - should be ordered by name
+        accounts = Account.objects.all()
+        account_names = [account.name for account in accounts]
+        
+        self.assertEqual(account_names, ['Alpha Company', 'Beta Company', 'Zebra Company'])
