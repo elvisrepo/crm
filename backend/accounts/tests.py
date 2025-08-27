@@ -187,6 +187,11 @@ class AccountAPITests(TestCase):
             last_name='User'
         )
 
+        self.account = Account.objects.create(
+            name='Test Company',
+            owner=self.user
+        )
+
     def test_get_accounts_list_unauthenticated(self):
         """Test that unauthenticated users cannot list accounts."""
         url = reverse('accounts_list')
@@ -194,3 +199,11 @@ class AccountAPITests(TestCase):
         self.assertEqual(response.status_code, 401)
 
 
+    def test_get_account_detail(self):
+
+        url = reverse('account_detail', kwargs= {'pk':self.account.pk}) ## accounts/1
+        self.client.force_authenticate(user = self.user)
+        response = self.client.get(url)
+        print(f'response data : {response.data}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], self.account.name)
