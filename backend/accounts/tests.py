@@ -344,3 +344,16 @@ class AccountAPITests(TestCase):
         account_data = {'name': 'Test Company', 'type': 'invalid_type'}
         response = self.client.post(url, account_data, format='json')
         self.assertEqual(response.status_code, 400)
+
+    def test_create_account_non_auth_user(self):
+        """Test that unauthenticated users cannot create accounts."""
+        account_data = {
+            'name': 'Other Company',
+        }
+
+        url = reverse('accounts_list')
+        response = self.client.post(url, account_data, format='json')
+
+        self.assertEqual(response.status_code, 401)
+        # Verify no account was created
+        self.assertFalse(Account.objects.filter(name='Other Company').exists())
