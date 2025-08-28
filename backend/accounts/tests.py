@@ -248,4 +248,30 @@ class AccountAPITests(TestCase):
             self.assertIn('Other Company', account_names)
 
 
-    
+       
+    def test_admin_can_see_all_accounts(self):
+            """Test that admin users can see all accounts."""
+            # Create another user with their own account
+            other_user = User.objects.create_user(
+                email='other@example.com',
+                password='password123',
+                first_name='Other',
+                last_name='User'
+            )
+            other_account = Account.objects.create(
+                name='Other Company',
+                owner=other_user
+            )
+            
+            # Admin should see all accounts (both users' accounts)
+            url = reverse('accounts_list')
+            self.client.force_authenticate(user=self.admin)
+            response = self.client.get(url)
+            
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.data), 2)  # Both accounts visible
+            
+            # Verify admin can see both accounts
+            account_names = [account['name'] for account in response.data]
+            self.assertIn('Test Company', account_names)
+            self.assertIn('Other Company', account_names)
