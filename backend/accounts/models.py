@@ -17,7 +17,7 @@ class Account(models.Model):
         ('competitor', 'Competitor'),
     ]
 
-    name = models.CharField(blank=False, max_length=255)
+    name = models.CharField(blank=False, max_length=255, unique=True)
     phone = models.CharField(max_length=50, blank=True)
     website = models.URLField(blank = True)
     type = models.CharField(

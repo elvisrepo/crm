@@ -357,3 +357,15 @@ class AccountAPITests(TestCase):
         self.assertEqual(response.status_code, 401)
         # Verify no account was created
         self.assertFalse(Account.objects.filter(name='Other Company').exists())
+
+    def test_create_duplicate_name(self):
+
+        account_data = {'name':'Test Company'}
+
+        url = reverse('accounts_list')
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, account_data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+
+        self.assertEqual(Account.objects.filter(name='Test Company').count(),1)
