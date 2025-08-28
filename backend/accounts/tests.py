@@ -322,3 +322,25 @@ class AccountAPITests(TestCase):
         self.assertEqual(response.data['version'],1)
 
         self.assertTrue(Account.objects.filter(name='Full Company').exists())
+
+
+    def test_create_account_invalid_data(self):
+        """Test creating an account with invalid/missing required data."""
+
+        account_data = {}
+
+        url = reverse('accounts_list')
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, account_data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('name', response.data)
+
+        account_data = {'name':''}
+        response = self.client.post(url, account_data, format='json')
+        print(f"Error response: {response.data}")
+        self.assertEqual(response.status_code, 400)
+
+        account_data = {'name': 'Test Company', 'type': 'invalid_type'}
+        response = self.client.post(url, account_data, format='json')
+        self.assertEqual(response.status_code, 400)
