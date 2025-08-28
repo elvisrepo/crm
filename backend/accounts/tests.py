@@ -275,3 +275,50 @@ class AccountAPITests(TestCase):
             account_names = [account['name'] for account in response.data]
             self.assertIn('Test Company', account_names)
             self.assertIn('Other Company', account_names)
+
+
+    def test_create_account(self):
+        """Test creating a new account via API."""
+        account_data = {
+            'name': 'Full Company',
+            'phone': '+1234567890',
+            'website': 'https://example.com',
+            'type': 'customer',
+            'billing_address': '123 Main St, City, State',
+            'shipping_address': '456 Oak Ave, City, State',
+            'description': 'A test company with all fields'
+            # Note: owner should be set automatically by the API, not in request data
+        }
+
+        url = reverse('accounts_list')
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, account_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['name'], 'Full Company')
+        self.assertEqual(response.data['owner'], self.user.id)
+        self.assertEqual(response.data['type'], 'customer')
+        
+        # Verify the account was actually created in the database
+        self.assertTrue(Account.objects.filter(name='Full Company').exists())
+
+    def test_create_account_min_data(self):
+        """Test creating an account with minimal required data (name only)."""
+
+        # name and owner are required. owner set by the server itself
+        account_data = {
+            'name': 'Full Company',
+        }
+
+        url = reverse('accounts_list')
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, account_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['name'], 'Full Company')
+        self.assertEqual(response.data['owner'], self.user.id)
+        self.assertEqual(response.data['type'], 'prospect')
+        self.assertTrue(response.data['is_active'])
+        self.assertEqual(response.data['version'],1)
+
+        self.assertTrue(Account.objects.filter(name='Full Company').exists())
