@@ -215,6 +215,37 @@ class AccountAPITests(TestCase):
         url = reverse('account_detail', kwargs= {'pk':self.account.pk}) ## accounts/1
         self.client.force_authenticate(user = self.user)
         response = self.client.get(url)
-        print(f'response data : {response.data}')
+        # print(f'response data : {response.data}')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['name'], self.account.name)
+        self.assertEqual(response.data['name'], self.account.name)  
+  
+    def test_all_users_can_see_all_accounts(self):
+            """Test that all authenticated users can see all accounts."""
+            # Create another user with their own account
+            other_user = User.objects.create_user(
+                email='other@example.com',
+                password='password123',
+                first_name='Other',
+                last_name='User'
+            )
+            other_account = Account.objects.create(
+                name='Other Company',
+                owner=other_user
+            )
+            
+            # User should see all accounts (both their own and others)
+            url = reverse('accounts_list')
+            self.client.force_authenticate(user=self.user)
+            response = self.client.get(url)
+            
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.data), 2)  # Both accounts visible
+            
+            # Verify both accounts are in the response
+            # print(f'accounts: {response.data}')
+            account_names = [account['name'] for account in response.data]
+            self.assertIn('Test Company', account_names)
+            self.assertIn('Other Company', account_names)
+
+
+    
