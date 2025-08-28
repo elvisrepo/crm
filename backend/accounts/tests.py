@@ -393,3 +393,61 @@ class AccountAPITests(TestCase):
 
 
 
+    def test_delete_account(self):
+        """Test soft deleting an account via API."""
+        url = reverse('account_detail', kwargs={'pk': self.account.pk})
+        self.client.force_authenticate(user=self.user)
+        
+        data = {'version': self.account.version}
+        response = self.client.delete(url, data, format='json')
+        
+        self.assertEqual(response.status_code, 204)
+        
+        # Verify soft delete - account still exists but is_active=False
+        self.account.refresh_from_db()
+        self.assertFalse(self.account.is_active)
+        
+        # Verify it doesn't appear in normal queries (if your API filters by is_active)
+        active_accounts = Account.objects.filter(is_active=True)
+        self.assertNotIn(self.account, active_accounts)
+
+
+
+    def test_delete_account_unauthenticated(self):
+        """Test that unauthenticated users cannot delete accounts."""
+        url = reverse('account_detail', kwargs={'pk': self.account.pk})
+        response = self.client.delete(url)
+        
+        self.assertEqual(response.status_code, 401)
+        self.assertTrue(Account.objects.filter(pk=self.account.pk).exists())
+        self.assertTrue(self.account.is_active)
+        
+        active_accounts = Account.objects.filter(is_active=True)
+        self.assertIn(self.account, active_accounts)
+
+
+    def test_delete_account_version_conflict(self):
+        """Test that optimistic locking prevents concurrent deletes."""
+        url = reverse('account_detail', kwargs={'pk': self.account.pk})
+        self.client.force_authenticate(user=self.user)
+        
+        # Use outdated version
+        data = {'version': self.account.version - 1}
+        response = self.client.delete(url, data, format='json')
+        
+        self.assertEqual(response.status_code, 409)  # Conflict
+        self.account.refresh_from_db()
+        self.assertTrue(self.account.is_active)  # Should still be active
+
+    def test_update_account_version_conflict(self):
+        """Test that optimistic locking prevents concurrent updates."""
+        update_data = {
+            'name': 'Updated Name',
+            'version': self.account.version - 1  # Outdated version
+        }
+        
+        url = reverse('account_detail', kwargs={'pk': self.account.pk})
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(url, update_data, format='json')
+        
+        self.assertEqual(response.status_code, 409)  # Conflict
