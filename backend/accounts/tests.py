@@ -369,3 +369,27 @@ class AccountAPITests(TestCase):
         self.assertEqual(response.status_code, 400)
 
         self.assertEqual(Account.objects.filter(name='Test Company').count(),1)
+
+
+    def test_update_account(self):
+        """Test updating an account via API."""
+        update_data = {
+            'name': 'Updated Company Name',
+            'type': 'customer',
+            'phone': '+1987654321',
+            'version': self.account.version
+        }
+        
+        url = reverse('account_detail', kwargs={'pk': self.account.pk})
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(url, update_data, format='json')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], 'Updated Company Name')
+        self.assertEqual(response.data['type'], 'customer')
+        
+        # Verify version incremented
+        self.assertEqual(response.data['version'], self.account.version + 1)
+
+
+
