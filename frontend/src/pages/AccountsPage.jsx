@@ -1,36 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { getAccounts } from '../api/client';
 import styles from './AccountsPage.module.css';
 
 export default function AccountsPage() {
-    const [accounts, setAccounts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        loadAccounts();
-    }, []);
+     // This one line replaces all your useState and useEffect for data fetching!
+    const { data: accounts = [], isLoading, isError, error } = useQuery({
+        queryKey: ['accounts'], // A unique key for this data
+        queryFn: getAccounts,  // The function that fetches the data
+    });
 
-    const loadAccounts = async () => {
-        try {
-            setLoading(true);
-            const data = await getAccounts();
-            setAccounts(data);
-        } catch (err) {
-            setError('Failed to load accounts');
-            console.error('Error loading accounts:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
+ 
 
     const filteredAccounts = accounts.filter(account =>
         account.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className={styles.container}>
                 <div className={styles.loading}>Loading accounts...</div>
@@ -38,7 +28,7 @@ export default function AccountsPage() {
         );
     }
 
-    if (error) {
+    if (isError) {
         return (
             <div className={styles.container}>
                 <div className={styles.error}>{error}</div>
