@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
@@ -19,6 +20,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
     try {
       await login(email, password);
       const redirectTo = location.state?.from?.pathname || '/';
@@ -26,6 +28,8 @@ const LoginPage = () => {
     } catch (err) {
       if (err?.response?.status === 401) setError('Invalid email or password.');
       else setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -56,8 +60,8 @@ const LoginPage = () => {
               required
             />
           </div>
-          <button type="submit" className={styles.button}>
-            Log In
+          <button type="submit" className={styles.button} disabled={isSubmitting}>
+            {isSubmitting ? 'Loggin in...' : 'Log in'}
           </button>
         </form>
       </div>
