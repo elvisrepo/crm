@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://localhost:8001/api',
+    baseURL: 'http://localhost:8001',
 
 })
 
@@ -32,7 +32,7 @@ async function refreshAccessToken() {
         // We immediately assign the new promise to the global 'refreshPromise' variable.
         // Now, any other calls that come in while this is running will see that
         // refreshPromise is NOT null and will skip this block.
-        refreshPromise = api.post('/token/refresh/', {}, { withCredentials: true })
+        refreshPromise = api.post('/api/token/refresh/', {}, { withCredentials: true })
             .then(res => {
                 // 3. Success: Store the new token
                 const newAccess = res.data?.access;
@@ -102,7 +102,7 @@ api.interceptors.response.use(
 
 
 export async function loginAndGetAccessToken({ email, password }) {
-    const res = await api.post('/token/', {
+    const res = await api.post('/api/token/', {
         email,
         password
     },
@@ -116,7 +116,7 @@ export async function loginAndGetAccessToken({ email, password }) {
 
 export async function logoutOnServer() {
     try {
-        await api.post('/logout/', {}, { withCredentials: true });
+        await api.post('/api/logout/', {}, { withCredentials: true });
     } catch { }
     setAccessToken(null);
 }
@@ -148,5 +148,33 @@ export async function bootstrapFromRefresh() {
     }
 }
 
+
+// Account API methods
+export async function getAccounts() {
+    const response = await api.get('/accounts/');
+    return response.data;
+}
+
+export async function getAccount(id) {
+    const response = await api.get(`/accounts/${id}/`);
+    return response.data;
+}
+
+export async function createAccount(accountData) {
+    const response = await api.post('/accounts/', accountData);
+    return response.data;
+}
+
+export async function updateAccount(id, accountData) {
+    const response = await api.patch(`/accounts/${id}/`, accountData);
+    return response.data;
+}
+
+export async function deleteAccount(id, version) {
+    const response = await api.delete(`/accounts/${id}/`, {
+        data: { version }
+    });
+    return response.data;
+}
 
 export default api;
