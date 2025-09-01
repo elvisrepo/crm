@@ -1,60 +1,80 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react';
-import api, {
-    loginAndGetAccessToken,
-    logoutOnServer,
-    bootstrapFromRefresh,
-    getAccessToken,
+// src/auth/AuthProvider.jsx
 
-} from "../api/client"
+import { createContext, useState, useEffect, useMemo } from 'react';
+import { getAccessToken, setAccessToken, bootstrapFromRefresh, loginAndGetAccessToken, logoutOnServer } from '../api/client';
+import { jwtDecode } from 'jwt-decode';
 
-// Context Creation & State Management
-const AuthContext = createContext(null);
-
-// Export the context so it can be used by the useAuth hook
-export { AuthContext };
+export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-    const [status, setStatus] = useState('loading'); // 'loading' | 'authenticated' | 'unauthenticated'
     const [user, setUser] = useState(null);
+    // 1. Add isLoading state to track the initial session check
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Bootstrap Effect - Auto-Login Check
+    console.log(' user', user)
+
+    // This effect runs only once on initial app load
     useEffect(() => {
-        let mounted = true;
-        (async () => {
-            const ok = await bootstrapFromRefresh();
-            if (!mounted) return;
-            setStatus(ok ? 'authenticated' : 'unauthenticated');
-            // Optionally: fetch user profile here and setUser(...)
-        })();
-        return () => { mounted = false; };
-    }, [])
+        const bootstrap = async () => {
+            try {
+                // Attempt to refresh the token and get user data
+                const refreshed = await bootstrapFromRefresh();
+                if (refreshed) {
+                    const token = getAccessToken();
+                    const decodedUser = jwtDecode(token);
+                    console.log('decoded user', decodedUser)
+                    setUser(decodedUser);
+                    
+                }
+            } catch (error) {
+                // If bootstrap fails, it's okay. The user is simply not logged in.
+                console.error("Bootstrap failed:", error);
+                setUser(null);
+            } finally {
+                // 2. Set loading to false after the attempt is complete
+                setIsLoading(false);
+            }
+        };
 
+        bootstrap();
+    }, []);
 
     const login = async (email, password) => {
-        await loginAndGetAccessToken({ email, password });
-        setStatus('authenticated');
-        // Optionally: fetch user profile here and setUser(...)
+        try {
+            const token = await loginAndGetAccessToken({ email, password });
+            const decodedUser = jwtDecode(token);
+            setUser(decodedUser);
+        } catch (error) {
+            // Let the caller (LoginPage) handle the error display
+            console.error("Login failed:", error);
+            throw error;
+        }
     };
-
 
     const logout = async () => {
-        await logoutOnServer();
-        setUser(null);
-        setStatus('unauthenticated');
+        try {
+            await logoutOnServer();
+        } finally {
+            // Always clear user state and token from the frontend
+            setUser(null);
+            setAccessToken(null);
+        }
     };
 
-    const value = useMemo(() => ({
-        status,
-        isAuthenticated: status === 'authenticated' && !!getAccessToken(),
-        user,
-        login,
-        logout,
-        api,
-    }), [status, user]);
+    // 3. Memoize the context value, including the new isLoading state
+    const value = useMemo(
+        () => ({
+            user,
+            isLoading, // Expose isLoading to consumers
+            login,
+            logout,
+        }),
+        [user, isLoading] // Add isLoading to the dependency array
+    );
 
-    // Provider Component
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-
-
-
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
