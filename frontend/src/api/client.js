@@ -178,7 +178,7 @@ export async function getAccounts() {
 }
 
 export async function getAccount(id) {
-    const response = await api.get(`/accounts/${id}/`);
+    const response = await api.get(`/accounts/${id}`);
     return response.data;
 }
 
