@@ -142,6 +142,9 @@ export async function logoutOnServer() {
 
 
 export async function bootstrapFromRefresh() {
+    if (localStorage.getItem('loggedOut') === 'true') {
+        return false;
+    }
     try {
         // 1. Attempt to get a new access token
         // It calls refreshAccessToken(), which will send the HttpOnly
