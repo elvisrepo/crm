@@ -73,29 +73,48 @@ api.interceptors.request.use((config) => {
 });
 
 // Response Interceptor
-// from frontend/src/api/client.js
 
 api.interceptors.response.use(
-    (res) => res,
+    // If the response is successful, just pass it through.
+    (response) => response,
+
+    // This function handles all API errors.
     async (error) => {
-        const original = error.config;
-        const isAuthError = error.response && error.response.status === 401;
-        const alreadyRetried = original && original._isRetryAfterRefresh;
+        const originalRequest = error.config;
 
-        if (isAuthError && !alreadyRetried) {
+        // Check for the specific conditions where we should attempt a token refresh:
+        // 1. The error was a 401 Unauthorized.
+        // 2. We haven't already tried to refresh the token for this specific request.
+        const shouldAttemptRefresh =
+            error.response?.status === 401 && !originalRequest._isRetryAfterRefresh;
+
+        if (shouldAttemptRefresh) {
+            // Mark this request as having been retried to prevent infinite loops.
+            originalRequest._isRetryAfterRefresh = true;
+
             try {
-                // Here is the call!
-                await refreshAccessToken(); // We MUST use 'await' here
+                // Attempt to get a new access token. The refreshAccessToken function
+                // is locked by a promise, so this will only run once even if
+                // multiple requests fail at the same time.
+                await refreshAccessToken();
 
-                // Because we used 'await', this next line only runs *after* the
-                // refreshPromise has successfully resolved. At this point, the
-                // new access token is already stored in memory by setAccessToken().
-                original._isRetryAfterRefresh = true;
-                return api(original);  // Retry original request
-            } catch {
-                // This 'catch' block will execute if the refreshPromise is rejected.
+                // If the refresh was successful, the new token is now stored.
+                // The request interceptor will automatically add it to this new request.
+                // We now retry the original request that failed.
+                return api(originalRequest);
+
+            } catch (error) {
+                // If refreshAccessToken() fails, it means the refresh token is invalid.
+                // The user's session is truly over. There's no way to recover.
+                // We reject the promise of the original request.
+                // The `refreshAccessToken` function is responsible for the actual "logout" logic
+                // (clearing the token, dispatching an event, etc.).
+                return Promise.reject(error);
             }
         }
+
+        // If the error was not a 401, or if we have already tried to refresh,
+        // we don't handle it here. We just let the original error propagate.
         return Promise.reject(error);
     }
 );
