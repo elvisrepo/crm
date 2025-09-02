@@ -1,20 +1,28 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getAccounts } from '../api/client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAccounts, createAccount } from '../api/client';
 import styles from './AccountsPage.module.css';
+import Modal from '../components/Modal';
+import NewAccountForm from '../components/NewAccountForm';
 
 export default function AccountsPage() {
-    
     const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const queryClient = useQueryClient();
 
-     // This one line replaces all your useState and useEffect for data fetching!
     const { data: accounts = [], isLoading, isError, error } = useQuery({
-        queryKey: ['accounts'], // A unique key for this data
-        queryFn: getAccounts,  // The function that fetches the data
+        queryKey: ['accounts'],
+        queryFn: getAccounts,
     });
 
- 
+    const createAccountMutation = useMutation({
+        mutationFn: createAccount,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['accounts']);
+            setIsModalOpen(false);
+        },
+    });
 
     const filteredAccounts = accounts.filter(account =>
         account.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -31,7 +39,7 @@ export default function AccountsPage() {
     if (isError) {
         return (
             <div className={styles.container}>
-                <div className={styles.error}>{error}</div>
+                <div className={styles.error}>{error.message}</div>
             </div>
         );
     }
@@ -40,9 +48,9 @@ export default function AccountsPage() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Accounts</h1>
-                <Link to="/accounts/new" className={styles.newButton}>
+                <button onClick={() => setIsModalOpen(true)} className={styles.newButton}>
                     New Account
-                </Link>
+                </button>
             </div>
 
             <div className={styles.controls}>
@@ -68,51 +76,30 @@ export default function AccountsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredAccounts.length === 0 ? (
-                            <tr>
-                                <td colSpan="6" className={styles.noData}>
-                                    No accounts found
+                        {filteredAccounts.map((account) => (
+                            <tr key={account.id}>
+                                <td>
+                                    <Link to={`/accounts/${account.id}`} className={styles.accountLink}>
+                                        {account.name}
+                                    </Link>
+                                </td>
+                                <td className={styles.type}>{account.type}</td>
+                                <td>{account.phone || '-'}</td>
+                                <td>
+                                    {account.website ? (
+                                        <a href={account.website} target="_blank" rel="noopener noreferrer" className={styles.websiteLink}>
+                                            {account.website}
+                                        </a>
+                                    ) : '-'}
+                                </td>
+                                <td>{account.owner}</td>
+                                <td>
+                                    <Link to={`/accounts/${account.id}/edit`} className={styles.editButton}>
+                                        Edit
+                                    </Link>
                                 </td>
                             </tr>
-                        ) : (
-                            filteredAccounts.map((account) => (
-                                <tr key={account.id}>
-                                    <td>
-                                        <Link
-                                            to={`/accounts/${account.id}`}
-                                            className={styles.accountLink}
-                                        >
-                                            {account.name}
-                                        </Link>
-                                    </td>
-                                    <td className={styles.type}>
-                                        {account.type}
-                                    </td>
-                                    <td>{account.phone || '-'}</td>
-                                    <td>
-                                        {account.website ? (
-                                            <a
-                                                href={account.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className={styles.websiteLink}
-                                            >
-                                                {account.website}
-                                            </a>
-                                        ) : '-'}
-                                    </td>
-                                    <td>{account.owner}</td>
-                                    <td>
-                                        <Link
-                                            to={`/accounts/${account.id}/edit`}
-                                            className={styles.editButton}
-                                        >
-                                            Edit
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -120,6 +107,16 @@ export default function AccountsPage() {
             <div className={styles.summary}>
                 Showing {filteredAccounts.length} of {accounts.length} accounts
             </div>
+
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <NewAccountForm
+                    onSubmit={createAccountMutation.mutate}
+                    onCancel={() => setIsModalOpen(false)}
+                    isLoading={createAccountMutation.isLoading}
+                    error={createAccountMutation.error}
+                    accounts={accounts}
+                />
+            </Modal>
         </div>
     );
 }
