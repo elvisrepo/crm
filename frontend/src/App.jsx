@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import AccountsPage from './pages/AccountsPage';
 import AccountPage from './pages/AccountPage';
+import EditAccountPage from './pages/EditAccountPage'; // Import the new page
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -24,6 +25,7 @@ const App = () => {
               <Route index element={<DashboardPage />} />
               <Route path="accounts" element={<AccountsPage />} />
               <Route path="accounts/:id" element={<AccountPage />} />
+              <Route path="accounts/:id/edit" element={<EditAccountPage />} /> {/* Add the new route */}
               {/* Other private routes */}
             </Route>
           </Route>
