@@ -1,15 +1,39 @@
-import { useParams, Link } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query';
-import { getAccount } from "../api/client";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAccount, deleteAccount } from "../api/client";
 import styles from './AccountPage.module.css';
 
 const AccountPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const { data: account, isLoading, isError, error } = useQuery({
         queryKey: ['account', id],
         queryFn: () => getAccount(id),
     });
+
+    const deleteAccountMutation = useMutation({
+        mutationFn: ({ id, version }) => deleteAccount(id, version),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] }); // Invalidate the list of accounts
+            navigate('/accounts'); // Redirect to the accounts list page
+        },
+        onError: (error) => {
+            console.error("Error deleting account:", error);
+            alert(`Failed to delete account: ${error.message || 'An unexpected error occurred.'}`);
+        },
+    });
+
+    const handleDelete = () => {
+        if (window.confirm(`Are you sure you want to delete account "${account?.name}"?`)) {
+            if (account?.id && account?.version) {
+                deleteAccountMutation.mutate({ id: account.id, version: account.version });
+            } else {
+                alert("Account data is incomplete for deletion.");
+            }
+        }
+    };
 
     if (isLoading) {
         return <div className={styles.container}>Loading account...</div>;
@@ -25,7 +49,13 @@ const AccountPage = () => {
                 <h1>{account?.name}</h1>
                 <div className={styles.actions}>
                     <Link to={`/accounts/${id}/edit`} className={`${styles.editButton} ${styles.button}`}>Edit</Link>
-                    <button className={`${styles.deleteButton} ${styles.button}`}>Delete</button>
+                    <button
+                        onClick={handleDelete}
+                        className={`${styles.deleteButton} ${styles.button}`}
+                        disabled={deleteAccountMutation.isLoading}
+                    >
+                        {deleteAccountMutation.isLoading ? 'Deleting...' : 'Delete'}
+                    </button>
                 </div>
             </div>
 

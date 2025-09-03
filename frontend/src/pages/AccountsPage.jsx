@@ -25,8 +25,10 @@ export default function AccountsPage() {
     });
 
     const filteredAccounts = accounts.filter(account =>
-        account.name.toLowerCase().includes(searchTerm.toLowerCase())
+        account.is_active && account.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    
 
     if (isLoading) {
         return (
