@@ -69,7 +69,7 @@ class Account(models.Model):
     def save(self, *args, **kwargs):
         """Increment version for optimistic locking on updates."""
         if self.pk:  # If updating existing record
-            self.version += 1
+            pass # Version increment is handled by the serializer
         super().save(*args, **kwargs)
 
 

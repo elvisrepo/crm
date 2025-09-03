@@ -9,7 +9,8 @@ from users.views_auth import (
 
 urlpatterns = [
     path('', include('users.urls')),
-    path('', include('accounts.urls')),
+    path('', include('contacts.urls')),
+    path('', include('accounts.urls')), # Add this line
     path("admin/", admin.site.urls),
 
     

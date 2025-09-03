@@ -22,3 +22,10 @@ class AccountSerializer(serializers.ModelSerializer):
         child_accounts = obj.child_accounts.filter(is_active=True)
         return [{'id': child.id, 'name': child.name} for child in child_accounts]
 
+    def update(self, instance, validated_data):
+        # Increment version first
+        instance.version += 1
+        # Then call super().update, which will apply validated_data and save the instance
+        # The incremented version will be saved along with other changes
+        return super().update(instance, validated_data)
+
