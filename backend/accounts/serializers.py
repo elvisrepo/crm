@@ -1,26 +1,42 @@
 from rest_framework import serializers
 from .models import Account
 from users.serializers import UserSerializer
+from contacts.models import Contact # Import Contact model
 
+# Define a minimal ContactSummarySerializer here
+class ContactSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ['id', 'first_name', 'last_name']
 
 class AccountSerializer(serializers.ModelSerializer):
     """Main Account serializer for API operations."""
-    child_accounts = serializers.SerializerMethodField() # call a method to get a value
-    
+    child_accounts = serializers.SerializerMethodField()
+    contacts = serializers.SerializerMethodField() # Use SerializerMethodField for contacts
+
     class Meta:
         model = Account
         fields = [
             'id', 'name', 'phone', 'website', 'type', 'description',
             'billing_address', 'shipping_address', 'parent_account','owner',
-            'is_active', 'version', 'created_at', 'updated_at', 'child_accounts'
+            'is_active', 'version', 'created_at', 'updated_at', 'child_accounts',
+            'contacts' # Add 'contacts' to fields
         ]
-        
-        read_only_fields = ['id', 'created_at', 'updated_at', 'version','owner', 'child_accounts']
-    
+
+        read_only_fields = ['id', 'created_at', 'updated_at', 'version','owner', 'child_accounts', 'contacts']
+
     def get_child_accounts(self, obj):
         """Return child accounts for this account."""
         child_accounts = obj.child_accounts.filter(is_active=True)
         return [{'id': child.id, 'name': child.name} for child in child_accounts]
+
+    def get_contacts(self, obj):
+        """Return related contacts for this account."""
+        # obj.contacts.all() uses the related_name defined in Contact model
+        contacts = obj.contacts.all()
+        return ContactSummarySerializer(contacts, many=True).data
+    
+        
 
     def update(self, instance, validated_data):
         # Increment version first
@@ -28,4 +44,3 @@ class AccountSerializer(serializers.ModelSerializer):
         # Then call super().update, which will apply validated_data and save the instance
         # The incremented version will be saved along with other changes
         return super().update(instance, validated_data)
-

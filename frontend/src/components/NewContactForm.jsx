@@ -34,7 +34,6 @@ const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
         // Ensure account and reports_to are numbers if the backend expects them as such
         const dataToSend = {
             ...formData,
-            // Rename 'account' to 'account_id'
             account_id: formData.account ? Number(formData.account) : null,
             reports_to: formData.reports_to ? Number(formData.reports_to) : null,
         };

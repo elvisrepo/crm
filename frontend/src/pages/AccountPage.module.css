@@ -75,3 +75,23 @@
 .description {
     white-space: pre-wrap; /* Preserves whitespace and line breaks */
 }
+
+.relatedContactsCard ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.relatedContactsCard li {
+    margin-bottom: 8px;
+}
+
+.relatedContactsCard li a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.relatedContactsCard li a:hover {
+    text-decoration: underline;
+}

@@ -102,7 +102,26 @@ const AccountPage = () => {
                         <label>Parent Account</label>
                         <span>{account?.parent_account || '-'}</span>
                     </div>
+
                    
+                </div>
+
+                {/* New section for Related Contacts */}
+                <div className={`${styles.detailCard} ${styles.relatedContactsCard}`}>
+                    <h2>Related Contacts</h2>
+                    {account?.contacts && account.contacts.length > 0 ? (
+                        <ul>
+                            {account.contacts.map(contact => (
+                                <li key={contact.id}>
+                                    <Link to={`/contacts/${contact.id}`}>
+                                        {contact.first_name} {contact.last_name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No contacts associated with this account.</p>
+                    )}
                 </div>
             </div>
         </div>
