@@ -7,6 +7,7 @@ import AccountPage from './pages/AccountPage';
 import ContactPage from './pages/ContactPage';
 import EditAccountPage from './pages/EditAccountPage'; // Import the new page
 import ContactsPage from './pages/ContactsPage';
+import EditContactPage from './pages/EditContactPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -30,6 +31,7 @@ const App = () => {
               <Route path="accounts/:id/edit" element={<EditAccountPage />} /> 
               <Route path="contacts" element={<ContactsPage />} />
               <Route path="contacts/:id" element={<ContactPage />}/>
+              <Route path="contacts/:id/edit" element={<EditContactPage />} />
             </Route>
           </Route>
         </Routes>

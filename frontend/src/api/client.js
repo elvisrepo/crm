@@ -178,7 +178,7 @@ export async function getAccounts() {
 }
 
 export async function getAccount(id) {
-    const response = await api.get(`/accounts/${id}`);
+    const response = await api.get(`/accounts/${id}/`);
     return response.data;
 }
 
@@ -213,17 +213,17 @@ export async function createContact(contactData) {
 }
 
 export async function getContact(id) {
-    const response = await api.get(`/contacts/${id}`)
+    const response = await api.get(`/contacts/${id}/`)
     return response.data
 }
 
 export async function updateContact(id, contactData) {
-    const response = await api.patch(`/contacts/${id}`, contactData)
+    const response = await api.patch(`/contacts/${id}/`, contactData)
     return response.data
 }
 
 export async function deleteContact(id, version) {
-    const response = await api.delete(`/contacts/${id}`, {
+    const response = await api.delete(`/contacts/${id}/`, {
         data : {version}
        
     })

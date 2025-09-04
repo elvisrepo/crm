@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getContacts, createContact } from "../api/client";
+import { getContacts, createContact, getAccounts } from "../api/client";
 import styles from './ContactsPage.module.css';
 import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
@@ -17,6 +17,11 @@ const ContactsPage = () => {
         queryFn: getContacts
     });
 
+    const { data: accounts = [] } = useQuery({
+        queryKey: ['accounts'],
+        queryFn: getAccounts,
+    });
+
     const createContactMutation = useMutation({
         mutationFn: createContact,
         onSuccess : () => {
@@ -28,22 +33,21 @@ const ContactsPage = () => {
 
     const filteredContacts = contacts.filter(contact =>
         contact.is_active &&
-        contact.first_name &&
-        `${contact.first_name} ${contact.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+        `${contact.first_name || ''} ${contact.last_name || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (isLoading) {
         return (
-            <div className={styles.loading}>
-                Loading contacts...
+            <div className={styles.container}>
+                <div className={styles.loading}>Loading contacts...</div>
             </div>
         );
     }
 
     if (isError) {
         return (
-            <div className={styles.error}>
-                Error: {error.message}
+            <div className={styles.container}>
+                <div className={styles.error}>{error.message}</div>
             </div>
         );
     }
@@ -51,14 +55,14 @@ const ContactsPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Contacts Page</h1>
-                <button onClick={() => setIsModalOpen(true)} className={styles.newContactButton}>New Contact</button>
+                <h1>Contacts</h1>
+                <button onClick={() => setIsModalOpen(true)} className={styles.newButton}>New Contact</button>
             </div>
 
             <div className={styles.controls}>
                 <input
                     type="text"
-                    placeholder="Search contacts"
+                    placeholder="Search contacts..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className={styles.searchInput}
@@ -85,30 +89,34 @@ const ContactsPage = () => {
                                         {contact.first_name} {contact.last_name}
                                     </Link>
                                 </td>
-                                <td>{contact.title || 'N/A'}</td>
-                                <td>{contact.phone || 'N/A'}</td>
-                                <td>{contact.account?.name || 'N/A'}</td>
-                                <td>{contact.owner?.first_name} {contact.owner?.last_name || 'N/A'}</td>
+                                <td>{contact.title || '-'}</td>
+                                <td>{contact.phone || '-'}</td>
+                                <td>{contact.account?.name || '-'}</td>
+                                <td>{contact.owner?.first_name} {contact.owner?.last_name || '-'}</td>
                                 <td>
-                                    <button className={styles.actionButton}>Edit</button>
-                                    <button className={styles.actionButton}>Delete</button>
+                                    <Link to={`/contacts/${contact.id}/edit`} className={styles.editButton}>
+                                        Edit
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            <div className={styles.summary}>
+                Showing {filteredContacts.length} of {contacts.length} contacts
+            </div>
                            
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                        <NewContactForm
-                            onSubmit={createContactMutation.mutate}
-                            onCancel = {() =>  setIsModalOpen(false)}
-                            isLoading = {createContactMutation.isLoading}
-                            error={createContactMutation.error}
-                            contacts ={contacts}
-
-                        />
-
+                <NewContactForm
+                    onSubmit={createContactMutation.mutate}
+                    onCancel = {() =>  setIsModalOpen(false)}
+                    isLoading = {createContactMutation.isLoading}
+                    error={createContactMutation.error}
+                    contacts={contacts}
+                    accounts={accounts}
+                />
             </Modal>
         </div>
     );

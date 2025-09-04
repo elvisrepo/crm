@@ -17,6 +17,14 @@ class ContactSerializer(serializers.ModelSerializer):
     # Nested serializer for account to display account details instead of just ID
     account = AccountSerializer(read_only=True)
 
+    # Nested representation for reports_to
+    class ReportsToSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Contact
+            fields = ('id', 'first_name', 'last_name')
+
+    reports_to = ReportsToSerializer(read_only=True)
+
     # Writable fields for FKs when creating/updating
     owner_id = serializers.PrimaryKeyRelatedField(
         queryset=get_user_model().objects.all(), source='owner', write_only=True, required=False
@@ -36,7 +44,7 @@ class ContactSerializer(serializers.ModelSerializer):
             'description', 'reports_to', 'account', 'owner', 'is_active', 'version',
             'owner_id', 'account_id', 'reports_to_id' # Include writable FK fields
         ]
-        read_only_fields = ['owner', 'account', 'reports_to'] # Make nested objects read-only
+        read_only_fields = ['owner', 'account'] # 'reports_to' is now handled by the nested serializer
         extra_kwargs = {
             'version': {'read_only': True} # Version is managed by the backend
         }
