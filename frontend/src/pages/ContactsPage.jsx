@@ -1,17 +1,30 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getContacts } from "../api/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getContacts, createContact } from "../api/client";
 import styles from './ContactsPage.module.css';
 import { Link } from "react-router-dom";
+import Modal from "../components/Modal";
+import NewContactForm from "../components/NewContactForm";
 
 const ContactsPage = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const queryClient = useQueryClient()
 
     const { data: contacts = [], isLoading, isError, error } = useQuery({
         queryKey: ['contacts'],
         queryFn: getContacts
     });
+
+    const createContactMutation = useMutation({
+        mutationFn: createContact,
+        onSuccess : () => {
+            queryClient.invalidateQueries(['contacts'])
+            setIsModalOpen(false)
+        }
+
+    })
 
     const filteredContacts = contacts.filter(contact =>
         contact.is_active &&
@@ -39,7 +52,7 @@ const ContactsPage = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Contacts Page</h1>
-                <button className={styles.newContactButton}>New Contact</button>
+                <button onClick={() => setIsModalOpen(true)} className={styles.newContactButton}>New Contact</button>
             </div>
 
             <div className={styles.controls}>
@@ -85,6 +98,18 @@ const ContactsPage = () => {
                     </tbody>
                 </table>
             </div>
+                           
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                        <NewContactForm
+                            onSubmit={createContactMutation.mutate}
+                            onCancel = {() =>  setIsModalOpen(false)}
+                            isLoading = {createContactMutation.isLoading}
+                            error={createContactMutation.error}
+                            contacts ={contacts}
+
+                        />
+
+            </Modal>
         </div>
     );
 };

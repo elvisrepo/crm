@@ -206,6 +206,12 @@ export async function getContacts() {
     return response.data
 }
 
+export async function createContact(contactData) {
+    const response = await api.post('/contacts/',contactData)
+    return response.data
+
+}
+
 export async function getContact(id) {
     const response = await api.get(`/contacts/${id}`)
     return response.data

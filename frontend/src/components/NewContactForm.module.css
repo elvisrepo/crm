@@ -1,0 +1,111 @@
+/* frontend/src/components/NewContactForm.module.css */
+
+.form {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.form h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.formGroup {
+    margin-bottom: 18px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 15px;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup input[type="tel"],
+.formGroup select,
+.formGroup textarea {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.formGroup textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.submitButton:hover {
+    background-color: #218838;
+}
+
+.submitButton:disabled {
+    background-color: #90ee90;
+    cursor: not-allowed;
+}
+
+.cancelButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+}
+
+.cancelButton:disabled {
+    background-color: #a9a9a9;
+    cursor: not-allowed;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
