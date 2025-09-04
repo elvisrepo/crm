@@ -1,0 +1,70 @@
+/* frontend/src/pages/ContactPage.module.css */
+
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 32px;
+    color: #333;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 20px;
+}
+
+.detailItem {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+
+.detailItemFull {
+    grid-column: 1 / -1; /* Spans across all columns */
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+
+.detailLabel {
+    font-weight: bold;
+    color: #555;
+    display: block; /* Make label take full width */
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.detailValue {
+    color: #333;
+    font-size: 16px;
+    word-wrap: break-word; /* Break long words */
+}
+
+.loading, .error, .notFound {
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}
+
+.error {
+    color: #dc3545;
+}

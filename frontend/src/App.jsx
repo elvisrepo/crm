@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import AccountsPage from './pages/AccountsPage';
 import AccountPage from './pages/AccountPage';
+import ContactPage from './pages/ContactPage';
 import EditAccountPage from './pages/EditAccountPage'; // Import the new page
 import ContactsPage from './pages/ContactsPage';
 import Layout from './components/Layout';
@@ -28,6 +29,7 @@ const App = () => {
               <Route path="accounts/:id" element={<AccountPage />} />
               <Route path="accounts/:id/edit" element={<EditAccountPage />} /> 
               <Route path="contacts" element={<ContactsPage />} />
+              <Route path="contacts/:id" element={<ContactPage />}/>
             </Route>
           </Route>
         </Routes>
