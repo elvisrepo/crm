@@ -199,4 +199,30 @@ export async function deleteAccount(id, version) {
     return response.data;
 }
 
+// Contacts API methods
+
+export async function getContacts() {
+    const response = await api.get('/contacts/')
+    return response.data
+}
+
+export async function getContact(id) {
+    const response = await api.get(`/contacts/${id}`)
+    return response.data
+}
+
+export async function updateContact(id, contactData) {
+    const response = await api.patch(`/contacts/${id}`, contactData)
+    return response.data
+}
+
+export async function deleteContact(id, version) {
+    const response = await api.delete(`/contacts/${id}`, {
+        data : {version}
+       
+    })
+     return response.data
+}
+
+
 export default api;
