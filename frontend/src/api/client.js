@@ -230,5 +230,12 @@ export async function deleteContact(id, version) {
      return response.data
 }
 
+// Opportunities API methods
+
+export async function getOpportunities() {
+    const response = await api.get('/opportunities/')
+    return response.data
+}
+
 
 export default api;
