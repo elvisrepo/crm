@@ -81,6 +81,14 @@
     background: #f9fafb;
 }
 
+.table tbody tr:nth-child(odd) {
+    background-color: #fdfdfd; /* Slightly different from default */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Default white */
+}
+
 .accountLink {
     color: #0176d3;
     text-decoration: none;
@@ -117,6 +125,30 @@
 .editButton:hover {
     background: #f0f9ff;
     text-decoration: none;
+}
+
+.editButton:hover {
+    background: #f0f9ff;
+    text-decoration: none;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+.deleteButton:disabled {
+    background-color: #f5c6cb;
+    cursor: not-allowed;
 }
 
 .noData {

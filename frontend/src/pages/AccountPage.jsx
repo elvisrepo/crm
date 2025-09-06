@@ -14,7 +14,7 @@ const AccountPage = () => {
     });
 
     const deleteAccountMutation = useMutation({
-        mutationFn: ({ id, version }) => deleteAccount(id, version),
+        mutationFn: deleteAccount,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['accounts'] }); // Invalidate the list of accounts
             navigate('/accounts'); // Redirect to the accounts list page

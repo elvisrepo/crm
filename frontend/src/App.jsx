@@ -9,6 +9,8 @@ import EditAccountPage from './pages/EditAccountPage'; // Import the new page
 import ContactsPage from './pages/ContactsPage';
 import EditContactPage from './pages/EditContactPage';
 import OpportunitiesPage from './pages/OpportunitiesPage';
+import EditOpportunityPage from './pages/EditOpportunityPage';
+import OpportunityPage from './pages/OpportunityPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -34,6 +36,8 @@ const App = () => {
               <Route path="contacts/:id" element={<ContactPage />}/>
               <Route path="contacts/:id/edit" element={<EditContactPage />} />
               <Route path="opportunities" element={< OpportunitiesPage />}   />
+              <Route path="opportunities/:id" element={<OpportunityPage />} />
+              <Route path="opportunities/:id/edit" element={<EditOpportunityPage />} />
             </Route>
           </Route>
         </Routes>
@@ -44,3 +48,5 @@ const App = () => {
 };
 
 export default App;
+
+

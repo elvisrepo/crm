@@ -1,15 +1,32 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getOpportunities } from '../api/client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getOpportunities, createOpportunity, getAccounts } from '../api/client';
+import Modal from '../components/Modal';
+import OpportunityForm from '../components/OpportunityForm';
 import styles from './OpportunitiesPage.module.css';
 
 const OpportunitiesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const queryClient = useQueryClient();
 
     const { data: opportunities = [], isLoading, isError, error } = useQuery({
         queryKey: ['opportunities'],
         queryFn: getOpportunities,
+    });
+
+    const { data: accounts } = useQuery({
+        queryKey: ['accounts'],
+        queryFn: getAccounts,
+    });
+
+    const createOpportunityMutation = useMutation({
+        mutationFn: createOpportunity,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['opportunities']);
+            setIsModalOpen(false);
+        },
     });
 
     const filteredOpportunities = opportunities.filter(opp =>
@@ -36,7 +53,9 @@ const OpportunitiesPage = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Opportunities</h1>
-                {/* Placeholder for New Opportunity button as requested */}
+                <button onClick={() => setIsModalOpen(true)} className={styles.newButton}>
+                    New Opportunity
+                </button>
             </div>
 
             <div className={styles.controls}>
@@ -87,8 +106,19 @@ const OpportunitiesPage = () => {
             <div className={styles.summary}>
                 Showing {filteredOpportunities.length} of {opportunities.length} opportunities
             </div>
+
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <OpportunityForm
+                    accounts={accounts}
+                    onSubmit={createOpportunityMutation.mutate}
+                    onCancel={() => setIsModalOpen(false)}
+                    isLoading={createOpportunityMutation.isLoading}
+                    error={createOpportunityMutation.error}
+                />
+            </Modal>
         </div>
     );
 };
 
 export default OpportunitiesPage;
+

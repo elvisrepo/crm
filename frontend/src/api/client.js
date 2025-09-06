@@ -192,7 +192,7 @@ export async function updateAccount(id, accountData) {
     return response.data;
 }
 
-export async function deleteAccount(id, version) {
+export async function deleteAccount({ id, version }) {
     const response = await api.delete(`/accounts/${id}/`, {
         data: { version }
     });
@@ -235,6 +235,28 @@ export async function deleteContact(id, version) {
 export async function getOpportunities() {
     const response = await api.get('/opportunities/')
     return response.data
+}
+
+export async function getOpportunity(id) {
+    const response = await api.get(`/opportunities/${id}/`);
+    return response.data;
+}
+
+export async function createOpportunity(opportunityData) {
+    const response = await api.post('/opportunities/', opportunityData);
+    return response.data;
+}
+
+export async function updateOpportunity(id, opportunityData) {
+    const response = await api.patch(`/opportunities/${id}/`, opportunityData);
+    return response.data;
+}
+
+export async function deleteOpportunity({ id, version }) {
+    const response = await api.delete(`/opportunities/${id}/`, {
+        data: { version }
+    });
+    return response.data;
 }
 
 

@@ -1,0 +1,92 @@
+ .container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    margin: 0;
+    color: #333;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.newButton,
+.editButton,
+.deleteButton {
+    background: #0176d3;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.newButton:hover,
+.editButton:hover,
+.deleteButton:hover {
+    background: #014486;
+}
+
+.editButton {
+    background-color: #6c757d;
+}
+
+.editButton:hover {
+    background-color: #5a6268;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+.deleteButton:disabled {
+    background-color: #f5c6cb;
+    cursor: not-allowed;
+}
+
+.detailCard {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.detailRow {
+    display: flex;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.detailRow:last-child {
+    border-bottom: none;
+}
+
+.detailLabel {
+    font-weight: 600;
+    color: #374151;
+    width: 200px;
+}
+
+.detailValue {
+    color: #6b7280;
+}
