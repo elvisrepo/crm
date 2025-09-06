@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Account
 from users.serializers import UserSerializer
 from contacts.models import Contact # Import Contact model
+from opportunities.models import Opportunity
 
 # Define a minimal ContactSummarySerializer here
 class ContactSummarySerializer(serializers.ModelSerializer):
@@ -9,10 +10,17 @@ class ContactSummarySerializer(serializers.ModelSerializer):
         model = Contact
         fields = ['id', 'first_name', 'last_name']
 
+
+class OpportunitySummarySerializer(serializers.ModelSerializer):
+     class Meta:
+         model =  Opportunity
+         fields =['id','name', 'stage','close_date']
+
 class AccountSerializer(serializers.ModelSerializer):
     """Main Account serializer for API operations."""
     child_accounts = serializers.SerializerMethodField()
     contacts = serializers.SerializerMethodField() # Use SerializerMethodField for contacts
+    opportunities = serializers.SerializerMethodField()
 
     class Meta:
         model = Account
@@ -20,7 +28,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'id', 'name', 'phone', 'website', 'type', 'description',
             'billing_address', 'shipping_address', 'parent_account','owner',
             'is_active', 'version', 'created_at', 'updated_at', 'child_accounts',
-            'contacts' # Add 'contacts' to fields
+            'contacts', 'opportunities'
         ]
 
         read_only_fields = ['id', 'created_at', 'updated_at', 'version','owner', 'child_accounts', 'contacts']
@@ -36,6 +44,10 @@ class AccountSerializer(serializers.ModelSerializer):
         contacts = obj.contacts.all()
         return ContactSummarySerializer(contacts, many=True).data
     
+    def get_opportunities(self, obj):
+        '''Return related opportunities for this account'''
+        opportunities = obj.opportunities.all()
+        return OpportunitySummarySerializer(opportunities, many=True).data
         
 
     def update(self, instance, validated_data):

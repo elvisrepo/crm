@@ -36,6 +36,10 @@ const OpportunityForm = ({ initialData, onSubmit, onCancel, isLoading, error, ac
         // Filter out empty fields before submitting
         const submittedData = Object.fromEntries(
             Object.entries(formData).filter(([_, value]) => value !== '')
+
+        // [['name', 'New Deal'], ['description', ''], ['stage', 'proposal']]. 
+        // keeps only the pairs where the value is not an empty string ('')
+
         );
         onSubmit(submittedData);
     };

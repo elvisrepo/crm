@@ -107,6 +107,7 @@ const AccountPage = () => {
                 </div>
 
                 {/* New section for Related Contacts */}
+                {/* New section for Related Contacts */}
                 <div className={`${styles.detailCard} ${styles.relatedContactsCard}`}>
                     <h2>Related Contacts</h2>
                     {account?.contacts && account.contacts.length > 0 ? (
@@ -121,6 +122,23 @@ const AccountPage = () => {
                         </ul>
                     ) : (
                         <p>No contacts associated with this account.</p>
+                    )}
+                </div>
+
+                <div className={styles.detailCard}>
+                    <h2>Related Opportunities</h2>
+                    {account?.opportunities && account.opportunities.length > 0 ? (
+                        <ul>
+                            {account.opportunities.map((opp) => (
+                                <li key={opp.id}>
+                                    <Link to={`/opportunities/${opp.id}`}>
+                                        {opp.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No opportunities associated with this account.</p>
                     )}
                 </div>
             </div>
