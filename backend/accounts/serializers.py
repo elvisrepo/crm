@@ -41,12 +41,12 @@ class AccountSerializer(serializers.ModelSerializer):
     def get_contacts(self, obj):
         """Return related contacts for this account."""
         # obj.contacts.all() uses the related_name defined in Contact model
-        contacts = obj.contacts.all()
+        contacts = obj.contacts.filter(is_active=True)
         return ContactSummarySerializer(contacts, many=True).data
     
     def get_opportunities(self, obj):
         '''Return related opportunities for this account'''
-        opportunities = obj.opportunities.all()
+        opportunities = obj.opportunities.filter(is_active=True)
         return OpportunitySummarySerializer(opportunities, many=True).data
         
 
