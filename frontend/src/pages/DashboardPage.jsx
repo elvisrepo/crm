@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getAccounts, getContacts } from '../api/client';
+import { getAccounts, getContacts, getOpportunities } from '../api/client';
 import { Link } from 'react-router-dom';
 import styles from './DashboardPage.module.css'; // Import the CSS module
 
@@ -79,6 +79,48 @@ const ContactsSummary = () => {
     );
 };
 
+
+const OpportunitiesSummary = () => {
+
+    const { data: opportunities = [], isLoading, isError} = useQuery({
+        queryKey: ['opportunities'],
+        queryFn : getOpportunities,
+    })
+
+    if (isLoading) return <div className={styles.loading}>Loading Opportunity summary...</div>;
+    if (isError) return <div className={styles.error}>Could not load Opportunity summary.</div>;
+
+    const recentOpportunities = opportunities.slice(0,5)
+
+    return (
+        <div className={styles.card}>
+             <h2 className={styles.cardHeader}>Recent Opportunities</h2>
+             <div className={styles.cardContent}>
+                {recentOpportunities.length > 0 ?  (
+                    <ul>
+                        {recentOpportunities.map(opp => (
+                            <li key={opp.id}>
+                                <Link to={`/opportunities/${opp.id}`}>
+                                    {opp?.name}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p> No opportunities found.</p>
+                )
+                
+                }
+            </div>
+            <div className={styles.cardFooter}>
+                <Link to="/opportunities">View All ({opportunities.length})</Link>
+            </div>
+        </div>
+    )
+
+}
+
+
 const DashboardPage = () => {
   return (
     <div className={styles.container}>
@@ -88,6 +130,7 @@ const DashboardPage = () => {
       <div className={styles.grid}>
         <AccountsSummary />
         <ContactsSummary />
+        <OpportunitiesSummary />
         {/* You can add more summary cards here for Contacts, Opportunities, etc. */}
         {/* Example: <ContactsSummary /> */}
       </div>
