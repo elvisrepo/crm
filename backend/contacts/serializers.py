@@ -46,12 +46,13 @@ class ContactSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['owner', 'account'] # 'reports_to' is now handled by the nested serializer
         extra_kwargs = {
-            'version': {'read_only': True} # Version is managed by the backend
+            'version': {'read_only': False} # Version is managed by the backend
         }
 
     def update(self, instance, validated_data):
-        # Increment version first
-        instance.version += 1
-        # Then call super().update, which will apply validated_data and save the instance
-        # The incremented version will be saved along with other changes
+        """
+        Handle version increment for optimistic locking.
+        The version check is performed by the OptimisticLockingMixin in the view.
+        """
+        validated_data['version'] = instance.version + 1
         return super().update(instance, validated_data)

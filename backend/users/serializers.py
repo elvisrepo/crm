@@ -13,4 +13,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'version', 'is_active','role','accounts']
 
-        read_only_fields = ['role', 'is_active','version']
+        read_only_fields = ['role', 'is_active']
+        extra_kwargs = {
+            'version': {'read_only': False}
+        }
+
+    def update(self, instance, validated_data):
+       validated_data['version'] = instance.version + 1
+       return super().update(instance, validated_data)

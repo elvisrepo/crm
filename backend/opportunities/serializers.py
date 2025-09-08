@@ -23,10 +23,13 @@ class OpportunitySerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'owner', 'created_at', 'updated_at', 'account']
         extra_kwargs = {
-            'version': {'read_only': True}
+            'version': {'read_only': False}
         }
 
     def update(self, instance, validated_data):
-        """Handle optimistic locking on update."""
-        instance.version += 1
+        """
+        Handle version increment for optimistic locking.
+        The version check is performed by the OptimisticLockingMixin in the view.
+        """
+        validated_data['version'] = instance.version + 1
         return super().update(instance, validated_data)

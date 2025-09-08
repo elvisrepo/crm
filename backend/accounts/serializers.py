@@ -31,7 +31,10 @@ class AccountSerializer(serializers.ModelSerializer):
             'contacts', 'opportunities'
         ]
 
-        read_only_fields = ['id', 'created_at', 'updated_at', 'version','owner', 'child_accounts', 'contacts']
+        read_only_fields = ['id', 'created_at', 'updated_at','owner', 'child_accounts', 'contacts']
+        extra_kwargs = {
+            'version': {'read_only': False} 
+        }
 
     def get_child_accounts(self, obj):
         """Return child accounts for this account."""
@@ -51,8 +54,5 @@ class AccountSerializer(serializers.ModelSerializer):
         
 
     def update(self, instance, validated_data):
-        # Increment version first
-        instance.version += 1
-        # Then call super().update, which will apply validated_data and save the instance
-        # The incremented version will be saved along with other changes
-        return super().update(instance, validated_data)
+       validated_data['version'] = instance.version + 1
+       return super().update(instance, validated_data)
