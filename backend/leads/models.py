@@ -67,9 +67,4 @@ class Lead(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} from {self.company}"
 
-    def save(self, *args, **kwargs):
-        """Increment version for optimistic locking on updates."""
-        if self.pk:  # If updating existing record
-            # Version increment is handled by the serializer/view to prevent race conditions
-            pass
-        super().save(*args, **kwargs)
+  

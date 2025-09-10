@@ -6,7 +6,7 @@ class LeadSerializer(serializers.ModelSerializer):
     Serializer for the Lead model.
     Handles validation, ownership, and optimistic locking.
     """
-    owner_username = serializers.CharField(source='owner.username', read_only=True)
+    owner_username = serializers.CharField(source='owner.first_name', read_only=True)
 
     class Meta:
         model = Lead
