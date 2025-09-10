@@ -6,18 +6,20 @@ class Opportunity(models.Model):
     """
     Opportunity model representing potential revenue-generating events.
     """
-    
-    STAGE_CHOICES = [
-        ('qualification', 'Qualification'),
-        ('meet_present', 'Meet_Present'),
-        ('proposal', 'Proposal'),
-        ('negotiation', 'Negotiation'),
-        ('closed_won', 'Closed Won'),
-        ('closed_lost', 'Closed Lost'),
-    ]
+    class Stage(models.TextChoices):
+        QUALIFICATION = 'qualification', 'Qualification'
+        MEET_PRESENT = 'meet_present', 'Meet/Present'
+        PROPOSAL = 'proposal', 'Proposal'
+        NEGOTIATION = 'negotiation', 'Negotiation'
+        CLOSED_WON = 'closed_won', 'Closed Won'
+        CLOSED_LOST = 'closed_lost', 'Closed Lost'
 
     name = models.CharField(max_length=255)
-    stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default='qualification')
+    stage = models.CharField(
+        max_length=20, 
+        choices=Stage.choices, 
+        default=Stage.QUALIFICATION
+    )
     close_date = models.DateField(null=True, blank=True)
     next_step = models.TextField(blank=True)
     description = models.TextField(blank=True)
