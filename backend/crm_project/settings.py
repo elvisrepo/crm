@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'contacts', # Add this line
     'opportunities',
     'leads',
+    'products'
 ]
 
 MIDDLEWARE = [
