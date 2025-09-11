@@ -259,5 +259,38 @@ export async function deleteOpportunity({ id, version }) {
     return response.data;
 }
 
+// Leads API methods
+export async function getLeads() {
+    const response = await api.get('/leads/');
+    return response.data;
+}
+
+export async function getLead(id) {
+    const response = await api.get(`/leads/${id}/`);
+    return response.data;
+}
+
+export async function createLead(leadData) {
+    const response = await api.post('/leads/', leadData);
+    return response.data;
+}
+
+export async function updateLead(id, leadData) {
+    const response = await api.patch(`/leads/${id}/`, leadData);
+    return response.data;
+}
+
+export async function deleteLead({ id, version }) {
+    const response = await api.delete(`/leads/${id}/`, {
+        data: { version }
+    });
+    return response.data;
+}
+
+export async function convertLead({ id, conversionData }) {
+    const response = await api.post(`/leads/${id}/convert/`, conversionData);
+    return response.data;
+}
+
 
 export default api;

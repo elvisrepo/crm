@@ -11,6 +11,10 @@ import EditContactPage from './pages/EditContactPage';
 import OpportunitiesPage from './pages/OpportunitiesPage';
 import EditOpportunityPage from './pages/EditOpportunityPage';
 import OpportunityPage from './pages/OpportunityPage';
+import LeadPage from './pages/LeadPage';
+import LeadsPage from './pages/LeadsPage';
+import EditLeadPage from './pages/EditLeadPage';
+import ConvertLeadPage from './pages/ConvertLeadPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -38,6 +42,10 @@ const App = () => {
               <Route path="opportunities" element={< OpportunitiesPage />}   />
               <Route path="opportunities/:id" element={<OpportunityPage />} />
               <Route path="opportunities/:id/edit" element={<EditOpportunityPage />} />
+              <Route path="leads" element={<LeadsPage />}/>
+              <Route path="leads/:id" element={<LeadPage/>}/>
+              <Route path="leads/:id/edit" element={<EditLeadPage />} />
+              <Route path="leads/:id/convert" element={<ConvertLeadPage />} />
             </Route>
           </Route>
         </Routes>

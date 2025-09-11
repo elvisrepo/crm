@@ -27,6 +27,11 @@ const Sidebar = () => {
               Opportunities
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/leads" className={({ isActive }) => isActive ? styles.active : ''}>
+              Leads
+            </NavLink>
+          </li>
 
         </ul>
       </nav>

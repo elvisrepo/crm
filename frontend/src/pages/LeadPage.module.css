@@ -1,0 +1,114 @@
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header h1 {
+    margin: 0;
+    color: #333;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.button {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    display: inline-block;
+    text-align: center;
+}
+
+.convertButton {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.convertButton:hover {
+    background-color: #218838;
+}
+
+.editButton {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+.editButton:hover {
+    background-color: #0069d9;
+}
+
+.deleteButton {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+.deleteButton:disabled {
+    background-color: #e27c86;
+    cursor: not-allowed;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.detailCard {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.detailCard h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.75rem;
+}
+
+.field {
+    margin-bottom: 1rem;
+}
+
+.field label {
+    display: block;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.field span, .field p {
+    font-size: 1rem;
+    color: #374151;
+}
+
+.field p {
+    white-space: pre-wrap;
+    line-height: 1.5;
+}

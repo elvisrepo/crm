@@ -1,0 +1,146 @@
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #333;
+}
+
+.header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.infoSection {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #007bff;
+}
+
+.infoSection p {
+    margin: 0 0 0.5rem 0;
+}
+
+.dataGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dataGrid > div {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 4px;
+}
+
+.dataGrid strong {
+    display: block;
+    color: #555;
+    margin-bottom: 0.25rem;
+}
+
+.opportunitySection {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    margin-bottom: 2rem;
+}
+
+.opportunitySection h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.opportunityForm {
+    margin-top: 1rem;
+}
+
+.formGroupCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.formGroupCheckbox label {
+    font-weight: bold;
+    color: #333;
+}
+
+.formGroup {
+    margin-bottom: 1rem;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.formGroup input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.convertButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancelButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.errorMessage {
+    color: #dc3545;
+    margin-top: 1rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 0.75rem;
+    border-radius: 5px;
+}
