@@ -5,7 +5,7 @@ class ProductSerializer(serializers.ModelSerializer):
     """
     Serializer for the Product model.
     """
-    owner_username = serializers.CharField(source='owner.username', read_only=True)
+    owner_username = serializers.CharField(source='owner.first_name', read_only=True)
 
     class Meta:
         model = Product
