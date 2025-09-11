@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include('accounts.urls')), # Add this line
     path('', include('opportunities.urls')),
     path('', include('leads.urls')),
+    path('', include('products.urls')),
     path("admin/", admin.site.urls),
 
     
