@@ -4,3 +4,57 @@ Problem statement.
 
 Functional requirements. 
 User Stories for Account Management
+
+
+-------leads-------
+5 lead suggestions per day.  click to generate them.
+Contact them at the very least.
+if 3 leads today not clicked, tomorrow only 2 added, so 5 suggestions at a time only.
+
+
+if 20 concurrents leads - no more auto generated leads added, until you close some of the leads.
+
+suggestions div on top of the leads list view -- interested/ignore/delete ?
+
+
+----------
+
+
+css - re-using a lot.  merge or what?
+
+
+-------opp------
+stages on top.
+add products,  create product option and add it after? 
+amount based on opp_line_items 
+
+
+
+----accounts-----
+filtering/sorting 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------general-----
+filtering/sorting/  pagination? 
+ask llm for suggestions
+check jupyter notes I have
+history.
+track all interactions.
+
+
+edit/delete in all list views?

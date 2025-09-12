@@ -15,6 +15,9 @@ import LeadPage from './pages/LeadPage';
 import LeadsPage from './pages/LeadsPage';
 import EditLeadPage from './pages/EditLeadPage';
 import ConvertLeadPage from './pages/ConvertLeadPage';
+import ProductsPage from './pages/ProductsPage';
+import EditProductPage from './pages/EditProductPage';
+import ProductPage from './pages/ProductPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -46,6 +49,9 @@ const App = () => {
               <Route path="leads/:id" element={<LeadPage/>}/>
               <Route path="leads/:id/edit" element={<EditLeadPage />} />
               <Route path="leads/:id/convert" element={<ConvertLeadPage />} />
+              <Route path="products" element={<ProductsPage />} />
+              <Route path="products/:id" element={<ProductPage />} />
+              <Route path="products/:id/edit" element={<EditProductPage />} />
             </Route>
           </Route>
         </Routes>
