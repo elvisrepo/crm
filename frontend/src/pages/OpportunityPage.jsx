@@ -5,18 +5,23 @@ import {
     getOpportunity,
     deleteOpportunity,
     getProducts,
+    createProduct,
     addLineItemToOpportunity,
     deleteLineItem
 } from '../api/client';
 import Modal from '../components/Modal';
 import LineItemForm from '../components/LineItemForm';
+import ProductForm from '../components/ProductForm';
 import styles from './OpportunityPage.module.css';
 
 const OpportunityPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
+    const [isNewProductModalOpen, setNewProductModalOpen] = useState(false);
+    const [newlyCreatedProductId, setNewlyCreatedProductId] = useState(null);
+
 
     // Fetch the opportunity details
     const { data: opportunity, isLoading, isError, error } = useQuery({
@@ -44,7 +49,20 @@ const OpportunityPage = () => {
         mutationFn: (lineItemData) => addLineItemToOpportunity(id, lineItemData),
         onSuccess: () => {
             queryClient.invalidateQueries(['opportunity', id]);
-            setIsModalOpen(false);
+            setAddProductModalOpen(false);
+        },
+    });
+
+    // Mutation for creating a new product
+    const createProductMutation = useMutation({
+        mutationFn: createProduct,
+        onSuccess: (newProduct) => {
+            // Invalidate products to refetch the list with the new one
+            queryClient.invalidateQueries(['products']).then(() => {
+                // Once refetched, set the new product ID to auto-select it
+                setNewlyCreatedProductId(newProduct.id);
+                setNewProductModalOpen(false);
+            });
         },
     });
 
@@ -71,6 +89,12 @@ const OpportunityPage = () => {
             });
         }
     };
+
+    // When the "Add Product" modal is closed, reset the newly created product ID
+    const handleCloseAddProductModal = () => {
+        setAddProductModalOpen(false);
+        setNewlyCreatedProductId(null);
+    }
 
     if (isLoading) {
         return <div className={styles.container}>Loading opportunity details...</div>;
@@ -130,7 +154,7 @@ const OpportunityPage = () => {
             <div className={styles.lineItemsCard}>
                 <div className={styles.cardHeader}>
                     <h2>Products</h2>
-                    <button onClick={() => setIsModalOpen(true)} className={styles.addButton}>
+                    <button onClick={() => setAddProductModalOpen(true)} className={styles.addButton}>
                         Add Product
                     </button>
                 </div>
@@ -172,13 +196,26 @@ const OpportunityPage = () => {
                 </table>
             </div>
 
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {/* Modal for adding a line item */}
+            <Modal isOpen={isAddProductModalOpen} onClose={handleCloseAddProductModal}>
                 <LineItemForm
                     products={products}
                     onSubmit={addLineItemMutation.mutate}
-                    onCancel={() => setIsModalOpen(false)}
+                    onCancel={handleCloseAddProductModal}
                     isLoading={addLineItemMutation.isLoading}
                     error={addLineItemMutation.error}
+                    onNewProductClick={() => setNewProductModalOpen(true)}
+                    newlyCreatedProductId={newlyCreatedProductId}
+                />
+            </Modal>
+
+            {/* Modal for creating a new product */}
+            <Modal isOpen={isNewProductModalOpen} onClose={() => setNewProductModalOpen(false)}>
+                <ProductForm
+                    onSubmit={createProductMutation.mutate}
+                    onCancel={() => setNewProductModalOpen(false)}
+                    isLoading={createProductMutation.isLoading}
+                    error={createProductMutation.error}
                 />
             </Modal>
         </div>

@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react';
 import styles from './LineItemForm.module.css';
 
-const LineItemForm = ({ onSubmit, onCancel, isLoading, error, products }) => {
+const LineItemForm = ({ 
+    onSubmit, 
+    onCancel, 
+    isLoading, 
+    error, 
+    products, 
+    onNewProductClick,
+    newlyCreatedProductId
+}) => {
     const [formData, setFormData] = useState({
         product_id: '',
         quantity: 1,
@@ -9,20 +17,27 @@ const LineItemForm = ({ onSubmit, onCancel, isLoading, error, products }) => {
     });
     const [selectedProductPrice, setSelectedProductPrice] = useState('');
 
+    // Effect to auto-select a newly created product
+    useEffect(() => {
+        if (newlyCreatedProductId) {
+            setFormData(prev => ({ ...prev, product_id: newlyCreatedProductId }));
+        }
+    }, [newlyCreatedProductId]);
+
+    // Effect to update sale price when product changes
     useEffect(() => {
         if (formData.product_id) {
             const selectedProduct = products.find(p => p.id === parseInt(formData.product_id));
             if (selectedProduct) {
                 const price = parseFloat(selectedProduct.standard_list_price).toFixed(2);
                 setSelectedProductPrice(price);
-                // Set sale_price only if it's empty
-                if (formData.sale_price === '') {
-                    setFormData(prev => ({ ...prev, sale_price: price }));
-                }
+                // Always update the sale_price to the new product's list price
+                setFormData(prev => ({ ...prev, sale_price: price }));
             }
         } else {
             // Reset if no product is selected
             setSelectedProductPrice('');
+            setFormData(prev => ({ ...prev, sale_price: '' }));
         }
     }, [formData.product_id, products]);
 
@@ -33,6 +48,11 @@ const LineItemForm = ({ onSubmit, onCancel, isLoading, error, products }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // Guard against submission if no product is selected
+        if (!formData.product_id) {
+            alert('Please select a product.');
+            return;
+        }
         const submissionData = {
             ...formData,
             quantity: parseInt(formData.quantity, 10),
@@ -47,20 +67,25 @@ const LineItemForm = ({ onSubmit, onCancel, isLoading, error, products }) => {
             <h2>Add Product to Opportunity</h2>
             <div className={styles.formGroup}>
                 <label htmlFor="product_id">Product*</label>
-                <select
-                    id="product_id"
-                    name="product_id"
-                    value={formData.product_id}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Select a Product</option>
-                    {products?.map(product => (
-                        <option key={product.id} value={product.id}>
-                            {product.name}
-                        </option>
-                    ))}
-                </select>
+                <div className={styles.productSelector}>
+                    <select
+                        id="product_id"
+                        name="product_id"
+                        value={formData.product_id}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select a Product</option>
+                        {products?.map(product => (
+                            <option key={product.id} value={product.id}>
+                                {product.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button type="button" onClick={onNewProductClick} className={styles.newProductButton}>
+                        New
+                    </button>
+                </div>
                 {selectedProductPrice && <small>List Price: ${selectedProductPrice}</small>}
             </div>
 
