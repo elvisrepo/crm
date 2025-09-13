@@ -1,4 +1,4 @@
- .container {
+.container {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -89,4 +89,85 @@
 
 .detailValue {
     color: #6b7280;
+}
+
+.totalValue {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #28a745;
+}
+
+.lineItemsCard {
+    margin-top: 2rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cardHeader h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.addButton {
+    background: #28a745;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.addButton:hover {
+    background: #218838;
+}
+
+.lineItemsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lineItemsTable th, .lineItemsTable td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.lineItemsTable th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.noItems {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.deleteItemButton {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.deleteItemButton:hover {
+    text-decoration: underline;
+}
+
+.deleteItemButton:disabled {
+    color: #6c757d;
+    cursor: not-allowed;
 }

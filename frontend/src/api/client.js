@@ -320,5 +320,18 @@ export async function deleteProduct({ id, version }) {
     return response.data;
 }
 
+// Opportunity Line Items API methods
+export async function addLineItemToOpportunity(opportunityId, lineItemData) {
+    const response = await api.post(`/opportunities/${opportunityId}/line_items/`, lineItemData);
+    return response.data;
+}
+
+export async function deleteLineItem({ opportunityId, lineItemId, version }) {
+    const response = await api.delete(`/opportunities/${opportunityId}/line_items/${lineItemId}/`, {
+        data: { version }
+    });
+    return response.data;
+}
+
 
 export default api;
