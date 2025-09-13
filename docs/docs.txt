@@ -58,3 +58,14 @@ track all interactions.
 
 
 edit/delete in all list views?
+
+
+order date - opp_created to get the time it took to close deal 
+create a report based on this?
+
+auto generated leads- not from hardcoded data.
+Option to add data/file of a certain format.  company name, phone, etc.
+
+store earlier data somewhere? previous payments and so on.
+
+Report on payments?
