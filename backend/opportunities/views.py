@@ -1,10 +1,14 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from django.shortcuts import get_object_or_404
+from django.db import transaction
+from rest_framework.response import Response
 
 from .models import Opportunity, OpportunityLineItem
 from .serializers import OpportunitySerializer, OpportunityLineItemSerializer
 from common.mixins import OptimisticLockingSoftDeleteMixin
+from orders.models import Order, OrderLineItem
+from orders.serializers import OrderSerializer
 
 # --- Opportunity Views ---
 
@@ -29,6 +33,50 @@ class OpportunityDetail(OptimisticLockingSoftDeleteMixin, generics.RetrieveUpdat
     def get_queryset(self):
         """Users can only access opportunities they own."""
         return Opportunity.objects.filter(owner=self.request.user)
+
+class GenerateOrderFromOpportunity(generics.GenericAPIView):
+    """
+    A view to generate an order from a 'Closed Won' opportunity.
+    """
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Opportunity.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        opportunity = self.get_object()
+
+        if opportunity.stage != 'closed_won':
+            return Response(
+                {'error': 'Order can only be generated for opportunities that are "closed_won".'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if Order.objects.filter(opportunity=opportunity).exists():
+            return Response(
+                {'error': 'An order has already been generated for this opportunity.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        with transaction.atomic():
+            # Create the Order
+            order = Order.objects.create(
+                account=opportunity.account,
+                opportunity=opportunity,
+                status='Awaiting Payment'
+            )
+
+            # Create OrderLineItems from OpportunityLineItems
+            line_items = opportunity.line_items.all()
+            for item in line_items:
+                OrderLineItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price_at_purchase=item.sale_price
+                )
+
+            serializer = OrderSerializer(order)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # --- Nested Opportunity Line Item Views ---
@@ -57,7 +105,7 @@ class OpportunityLineItemDetail(OptimisticLockingSoftDeleteMixin, generics.Retri
     """View for retrieving, updating, and deleting a single Line Item."""
     serializer_class = OpportunityLineItemSerializer
     permission_classes = [IsAuthenticated, IsOpportunityOwner]
-    
+
     def get_queryset(self):
         """Filter line items to only those belonging to the specified opportunity."""
         return OpportunityLineItem.objects.filter(opportunity_id=self.kwargs['opportunity_pk'])
