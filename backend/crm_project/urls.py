@@ -14,6 +14,7 @@ urlpatterns = [
     path('', include('opportunities.urls')),
     path('', include('leads.urls')),
     path('', include('products.urls')),
+    path('', include('orders.urls')),
     path("admin/", admin.site.urls),
 
     
