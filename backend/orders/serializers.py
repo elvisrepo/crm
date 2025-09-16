@@ -27,15 +27,16 @@ class OrderSerializer(serializers.ModelSerializer):
     line_items = OrderLineItemSerializer(many=True, read_only=True)
     total_amount = serializers.DecimalField( read_only=True, max_digits=12, decimal_places=2)
     account_name = serializers.CharField(source='account.name', read_only=True)
+    opportunity_name = serializers.CharField(source='opportunity.name', read_only=True)
 
     class Meta:
         model = Order
         fields = [
-            'id', 'order_date', 'status', 'account', 'account_name', 'opportunity',
+            'id', 'order_date', 'status', 'account', 'account_name', 'opportunity','opportunity_name',
             'version', 'created_at', 'updated_at', 'line_items', 'total_amount'
         ]
         read_only_fields = ['id', 'order_date', 'created_at', 'updated_at', 'total_amount', 'account_name'
-                            ,'opportunity']
+                            ,'opportunity','opportunity_name']
 
     def update(self, instance, validated_data):
         validated_data['version'] = instance.version + 1

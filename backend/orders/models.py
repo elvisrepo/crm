@@ -38,7 +38,7 @@ class Order(models.Model):
 
     @property
     def total_amount(self):
-        return sum(item.sale_price * item.quantity for item in self.line_items.all())
+        return sum(item.price_at_purchase * item.quantity for item in self.line_items.all())
 
 
 class OrderLineItem(models.Model):

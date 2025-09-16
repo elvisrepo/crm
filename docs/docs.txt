@@ -69,3 +69,10 @@ Option to add data/file of a certain format.  company name, phone, etc.
 store earlier data somewhere? previous payments and so on.
 
 Report on payments?
+
+
+general search.  embedded store?
+automated leads, email integration, calendar integration. 
+what other automations? 
+notifications.
+abilitiy to send mass emails, campaigns.   Can sell app to others, think how would it work without leads e.g.

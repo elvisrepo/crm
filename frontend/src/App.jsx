@@ -18,6 +18,9 @@ import ConvertLeadPage from './pages/ConvertLeadPage';
 import ProductsPage from './pages/ProductsPage';
 import EditProductPage from './pages/EditProductPage';
 import ProductPage from './pages/ProductPage';
+import OrdersPage from './pages/OrdersPage';
+import OrderPage from './pages/OrderPage';
+import EditOrderPage from './pages/EditOrderPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -52,6 +55,9 @@ const App = () => {
               <Route path="products" element={<ProductsPage />} />
               <Route path="products/:id" element={<ProductPage />} />
               <Route path="products/:id/edit" element={<EditProductPage />} />
+              <Route path="orders" element={<OrdersPage />} />
+              <Route path="orders/:id" element={<OrderPage />} />
+              <Route path="orders/:id/edit" element={<EditOrderPage />} />
             </Route>
           </Route>
         </Routes>

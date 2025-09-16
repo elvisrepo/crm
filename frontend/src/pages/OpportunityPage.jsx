@@ -7,7 +7,8 @@ import {
     getProducts,
     createProduct,
     addLineItemToOpportunity,
-    deleteLineItem
+    deleteLineItem,
+    createOrderFromOpportunity
 } from '../api/client';
 import Modal from '../components/Modal';
 import LineItemForm from '../components/LineItemForm';
@@ -74,6 +75,14 @@ const OpportunityPage = () => {
         },
     });
 
+    const createOrderMutation = useMutation({
+        mutationFn: () => createOrderFromOpportunity(id),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['orders']);
+            navigate(`/orders/${data.id}`);
+        },
+    });
+
     const handleDeleteOpportunity = () => {
         if (window.confirm('Are you sure you want to delete this opportunity?')) {
             deleteOpportunityMutation.mutate({ id: opportunity.id, version: opportunity.version });
@@ -117,6 +126,15 @@ const OpportunityPage = () => {
             <div className={styles.header}>
                 <h1>{opportunity.name}</h1>
                 <div className={styles.actions}>
+                    {opportunity.stage === 'closed_won' && (
+                        <button 
+                            onClick={() => createOrderMutation.mutate()}
+                            className={styles.generateOrderButton}
+                            disabled={createOrderMutation.isLoading}
+                        >
+                            {createOrderMutation.isLoading ? 'Generating Order...' : 'Generate Order'}
+                        </button>
+                    )}
                     <Link to={`/opportunities/${opportunity.id}/edit`} className={styles.editButton}>
                         Edit Opportunity
                     </Link>

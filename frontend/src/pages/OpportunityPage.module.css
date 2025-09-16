@@ -64,6 +64,27 @@
     cursor: not-allowed;
 }
 
+.generateOrderButton {
+    background-color: #28a745;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.generateOrderButton:hover {
+    background-color: #218838;
+}
+
+.generateOrderButton:disabled {
+    background-color: #a3d9b3;
+    cursor: not-allowed;
+}
+
 .detailCard {
     background: white;
     border-radius: 0.5rem;

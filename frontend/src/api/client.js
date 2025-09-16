@@ -333,5 +333,26 @@ export async function deleteLineItem({ opportunityId, lineItemId, version }) {
     return response.data;
 }
 
+// Order API methods
+export async function getOrders() {
+    const response = await api.get('/orders/');
+    return response.data;
+}
+
+export async function getOrder(id) {
+    const response = await api.get(`/orders/${id}/`);
+    return response.data;
+}
+
+export async function createOrderFromOpportunity(opportunityId) {
+    const response = await api.post(`/opportunities/${opportunityId}/generate-order/`);
+    return response.data;
+}
+
+export async function updateOrder(id, orderData) {
+    const response = await api.patch(`/orders/${id}/`, orderData);
+    return response.data;
+}
+
 
 export default api;

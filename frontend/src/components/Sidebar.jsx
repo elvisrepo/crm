@@ -37,6 +37,11 @@ const Sidebar = () => {
               Products
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/orders" className={({ isActive }) => isActive ? styles.active : ''}>
+              Orders
+            </NavLink>
+          </li>
 
         </ul>
       </nav>
