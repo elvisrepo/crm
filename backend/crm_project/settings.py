@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'opportunities',
     'leads',
     'products',
-    'orders'
+    'orders',
+    'contracts'
 ]
 
 MIDDLEWARE = [
