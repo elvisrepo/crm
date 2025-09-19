@@ -3,12 +3,15 @@ from rest_framework.permissions import IsAuthenticated, BasePermission
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from rest_framework.response import Response
+from datetime import date, timedelta
 
 from .models import Opportunity, OpportunityLineItem
 from .serializers import OpportunitySerializer, OpportunityLineItemSerializer
 from common.mixins import OptimisticLockingSoftDeleteMixin
 from orders.models import Order, OrderLineItem
 from orders.serializers import OrderSerializer
+from contracts.models import Contract, ContractLineItem
+from contracts.serializers import ContractSerializer
 
 # --- Opportunity Views ---
 
@@ -57,6 +60,14 @@ class GenerateOrderFromOpportunity(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # Check if there are any non-retainer products to create an order from
+        line_items = opportunity.line_items.filter(product__is_retainer_product=False)
+        if not line_items.exists():
+            return Response(
+                {'error': 'This opportunity has no non-retainer products to create an order from.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         with transaction.atomic():
             # Create the Order
             order = Order.objects.create(
@@ -65,8 +76,7 @@ class GenerateOrderFromOpportunity(generics.GenericAPIView):
                 status='Awaiting Payment'
             )
 
-            # Create OrderLineItems from OpportunityLineItems
-            line_items = opportunity.line_items.all()
+            # Create OrderLineItems from the filtered list
             for item in line_items:
                 OrderLineItem.objects.create(
                     order=order,
@@ -76,6 +86,63 @@ class GenerateOrderFromOpportunity(generics.GenericAPIView):
                 )
 
             serializer = OrderSerializer(order)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class GenerateContractFromOpportunity(generics.GenericAPIView):
+    """
+    A view to generate a contract from a 'Closed Won' opportunity,
+    including only line items for products marked as 'retainer' products.
+    """
+    serializer_class = ContractSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Opportunity.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        opportunity = self.get_object()
+
+        if opportunity.stage != 'closed_won':
+            return Response(
+                {'error': 'Contract can only be generated for opportunities that are "closed_won".'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if Contract.objects.filter(opportunity=opportunity).exists():
+            return Response(
+                {'error': 'A contract has already been generated for this opportunity.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        retainer_line_items = opportunity.line_items.filter(product__is_retainer_product=True)
+        if not retainer_line_items.exists():
+            return Response(
+                {'error': 'This opportunity has no retainer products to create a contract from.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        with transaction.atomic():
+            # Create the Contract
+            today = date.today()
+            contract = Contract.objects.create(
+                account=opportunity.account,
+                opportunity=opportunity,
+                owner=request.user,
+                status='Awaiting Payment',
+                start_date=today,
+                end_date=today + timedelta(days=365), # Default to a 1-year contract
+                billing_cycle='Monthly' # Default to monthly billing
+            )
+
+            # Create ContractLineItems from retainer OpportunityLineItems
+            for item in retainer_line_items:
+                ContractLineItem.objects.create(
+                    contract=contract,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price_per_cycle=item.product.standard_list_price
+                )
+
+            serializer = self.get_serializer(contract)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

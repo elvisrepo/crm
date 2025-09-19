@@ -6,6 +6,7 @@ urlpatterns = [
     path('opportunities/', views.OpportunityList.as_view(), name='opportunity-list'),
     path('opportunities/<int:pk>/', views.OpportunityDetail.as_view(), name='opportunity-detail'),
     path('opportunities/<int:pk>/generate-order/', views.GenerateOrderFromOpportunity.as_view(), name='opportunity-generate-order'),
+    path('opportunities/<int:pk>/generate-contract/', views.GenerateContractFromOpportunity.as_view(), name='opportunity-generate-contract'),
 
     # Nested line item routes
     path(

@@ -15,7 +15,7 @@ class OpportunitySummarySerializer(serializers.ModelSerializer):
 class ProductSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'name', 'standard_list_price']
+        fields = ['id', 'name', 'standard_list_price','is_retainer_product']
 
 class OpportunityLineItemSerializer(serializers.ModelSerializer):
     """Serializer for OpportunityLineItem model."""
