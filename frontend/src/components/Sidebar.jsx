@@ -42,6 +42,11 @@ const Sidebar = () => {
               Orders
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/contracts" className={({ isActive }) => isActive ? styles.active : ''}>
+              Contracts
+            </NavLink>
+          </li>
 
         </ul>
       </nav>

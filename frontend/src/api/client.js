@@ -355,4 +355,22 @@ export async function updateOrder(id, orderData) {
 }
 
 
+// Contracts API methods
+
+export async function getContracts() {
+    const response = await api.get('/contracts/')
+    return response.data
+}
+
+export async function getContract(id) {
+    const response = await api.get(`/contracts/${id}/`)
+    return response.data
+}
+
+export async function updateContract(id, contractData) {
+    const response = await api.patch(`/contracts/${id}/`, contractData)
+    return response.data
+}
+
+
 export default api;

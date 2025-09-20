@@ -35,7 +35,7 @@ class ContractSerializer(serializers.ModelSerializer):
             'line_items', 'total_amount_per_cycle'
         ]
         read_only_fields = [
-            'id', 'created_at', 'updated_at', 'total_amount_per_cycle', 'account_name', 
+            'id', 'created_at', 'updated_at', 'total_amount_per_cycle', 'account_name', 'opportunity',
             'opportunity_name'
         ]
 

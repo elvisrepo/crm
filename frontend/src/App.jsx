@@ -23,6 +23,9 @@ import OrderPage from './pages/OrderPage';
 import EditOrderPage from './pages/EditOrderPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
+import ContractsPage from './pages/ContractsPage';
+import ContractPage from './pages/ContractPage';
+import EditContractPage from './pages/EditContractPage';
 import RequireAuth from './auth/RequireAuth';
 
 const queryClient = new QueryClient();
@@ -58,6 +61,10 @@ const App = () => {
               <Route path="orders" element={<OrdersPage />} />
               <Route path="orders/:id" element={<OrderPage />} />
               <Route path="orders/:id/edit" element={<EditOrderPage />} />
+
+              <Route path="contracts" element={<ContractsPage />} />
+              <Route path="contracts/:id" element={<ContractPage />} />
+              <Route path="contracts/:id/edit" element={<EditContractPage />} />
             </Route>
           </Route>
         </Routes>
