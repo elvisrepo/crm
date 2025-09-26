@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Invoice, InvoiceLineItem
 from products.models import Product
+from accounts.serializers import AccountSerializer
 
 # A simple serializer to show product details within a line item
 class ProductSummarySerializer(serializers.ModelSerializer):
@@ -30,6 +31,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     order_str = serializers.StringRelatedField(source='order', read_only=True)
     contract_str = serializers.StringRelatedField(source='contract', read_only=True)
+    account = AccountSerializer(read_only=True)
 
     class Meta:
         model = Invoice
@@ -37,7 +39,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
             'id', 'invoice_number', 'issue_date', 'due_date', 'total_amount',
             'balance_due', 'status', 'status_display', 'order', 'contract',
             'order_str', 'contract_str', 'notes', 'is_active', 'version',
-            'created_at', 'updated_at', 'line_items'
+            'created_at', 'updated_at', 'line_items','account'
         ]
         read_only_fields = [
             'id', 'invoice_number', 'total_amount', 'balance_due',
