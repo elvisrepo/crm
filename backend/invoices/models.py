@@ -2,24 +2,31 @@ from django.db import models
 
 class Invoice(models.Model):
     class Status(models.TextChoices):
-        DRAFT = 'draft', 'Draft'
-        SENT = 'sent', 'Sent'
-        PARTIALLY_PAID = 'partially_paid', 'Partially Paid'
-        PAID = 'paid', 'Paid'
-        OVERDUE = 'overdue', 'Overdue'
-        CANCELLED = 'cancelled', 'Cancelled'
+        AWAITING_PAYMENT = 'Awaiting Payment', 'Awaiting Payment'
+        PARTIALLY_PAID = 'Partially Paid', 'Partially Paid'
+        PAID_IN_FULL = 'Paid in Full', 'Paid in Full'
+        FULFILLED = 'Fulfilled', 'Fulfilled'
+        CANCELLED = 'Cancelled', 'Cancelled'
 
     invoice_number = models.CharField(max_length=255, unique=True)
     issue_date = models.DateField()
     due_date = models.DateField()
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
     balance_due = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(
         max_length=20, 
         choices=Status.choices, 
-        default=Status.DRAFT
+        default=Status.AWAITING_PAYMENT
     )
-    
+
+    account = models.ForeignKey(
+        'accounts.Account',
+        on_delete=models.CASCADE,
+        related_name='invoices',
+        null=True,
+        blank=True
+    )
+
     order = models.ForeignKey(
         'orders.Order', 
         on_delete=models.SET_NULL, 
@@ -53,6 +60,10 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.get_status_display()}"
+    
+    @property
+    def total_amount(self):
+        return sum(item.quantity * item.unit_price for item in self.line_items.all())
 
 class InvoiceLineItem(models.Model):
     invoice = models.ForeignKey(

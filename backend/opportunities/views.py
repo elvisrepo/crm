@@ -37,6 +37,7 @@ class OpportunityDetail(OptimisticLockingSoftDeleteMixin, generics.RetrieveUpdat
         """Users can only access opportunities they own."""
         return Opportunity.objects.filter(owner=self.request.user)
 
+## this view uses serializer only for serialization(output)
 class GenerateOrderFromOpportunity(generics.GenericAPIView):
     """
     A view to generate an order from a 'Closed Won' opportunity.
