@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
+from datetime import timedelta
+
 from accounts.models import Account
 from opportunities.models import Opportunity
 from products.models import Product
@@ -46,6 +50,25 @@ class Contract(models.Model):
     @property
     def total_amount_per_cycle(self):
         return sum(item.price_per_cycle * item.quantity for item in self.line_items.all())
+
+    def get_current_billing_cycle(self):
+        """
+        Calculates the start and end dates of the current billing cycle.
+        This method is timezone-aware.
+        Returns a tuple (start_date, end_date) or (None, None) if invalid.
+        """
+        today = timezone.now().date()
+
+        if self.billing_cycle == 'Monthly':
+            cycle_start = today.replace(day=1)
+            cycle_end = cycle_start + relativedelta(months=1) - timedelta(days=1)
+            return cycle_start, cycle_end
+        elif self.billing_cycle == 'Annually':
+            cycle_start = today.replace(month=1, day=1)
+            cycle_end = cycle_start + relativedelta(years=1) - timedelta(days=1)
+            return cycle_start, cycle_end
+        
+        return None, None # Should not be reached with valid data
 
 
 class ContractLineItem(models.Model):
