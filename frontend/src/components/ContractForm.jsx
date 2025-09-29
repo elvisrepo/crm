@@ -5,15 +5,17 @@ const ContractForm = ({ initialData, onSubmit, onCancel, isLoading, error }) => 
     
 
     const [formData, setFormData] = useState({
-        status: '',
+        status: 'Draft',
         start_date: '',
         end_date: '',
     });
 
     useEffect(() => {
+        const validStatuses = ['Draft', 'Active', 'Expired', 'Terminated', 'Cancelled'];
         if (initialData) {
+            const initialStatus = initialData.status;
             setFormData({
-                status: initialData.status || '',
+                status: validStatuses.includes(initialStatus) ? initialStatus : 'Draft',
                 start_date: initialData.start_date || '',
                 end_date: initialData.end_date || '',
             });
@@ -36,11 +38,11 @@ const ContractForm = ({ initialData, onSubmit, onCancel, isLoading, error }) => 
             <div className={styles.formGroup}>
                 <label htmlFor="status">Status</label>
                 <select id="status" name="status" value={formData.status} onChange={handleChange}>
-                    <option value="Awaiting Payment">Awaiting Payment</option>
-                                <option value="Partially Paid">Partially Paid</option>
-                                <option value="Paid in Full">Paid in Full</option>
-                                <option value="Fulfilled">Fulfilled</option>
-                                <option value="Cancelled">Cancelled</option>
+                    <option value="Draft">Draft</option>
+                    <option value="Active">Active</option>
+                    <option value="Expired">Expired</option>
+                    <option value="Terminated">Terminated</option>
+                    <option value="Cancelled">Cancelled</option>
                 </select>
             </div>
             <div className={styles.formGroup}>

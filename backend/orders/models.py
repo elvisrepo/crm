@@ -8,15 +8,15 @@ User = get_user_model()
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('Awaiting Payment', 'Awaiting Payment'),
-        ('Partially Paid', 'Partially Paid'),
-        ('Paid in Full', 'Paid in Full'),
-        ('Fulfilled', 'Fulfilled'),
+        ('Pending Fulfillment', 'Pending Fulfillment'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
     ]
 
     order_date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Awaiting Payment')
+    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default='Pending Fulfillment')
     account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='orders')
     opportunity = models.ForeignKey(Opportunity, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
     version = models.IntegerField(default=1)

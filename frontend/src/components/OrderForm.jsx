@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import styles from './OrderForm.module.css';
 
 const OrderForm = ({ initialData, onSubmit, onCancel, isLoading, error }) => {
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState('Pending Fulfillment');
 
     useEffect(() => {
+        const validStatuses = ['Pending Fulfillment', 'Shipped', 'Delivered', 'Completed', 'Cancelled'];
         if (initialData) {
-            setStatus(initialData.status || '');
+            const initialStatus = initialData.status;
+            setStatus(validStatuses.includes(initialStatus) ? initialStatus : 'Pending Fulfillment');
         }
     }, [initialData]);
 
@@ -21,10 +23,10 @@ const OrderForm = ({ initialData, onSubmit, onCancel, isLoading, error }) => {
             <div className={styles.formGroup}>
                 <label htmlFor="status">Order Status</label>
                 <select id="status" name="status" value={status} onChange={(e) => setStatus(e.target.value)}>
-                    <option value="Awaiting Payment">Awaiting Payment</option>
-                    <option value="Partially Paid">Partially Paid</option>
-                    <option value="Paid in Full">Paid in Full</option>
-                    <option value="Fulfilled">Fulfilled</option>
+                    <option value="Pending Fulfillment">Pending Fulfillment</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
                 </select>
             </div>

@@ -12,10 +12,10 @@ User = get_user_model()
 
 class Contract(models.Model):
     STATUS_CHOICES = [
-        ('Awaiting Payment', 'Awaiting Payment'),
-        ('Partially Paid', 'Partially Paid'),
-        ('Paid in Full', 'Paid in Full'),
-        ('Fulfilled', 'Fulfilled'),
+        ('Draft', 'Draft'),
+        ('Active', 'Active'),
+        ('Expired', 'Expired'),
+        ('Terminated', 'Terminated'),
         ('Cancelled', 'Cancelled'),
     ]
 
@@ -24,7 +24,7 @@ class Contract(models.Model):
         ('Annually', 'Annually'),
     ]
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Awaiting Payment')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Draft')
     start_date = models.DateField()
     end_date = models.DateField()
     billing_cycle = models.CharField(max_length=20, choices=BILLING_CYCLE_CHOICES)
