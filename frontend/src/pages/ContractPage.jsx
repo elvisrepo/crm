@@ -1,14 +1,27 @@
-import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getContract } from '../api/client';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getContract, generateInvoiceFromContract } from '../api/client';
 import styles from './ContractPage.module.css';
 
 const ContractPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const { data: contract, isLoading, isError, error } = useQuery({
         queryKey: ['contract', id],
         queryFn: () => getContract(id),
+    });
+
+    const generateInvoiceMutation = useMutation({
+        mutationFn: () => generateInvoiceFromContract(id),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['contract', id] });
+            navigate(`/invoices/${data.id}`);
+        },
+        onError: (error) => {
+            console.error("Error generating invoice:", error);
+        }
     });
 
     if (isLoading) {
@@ -31,8 +44,21 @@ const ContractPage = () => {
                     <Link to={`/contracts/${contract.id}/edit`} className={styles.editButton}>
                         Edit Contract
                     </Link>
+                    <button 
+                        onClick={() => generateInvoiceMutation.mutate()}
+                        className={styles.generateButton}
+                        disabled={generateInvoiceMutation.isPending}
+                    >
+                        {generateInvoiceMutation.isPending ? 'Generating...' : 'Generate Invoice'}
+                    </button>
                 </div>
             </div>
+
+            {generateInvoiceMutation.isError && (
+                <div className={styles.errorBanner}>
+                    Failed to generate invoice: {generateInvoiceMutation.error.response?.data?.error || generateInvoiceMutation.error.message}
+                </div>
+            )}
 
             <div className={styles.detailCard}>
                 <div className={styles.detailRow}>

@@ -1,14 +1,30 @@
-import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getOrder } from '../api/client';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getOrder, generateInvoiceFromOrder } from '../api/client';
 import styles from './OrderPage.module.css';
 
 const OrderPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const { data: order, isLoading, isError, error } = useQuery({
         queryKey: ['order', id],
         queryFn: () => getOrder(id),
+    });
+
+    const generateInvoiceMutation = useMutation({
+        mutationFn: () => generateInvoiceFromOrder(id),
+        onSuccess: (data) => {
+            // Invalidate and refetch order data to show updated state if necessary
+            queryClient.invalidateQueries({ queryKey: ['order', id] });
+            // Navigate to the newly created invoice page
+            navigate(`/invoices/${data.id}`);
+        },
+        onError: (error) => {
+            // The error message will be displayed via the `error` property of the mutation
+            console.error("Error generating invoice:", error);
+        }
     });
 
     if (isLoading) {
@@ -31,8 +47,21 @@ const OrderPage = () => {
                     <Link to={`/orders/${order.id}/edit`} className={styles.editButton}>
                         Edit Order
                     </Link>
+                    <button 
+                        onClick={() => generateInvoiceMutation.mutate()}
+                        className={styles.generateButton}
+                        disabled={generateInvoiceMutation.isPending}
+                    >
+                        {generateInvoiceMutation.isPending ? 'Generating...' : 'Generate Invoice'}
+                    </button>
                 </div>
             </div>
+
+            {generateInvoiceMutation.isError && (
+                <div className={styles.errorBanner}>
+                    Failed to generate invoice: {generateInvoiceMutation.error.response?.data?.error || generateInvoiceMutation.error.message}
+                </div>
+            )}
 
             <div className={styles.detailCard}>
                 <div className={styles.detailRow}>

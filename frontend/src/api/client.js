@@ -383,5 +383,15 @@ export async function getInvoice(id) {
     return response.data;
 }
 
+export async function generateInvoiceFromOrder(orderId) {
+    const response = await api.post(`/orders/${orderId}/generate-invoice/`);
+    return response.data;
+}
+
+export async function generateInvoiceFromContract(contractId) {
+    const response = await api.post(`/contracts/${contractId}/generate-invoice/`);
+    return response.data;
+}
+
 
 export default api;
