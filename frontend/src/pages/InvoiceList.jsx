@@ -42,6 +42,7 @@ const InvoiceListPage = () => {
                         <tr>
                             <th>Invoice #</th>
                             <th>Account</th>
+                            <th>Source</th>
                             <th>Status</th>
                             <th>Issue Date</th>
                             <th>Due Date</th>
@@ -55,6 +56,10 @@ const InvoiceListPage = () => {
                                 <tr key={invoice.id}>
                                     <td>{invoice.invoice_number}</td>
                                     <td>{invoice.account?.name || 'N/A'}</td>
+                                    <td>
+                                        {invoice.order && <Link to={`/orders/${invoice.order}`} className={styles.sourceLink}>Order</Link>}
+                                        {invoice.contract && <Link to={`/contracts/${invoice.contract}`} className={styles.sourceLink}>Contract</Link>}
+                                    </td>
                                     <td>
                                         <span className={`${styles.status} ${getStatusClassName(invoice.status)}`}>
                                             {invoice.status_display}

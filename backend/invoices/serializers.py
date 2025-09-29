@@ -49,8 +49,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'version': {'read_only': False},
             # Make FKs write-only as we have string representations for reading
-            'order': {'write_only': True, 'required': False, 'allow_null': True},
-            'contract': {'write_only': True, 'required': False, 'allow_null': True},
+            'order': {'required': False, 'allow_null': True},
+            'contract': {'required': False, 'allow_null': True},
         }
 
     def update(self, instance, validated_data):
