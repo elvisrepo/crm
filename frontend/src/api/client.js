@@ -372,5 +372,11 @@ export async function updateContract(id, contractData) {
     return response.data
 }
 
+// Invoice API methods
+export async function getInvoices() {
+    const response = await api.get('/invoices/');
+    return response.data;
+}
+
 
 export default api;

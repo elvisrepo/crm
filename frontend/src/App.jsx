@@ -26,6 +26,7 @@ import { AuthProvider } from './auth/AuthProvider';
 import ContractsPage from './pages/ContractsPage';
 import ContractPage from './pages/ContractPage';
 import EditContractPage from './pages/EditContractPage';
+import InvoiceListPage from './pages/InvoiceList.jsx';
 import RequireAuth from './auth/RequireAuth';
 
 const queryClient = new QueryClient();
@@ -65,6 +66,10 @@ const App = () => {
               <Route path="contracts" element={<ContractsPage />} />
               <Route path="contracts/:id" element={<ContractPage />} />
               <Route path="contracts/:id/edit" element={<EditContractPage />} />
+
+              <Route path="invoices" element={<InvoiceListPage />} />
+              {/* Placeholder for detail page */}
+              <Route path="invoices/:id" element={<div>Invoice Detail Page</div>} />
             </Route>
           </Route>
         </Routes>

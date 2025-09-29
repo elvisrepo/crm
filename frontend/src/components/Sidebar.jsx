@@ -47,6 +47,11 @@ const Sidebar = () => {
               Contracts
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/invoices" className={({ isActive }) => isActive ? styles.active : ''}>
+              Invoices
+            </NavLink>
+          </li>
 
         </ul>
       </nav>

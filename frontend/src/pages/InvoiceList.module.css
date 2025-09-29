@@ -1,0 +1,88 @@
+.container {
+    padding: 2rem;
+    background-color: #f9fafb;
+}
+
+.header {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1.5rem;
+}
+
+.tableContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.invoiceTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoiceTable th,
+.invoiceTable td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.invoiceTable th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    background-color: #f9fafb;
+}
+
+.invoiceTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.invoiceTable tbody tr:hover {
+    background-color: #f3f4f6;
+}
+
+.status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    text-align: center;
+}
+
+.statusPaid {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.statusPartial {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.statusAwaiting {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.statusCancelled {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.detailsLink {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.detailsLink:hover {
+    text-decoration: underline;
+}
