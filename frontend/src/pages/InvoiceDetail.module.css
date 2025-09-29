@@ -1,0 +1,149 @@
+.container {
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.invoiceTitle {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.card, .summaryCard {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+}
+
+.cardHeader {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cardHeader h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cardBody {
+    padding: 1.5rem;
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.detailLabel {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.detailValue {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.detailValue a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.detailValue a:hover {
+    text-decoration: underline;
+}
+
+.lineItemsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lineItemsTable th,
+.lineItemsTable td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.lineItemsTable th {
+    color: #6b7280;
+    font-weight: 600;
+    background-color: #f9fafb;
+}
+
+.lineItemsTable td:last-child,
+.lineItemsTable th:last-child {
+    text-align: right;
+}
+
+.summaryCard {
+    background-color: #f3f4f6;
+}
+
+.summaryGrid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    text-align: right;
+}
+
+.summaryLabel {
+    font-size: 1rem;
+    color: #4b5563;
+}
+
+.summaryValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.balanceDue {
+    color: #dc2626;
+}
+
+.notesText {
+    white-space: pre-wrap;
+    color: #374151;
+}
+
+/* Status styles from list view */
+.status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.statusPaid {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.statusPartial {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.statusAwaiting {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.statusCancelled {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}

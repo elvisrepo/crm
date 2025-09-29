@@ -378,5 +378,10 @@ export async function getInvoices() {
     return response.data;
 }
 
+export async function getInvoice(id) {
+    const response = await api.get(`/invoices/${id}/`);
+    return response.data;
+}
+
 
 export default api;
