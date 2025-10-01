@@ -29,7 +29,7 @@ import EditContractPage from './pages/EditContractPage';
 import InvoiceListPage from './pages/InvoiceList.jsx';
 import InvoiceDetailPage from './pages/InvoiceDetailPage.jsx';
 import PaymentListPage from './pages/PaymentListPage.jsx';
-// import PaymentDetailPage from './pages/PaymentDetailPage.jsx';
+import PaymentDetailPage from './pages/PaymentDetailPage.jsx';
 import RequireAuth from './auth/RequireAuth';
 
 const queryClient = new QueryClient();
@@ -73,7 +73,7 @@ const App = () => {
               <Route path="invoices" element={<InvoiceListPage />} />
               <Route path="invoices/:id" element={<InvoiceDetailPage />} />
               <Route path="payments" element={<PaymentListPage />} />
-              {/* <Route path="payments/:id" element={<PaymentDetailPage />} /> */}
+              <Route path="payments/:id" element={<PaymentDetailPage />} />
             </Route>
           </Route>
         </Routes>
