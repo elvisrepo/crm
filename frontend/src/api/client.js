@@ -394,4 +394,32 @@ export async function generateInvoiceFromContract(contractId) {
 }
 
 
+// Payment API methods
+export async function getPayments() {
+    const response = await api.get('/payments/');
+    return response.data;
+}
+
+export async function getPayment(id) {
+    const response = await api.get(`/payments/${id}/`);
+    return response.data;
+}
+
+export async function createPayment(paymentData) {
+    const response = await api.post('/payments/', paymentData);
+    return response.data;
+}
+
+export async function updatePayment(id, paymentData) {
+    const response = await api.patch(`/payments/${id}/`, paymentData);
+    return response.data;
+}
+
+export async function deletePayment({ id, version }) {
+    const response = await api.delete(`/payments/${id}/`, {
+        data: { version }
+    });
+    return response.data;
+}
+
 export default api;
