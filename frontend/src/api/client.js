@@ -393,6 +393,11 @@ export async function generateInvoiceFromContract(contractId) {
     return response.data;
 }
 
+export async function logPaymentForInvoice(invoiceId, paymentData) {
+    const response = await api.post(`/invoices/${invoiceId}/log_payment/`, paymentData);
+    return response.data;
+}
+
 
 // Payment API methods
 export async function getPayments() {

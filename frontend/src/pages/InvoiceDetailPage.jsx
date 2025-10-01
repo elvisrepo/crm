@@ -1,15 +1,34 @@
 
 import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getInvoice } from '../api/client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getInvoice, logPaymentForInvoice } from '../api/client';
 import styles from './InvoiceDetail.module.css';
+import Modal from 'react-modal';
+import { useState } from 'react';
+import PaymentForm from '../components/PaymentForm';
+
+Modal.setAppElement('#root');
 
 const InvoiceDetailPage = () => {
     const { id } = useParams();
+    const queryClient = useQueryClient();
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
     const { data: invoice, isLoading, isError, error } = useQuery({
         queryKey: ['invoice', id],
         queryFn: () => getInvoice(id),
     });
+
+    const mutation = useMutation({
+        mutationFn: (paymentData) => logPaymentForInvoice(id, paymentData),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['invoice', id]);
+            closeModal();
+        },
+    });
+
+    const openModal = () => setModalIsOpen(true);
+    const closeModal = () => setModalIsOpen(false);
 
     const getStatusClassName = (status) => {
         switch (status) {
@@ -45,7 +64,23 @@ const InvoiceDetailPage = () => {
                 <span className={`${styles.status} ${getStatusClassName(invoice.status)}`}>
                     {invoice.status_display}
                 </span>
+                <button onClick={openModal} className={styles.recordPaymentButton}>Record Payment</button>
             </div>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Record Payment"
+                className={styles.modal}
+                overlayClassName={styles.overlay}
+            >
+                <PaymentForm
+                    onSubmit={mutation.mutate}
+                    onCancel={closeModal}
+                    isLoading={mutation.isLoading}
+                    error={mutation.error}
+                />
+            </Modal>
 
             <div className={styles.card}>
                 <div className={styles.cardHeader}>
