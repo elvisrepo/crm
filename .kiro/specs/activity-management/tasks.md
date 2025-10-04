@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Create Activity Serializers
+- [x] 1. Create Activity Serializers
   - Implement ActivitySerializer with nested representations for all related entities (account, opportunity, contract, order, invoice, contact, lead, assigned_to)
   - Add writable ID fields for foreign key relationships (account_id, opportunity_id, etc.)
   - Implement computed fields: related_to_type, related_to_name, name_type, name_display for simplified UI rendering
