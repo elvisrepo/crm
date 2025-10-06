@@ -152,66 +152,170 @@
   - Test activity creation and timeline refresh on each page
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-- [ ] 10. Implement Calendar View
-- [ ] 10.1 Create CalendarPage Component
-  - Create CalendarPage component with route configuration
+- [ ] 10. Implement To-Do List Page
+- [ ] 10.1 Create ToDoListPage Component
+  - Create ToDoListPage component with route configuration at /activities/tasks
+  - Add To-Do List to navigation menu
+  - Implement task list state management
+  - Add "New Task" button
+  - _Requirements: 3.1, 3.7_
+
+- [ ] 10.2 Implement Task List Sidebar Filters
+  - Create sidebar with filter options: All, Starred, Due Today, Overdue
+  - Implement filter state management
+  - Apply filters to task query (type='Task', status filters)
+  - Add "New Label" functionality for task categorization
+  - Display label suggestions (e.g., "Urgent or Pipeline")
+  - _Requirements: 3.1, 3.4, 3.7_
+
+- [ ] 10.3 Implement Task List View
+  - Display tasks in list format with checkboxes
+  - Show task subject, related entity, and due date
+  - Implement task sorting (by created date, due date, etc.)
+  - Add "5 items - Sort by: Created Date" display
+  - Implement click handler to navigate to TaskDetailPage
+  - Add checkbox for quick task completion
+  - _Requirements: 3.1, 3.4, 3.6_
+
+- [ ] 10.4 Integrate Task Creation from To-Do List
+  - Connect "New Task" button to NewTaskModal
+  - Refresh task list after task creation
+  - Test task creation and display workflow
+  - _Requirements: 1.1, 1.2, 1.8_
+
+- [ ] 11. Implement Calendar View
+- [ ] 11.1 Create CalendarPage Component
+  - Create CalendarPage component with route configuration at /calendar
   - Add calendar page to navigation menu
   - Implement weekly calendar state management
   - Add "New Event" button in header
   - _Requirements: 10.1, 10.5_
 
-- [ ] 10.2 Implement CalendarHeader Component
-  - Create CalendarHeader with date range display (e.g., "September 28, 2025–October 4, 2025")
+- [ ] 11.2 Implement CalendarHeader Component
+  - Create CalendarHeader with date range display (e.g., "October 5, 2025–October 11, 2025")
   - Add previous/next arrow buttons for week navigation
   - Add "Today" button to jump to current week
-  - Add view toggle buttons (day/week/month)
+  - Add view toggle buttons (list/calendar views)
   - Implement navigation handlers
   - _Requirements: 10.2, 10.6, 10.7, 10.10_
 
-- [ ] 10.3 Implement WeekView Component
+- [ ] 11.3 Implement WeekView Component
   - Create WeekView component with weekly grid layout
-  - Display days of week as column headers
-  - Display hourly time slots from early morning to late evening
+  - Display days of week as column headers (SUN 5, MON 6, etc.)
+  - Display hourly time slots with GMT offset (e.g., "GMT+2")
   - Render events as colored blocks positioned at their start_time
-  - Display event subject and related entity name on event blocks
-  - Implement click handler to open event details
+  - Display event subject and time range on event blocks
+  - Implement click handler to navigate to EventDetailPage
   - _Requirements: 10.1, 10.3, 10.4, 10.12_
 
-- [ ] 10.4 Implement MiniCalendar Component
+- [ ] 11.4 Implement MiniCalendar Component
   - Create MiniCalendar component showing current month
-  - Highlight selected week in mini calendar
+  - Highlight selected week/date in mini calendar
   - Implement date click handler to navigate to that week
-  - Display "My Calendars" and "Other Calendars" sections
-  - Add calendar visibility toggles
+  - Display "My Calendars" section with "My Events" toggle
+  - Display "Other Calendars" section
+  - Add calendar visibility toggles with checkboxes
   - _Requirements: 10.8, 10.9, 10.11_
 
-- [ ] 10.5 Integrate Event Creation from Calendar
+- [ ] 11.5 Integrate Event Creation from Calendar
   - Connect "New Event" button to NewEventModal
   - Pre-fill start_time and end_time based on clicked time slot
   - Refresh calendar view after event creation
   - Test event creation and display workflow
   - _Requirements: 10.5_
 
-- [ ] 11. Implement Activity Update Functionality
+- [ ] 12. Implement Task Detail Page
+- [ ] 12.1 Create TaskDetailPage Component
+  - Create TaskDetailPage component with route configuration at /activities/tasks/:id
+  - Fetch task data using getActivity(id) API call
+  - Display task header with subject and type icon
+  - Add action buttons: Mark Complete, Edit Comments, Change Date, Create Follow-Up Task
+  - Implement tabs: Details, Related
+  - _Requirements: 3.1, 5.1_
+
+- [ ] 12.2 Implement Task Details Tab
+  - Create Task Information section with fields: Assigned To, Subject, Due Date, Comments
+  - Display "Name" (contact/lead) and "Related To" (account/opportunity/etc.) fields
+  - Create Additional Information section with Status and Priority
+  - Create System Information section with Created By and Last Modified By
+  - Add inline edit functionality for each field (pencil icon)
+  - _Requirements: 5.1, 5.5, 5.6_
+
+- [ ] 12.3 Implement Task Related Tab
+  - Display related records (contacts, accounts, opportunities, etc.)
+  - Show relationships in a structured format
+  - Add links to related entity detail pages
+  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7_
+
+- [ ] 12.4 Implement Task Quick Actions
+  - Implement "Mark Complete" button to update status to 'Completed'
+  - Implement "Edit Comments" to open inline editor
+  - Implement "Change Date" to open date picker
+  - Implement "Create Follow-Up Task" to open NewTaskModal with pre-filled data
+  - Refresh task data after each action
+  - _Requirements: 5.1, 5.4_
+
+- [ ] 13. Implement Event Detail Page
+- [ ] 13.1 Create EventDetailPage Component
+  - Create EventDetailPage component with route configuration at /activities/events/:id
+  - Fetch event data using getActivity(id) API call
+  - Display event header with subject and type icon
+  - Add action buttons: New Opportunity, Edit, Delete
+  - Implement tabs: Meeting Digest, Details, Related
+  - _Requirements: 3.2, 5.1_
+
+- [ ] 13.2 Implement Event Details Tab
+  - Display Location, Start, and End fields at the top
+  - Display Subject and Description fields
+  - Display Start and End times with inline edit (pencil icon)
+  - Display Attendees with acceptance status (Accepted or Maybe, Declined, No Response counts)
+  - Create Related Records section showing Name and Related To
+  - Create Additional Information section with Location, Show Time As, All Day Event, Private
+  - Create System Information section with Created By and Last Modified By
+  - Add inline edit functionality for each field
+  - _Requirements: 5.1, 5.6_
+
+- [ ] 13.3 Implement Event Meeting Digest Tab
+  - Create Meeting Digest view (placeholder for future enhancement)
+  - Display meeting summary and notes
+  - _Requirements: 10.1_
+
+- [ ] 13.4 Implement Event Related Tab
+  - Display related records (contacts, accounts, opportunities, etc.)
+  - Show relationships in a structured format
+  - Add links to related entity detail pages
+  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7_
+
+- [ ] 13.5 Implement Event Quick Actions
+  - Implement "Edit" button to open EditEventModal
+  - Implement "Delete" button with confirmation dialog
+  - Implement "New Opportunity" button to create opportunity from event
+  - Refresh event data after each action
+  - _Requirements: 5.1, 7.1, 7.2_
+
+- [ ] 14. Implement Activity Update Functionality
   - Add edit button/action to activity items in timeline
   - Create EditActivityModal component (reuse form components from create modals)
+  - Implement inline editing on TaskDetailPage and EventDetailPage
   - Implement updateActivity API call with version field
   - Handle optimistic locking conflicts (409 response)
   - Display conflict error modal with refresh option
-  - Refresh activity timeline after successful update
+  - Refresh activity timeline and detail pages after successful update
   - Test update workflow with concurrent modifications
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
 
-- [ ] 12. Implement Activity Delete Functionality
-  - Add delete button/action to activity items in timeline
+- [ ] 15. Implement Activity Delete Functionality
+  - Add delete button to TaskDetailPage and EventDetailPage
+  - Add delete action to activity items in timeline
   - Implement confirmation dialog before deletion
   - Call deleteActivity API with version field
   - Handle optimistic locking conflicts
-  - Refresh activity timeline after successful deletion
+  - Redirect to appropriate page after deletion from detail page
+  - Refresh activity timeline after deletion from timeline
   - Test delete workflow
-  - _Requirements: 6.1, 6.2, 6.3, 6.4_
+  - _Requirements: 6.1, 6.2, 6.3, 6.4, 7.1, 7.2, 7.3_
 
-- [ ] 13. Add Comprehensive Error Handling
+- [ ] 16. Add Comprehensive Error Handling
   - Implement toast notification system for success/error messages
   - Add inline field validation errors in forms
   - Handle network errors with retry option
@@ -221,15 +325,15 @@
   - Test all error scenarios
   - _Requirements: 1.6, 1.7, 1.8, 2.5, 2.6, 2.7, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 6.4, 7.5, 9.7, 13.7_
 
-- [ ] 14. Write Backend Tests
-- [ ] 14.1 Write Activity Model Tests
+- [ ] 17. Write Backend Tests
+- [ ] 17.1 Write Activity Model Tests
   - Test model validation (required fields, choices)
   - Test database constraints (only one "what", only one "who")
   - Test dynamic properties (what_object, who_object)
   - Test model string representation
   - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.8_
 
-- [ ] 14.2 Write Activity Serializer Tests
+- [ ] 17.2 Write Activity Serializer Tests
   - Test nested serialization of related entities
   - Test writable ID fields for foreign keys
   - Test computed fields (related_to_type, related_to_name, etc.)
@@ -237,7 +341,7 @@
   - Test version increment on update
   - _Requirements: 1.3, 1.4, 1.5, 1.6, 1.7, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8, 12.9, 12.10, 12.11_
 
-- [ ] 14.3 Write Activity View Tests
+- [ ] 17.3 Write Activity View Tests
   - Test activity list endpoint with filtering
   - Test activity creation with default assigned_to
   - Test activity retrieval
@@ -247,8 +351,8 @@
   - Test date range filtering
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 7.1, 7.2, 7.3, 7.4, 7.5, 8.1, 8.2, 8.3, 8.4, 8.5, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-- [ ] 15. Write Frontend Tests
-- [ ] 15.1 Write Component Unit Tests
+- [ ] 18. Write Frontend Tests
+- [ ] 18.1 Write Component Unit Tests
   - Test NewTaskModal rendering and form submission
   - Test NewEventModal rendering and form submission
   - Test LogCallModal rendering and form submission
@@ -257,7 +361,7 @@
   - Test ActivityQuickActions button clicks
   - _Requirements: 1.1, 1.2, 2.1, 2.2, 6.1, 6.2, 6.3, 11.1, 11.2_
 
-- [ ] 15.2 Write ActivityTimeline Tests
+- [ ] 18.2 Write ActivityTimeline Tests
   - Test activity grouping by time period
   - Test filter application
   - Test "View More" pagination
@@ -265,7 +369,15 @@
   - Test refresh functionality
   - _Requirements: 3.1, 3.2, 3.7, 4.1, 4.8, 4.9, 4.10, 4.11, 4.13_
 
-- [ ] 15.3 Write Calendar View Tests
+- [ ] 18.3 Write To-Do List Tests
+  - Test task list rendering with filters
+  - Test sidebar filter application
+  - Test task sorting
+  - Test task completion checkbox
+  - Test navigation to TaskDetailPage
+  - _Requirements: 3.1, 3.4, 3.7_
+
+- [ ] 18.4 Write Calendar View Tests
   - Test weekly calendar rendering
   - Test event positioning on calendar grid
   - Test week navigation (previous/next/today)
@@ -273,7 +385,23 @@
   - Test event creation from calendar
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 10.9_
 
-- [ ] 16. Performance Optimization
+- [ ] 18.5 Write Task Detail Page Tests
+  - Test TaskDetailPage rendering
+  - Test task data display
+  - Test inline editing functionality
+  - Test quick action buttons (Mark Complete, Edit Comments, Change Date)
+  - Test navigation between tabs
+  - _Requirements: 5.1, 5.4, 5.5, 5.6_
+
+- [ ] 18.6 Write Event Detail Page Tests
+  - Test EventDetailPage rendering
+  - Test event data display
+  - Test inline editing functionality
+  - Test action buttons (Edit, Delete, New Opportunity)
+  - Test navigation between tabs
+  - _Requirements: 5.1, 10.1_
+
+- [ ] 19. Performance Optimization
   - Add select_related('assigned_to') to activity queries
   - Add prefetch_related for related entities in list views
   - Implement pagination for activity list endpoint
@@ -282,7 +410,7 @@
   - Test query performance with large datasets
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-- [ ] 17. Polish and Final Integration
+- [ ] 20. Polish and Final Integration
   - Add loading skeletons for activity timeline
   - Add animations for modal open/close
   - Add transitions for activity list updates
