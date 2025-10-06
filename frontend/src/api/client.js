@@ -427,4 +427,43 @@ export async function deletePayment({ id, version }) {
     return response.data;
 }
 
+// Activity API methods
+export async function getActivities(filters = {}) {
+    const params = new URLSearchParams();
+    
+    // Add all filter parameters to the query string
+    Object.entries(filters).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+            params.append(key, value);
+        }
+    });
+    
+    const queryString = params.toString();
+    const url = queryString ? `/activities/?${queryString}` : '/activities/';
+    const response = await api.get(url);
+    return response.data;
+}
+
+export async function getActivity(id) {
+    const response = await api.get(`/activities/${id}/`);
+    return response.data;
+}
+
+export async function createActivity(activityData) {
+    const response = await api.post('/activities/', activityData);
+    return response.data;
+}
+
+export async function updateActivity(id, activityData) {
+    const response = await api.patch(`/activities/${id}/`, activityData);
+    return response.data;
+}
+
+export async function deleteActivity({ id, version }) {
+    const response = await api.delete(`/activities/${id}/`, {
+        data: { version }
+    });
+    return response.data;
+}
+
 export default api;

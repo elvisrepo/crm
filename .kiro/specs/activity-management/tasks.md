@@ -27,7 +27,7 @@
   - Test all endpoints are accessible at /activities/ and /activities/<id>/
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-- [ ] 4. Add Activity API Client Methods
+- [x] 4. Add Activity API Client Methods
   - Implement getActivities(filters) in frontend/src/api/client.js with query parameter support
   - Implement getActivity(id) for retrieving single activity
   - Implement createActivity(activityData) for creating new activities
