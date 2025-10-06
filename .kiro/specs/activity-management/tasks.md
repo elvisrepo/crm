@@ -10,7 +10,7 @@
   - Write unit tests for serializer validation and nested serialization
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8, 12.9, 12.10, 12.11, 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.8_
 
-- [ ] 2. Implement Activity Views and Permissions
+- [x] 2. Implement Activity Views and Permissions
   - Create IsActivityOwnerOrAdmin permission class to verify user is assigned_to or admin
   - Implement ActivityList view with ListCreateAPIView for listing and creating activities
   - Add filtering support for type, status, priority, assigned_to, and all related entities
