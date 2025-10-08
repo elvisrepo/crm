@@ -1,0 +1,114 @@
+/* ActivityQuickActions Component Styles */
+
+.quickActionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.quickActionsLabel {
+  font-weight: 600;
+  font-size: 14px;
+  color: #555;
+  white-space: nowrap;
+}
+
+.quickActionsButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.actionButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.actionButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.label {
+  font-weight: 600;
+}
+
+/* Button-specific colors */
+.emailButton {
+  border-color: #17a2b8;
+}
+
+.emailButton:hover {
+  background-color: #e7f7f9;
+  border-color: #138496;
+}
+
+.taskButton {
+  border-color: #28a745;
+}
+
+.taskButton:hover {
+  background-color: #e8f5e9;
+  border-color: #218838;
+}
+
+.eventButton {
+  border-color: #007bff;
+}
+
+.eventButton:hover {
+  background-color: #e7f3ff;
+  border-color: #0056b3;
+}
+
+.callButton {
+  border-color: #ffc107;
+}
+
+.callButton:hover {
+  background-color: #fff8e1;
+  border-color: #e0a800;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .quickActionsContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quickActionsButtons {
+    width: 100%;
+  }
+
+  .actionButton {
+    flex: 1;
+    justify-content: center;
+    min-width: 100px;
+  }
+}
