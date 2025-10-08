@@ -6,12 +6,16 @@ import styles from './InvoiceDetail.module.css';
 import Modal from 'react-modal';
 import { useState } from 'react';
 import PaymentForm from '../components/PaymentForm';
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 
 Modal.setAppElement('#root');
 
 const InvoiceDetailPage = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
+    const { user } = useAuth();
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const { data: invoice, isLoading, isError, error } = useQuery({
@@ -162,6 +166,20 @@ const InvoiceDetailPage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={invoice}
+                    entityType="invoice"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="invoice"
+                    entityId={parseInt(id)}
+                />
+            </div>
         </div>
     );
 };

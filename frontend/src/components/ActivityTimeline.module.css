@@ -1,0 +1,310 @@
+/* ActivityTimeline Component Styles */
+
+.timeline {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* Filters and Actions Bar */
+.filtersBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.filterButton {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #555;
+}
+
+.filterButton:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.filterButton.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.actionBtn {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #555;
+}
+
+.actionBtn:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.loading,
+.error,
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.empty {
+  font-style: italic;
+}
+
+/* Timeline Sections */
+.timelineSection {
+  margin-bottom: 30px;
+}
+
+.timelineSection:last-child {
+  margin-bottom: 0;
+}
+
+.sectionHeader {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #007bff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expandIcon {
+  font-size: 12px;
+  color: #666;
+  transition: transform 0.2s ease;
+}
+
+.activitiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Activity Item */
+.activityItem {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.activityItem:hover {
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateX(4px);
+}
+
+.activityItem.overdue {
+  border-left: 4px solid #dc3545;
+  background-color: #fff5f5;
+}
+
+.activityIcon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.activityContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.activityHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.activitySubject {
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activityType {
+  font-size: 12px;
+  padding: 2px 8px;
+  background-color: #e7f3ff;
+  color: #0056b3;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.activityMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.activityDate {
+  font-size: 13px;
+  color: #666;
+}
+
+.activityStatus {
+  font-size: 12px;
+  padding: 2px 8px;
+  background-color: #e0e0e0;
+  color: #555;
+  border-radius: 10px;
+}
+
+.activityPriority {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.activityPriority.high {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.activityPriority.low {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.activityDescription {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.activityActions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.noPastActivities {
+  text-align: center;
+  padding: 30px 20px;
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 20px;
+}
+
+.viewMoreContainer {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 20px;
+}
+
+.viewMoreButton {
+  padding: 10px 24px;
+  border: 1px solid #007bff;
+  background-color: #fff;
+  color: #007bff;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewMoreButton:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .activityItem {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .activityHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .activityActions {
+    align-self: flex-end;
+  }
+}

@@ -214,3 +214,16 @@
     color: #6b7280;
     text-transform: uppercase;
 }
+
+/* Activity Section */
+.activitySection {
+    margin-top: 3rem;
+}
+
+.activitySection h2 {
+    font-size: 1.75rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #007bff;
+}

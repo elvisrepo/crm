@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './Lookup.module.css';
-import { apiClient } from '../api/client';
+import api from '../api/client';
 
 const Lookup = ({
   apiEndpoint,
@@ -54,7 +54,7 @@ const Lookup = ({
         const params = new URLSearchParams();
         params.append(searchParam, searchTerm);
         
-        const response = await apiClient.get(`${apiEndpoint}?${params.toString()}`);
+        const response = await api.get(`${apiEndpoint}?${params.toString()}`);
         setResults(response.data || []);
         setIsOpen(true);
         setHighlightedIndex(-1);

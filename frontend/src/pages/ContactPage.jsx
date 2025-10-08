@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { getContact, deleteContact } from "../api/client";
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 import styles from './ContactPage.module.css'; // Import styles
 import { Link } from "react-router-dom";
 
@@ -8,6 +11,7 @@ const ContactPage = () => {
     const { id } = useParams();
      const queryClient = useQueryClient()
      const navigate = useNavigate()
+     const { user } = useAuth();
 
     const { data: contact, isLoading, isError, error } = useQuery({
         queryKey: ['contact', id],
@@ -112,6 +116,20 @@ const ContactPage = () => {
                         {contact.reports_to ? `${contact.reports_to.first_name} ${contact.reports_to.last_name}` : 'N/A'}
                     </span>
                 </div>
+            </div>
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={contact}
+                    entityType="contact"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="contact"
+                    entityId={parseInt(id)}
+                />
             </div>
         </div>
     );

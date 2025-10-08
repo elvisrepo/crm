@@ -1,12 +1,16 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getLead, deleteLead } from "../api/client";
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 import styles from './LeadPage.module.css';
 
 export default function LeadPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { user } = useAuth();
 
     const { data: lead, isLoading, isError, error } = useQuery({
         queryKey: ['lead', id],
@@ -67,6 +71,20 @@ export default function LeadPage() {
                     <div className={styles.field}><label>Industry</label><span>{lead.industry || '-'}</span></div>
                     <div className={styles.field}><label>Owner</label><span>{lead.owner_username}</span></div>
                 </div>
+            </div>
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={lead}
+                    entityType="lead"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="lead"
+                    entityId={parseInt(id)}
+                />
             </div>
         </div>
     );

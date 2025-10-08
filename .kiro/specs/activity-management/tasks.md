@@ -242,8 +242,8 @@
   - Example: From Contact page, pre-fill Name with {entityType: 'contact', id: 5, name: 'John Doe'}
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
 
-- [ ] 10. Implement ActivityTimeline Component
-- [ ] 10.1 Create ActivityTimeline Base Component
+- [x] 10. Implement ActivityTimeline Component
+- [x] 10.1 Create ActivityTimeline Base Component
   - Create ActivityTimeline component accepting entityType and entityId props
   - Fetch activities using useQuery with entity-specific filters
   - Implement grouping logic to separate "Upcoming & Overdue" from past activities
@@ -251,7 +251,7 @@
   - Display "No more past activities to load" when no past activities exist
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8_
 
-- [ ] 10.2 Add Activity Filters and Actions
+- [x] 10.2 Add Activity Filters and Actions
   - Implement filter buttons for activity types (email, task, event, call)
   - Add "Refresh" button to reload activities
   - Add "Expand All" button to expand all activity groups
@@ -259,7 +259,7 @@
   - Apply filters to activity query
   - _Requirements: 3.7, 4.10, 4.11_
 
-- [ ] 10.3 Implement Activity Display Items
+- [x] 10.3 Implement Activity Display Items
   - Create ActivityItem component for individual activity display
   - Show type icon (task/event) based on activity type
   - Display subject, description snippet, and due date/start time
@@ -267,14 +267,14 @@
   - Implement click handler to view full activity details
   - _Requirements: 4.8, 4.9, 4.12_
 
-- [ ] 10.4 Add View More Functionality
+- [x] 10.4 Add View More Functionality
   - Implement pagination for activity timeline
   - Add "View More" button when more activities exist
   - Load additional activities on button click
   - Update activity list with newly loaded activities
   - _Requirements: 4.13_
 
-- [ ] 11. Integrate ActivityTimeline into Entity Pages
+- [x] 11. Integrate ActivityTimeline into Entity Pages
   - Add ActivityTimeline component to Account detail page
   - Add ActivityTimeline component to Opportunity detail page
   - Add ActivityTimeline component to Contact detail page

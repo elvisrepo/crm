@@ -1,12 +1,16 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getAccount, deleteAccount } from "../api/client";
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 import styles from './AccountPage.module.css';
 
 const AccountPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { user } = useAuth();
 
     const { data: account, isLoading, isError, error } = useQuery({
         queryKey: ['account', id],
@@ -141,6 +145,20 @@ const AccountPage = () => {
                         <p>No opportunities associated with this account.</p>
                     )}
                 </div>
+            </div>
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={account}
+                    entityType="account"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="account"
+                    entityId={parseInt(id)}
+                />
             </div>
         </div>
     );

@@ -163,15 +163,42 @@ This document tracks the implementation progress of the Activity Management feat
 
 ## Remaining Tasks
 
-### 🔲 Task 10: Implement ActivityTimeline Component
-- Create base timeline component
-- Add filters and actions
-- Implement activity display items
-- Add "View More" pagination
+### ✅ Task 10: Implement ActivityTimeline Component
+**Status:** Complete  
+**Files:**
+- `frontend/src/components/ActivityTimeline.jsx`
+- `frontend/src/components/ActivityTimeline.module.css`
 
-### 🔲 Task 11: Integrate ActivityTimeline into Entity Pages
-- Add to Account, Opportunity, Contact, Lead, Contract, Order, Invoice pages
-- Add ActivityQuickActions to each page
+**Features:**
+- Base timeline with entity filtering and grouping
+- Filter buttons (All, Tasks, Events)
+- Action buttons (Expand All, Refresh)
+- ActivityItem component with icons, dates, status, priority
+- View More pagination support
+- Collapsible month sections
+- Overdue highlighting
+
+---
+
+### ✅ Task 11: Integrate ActivityTimeline into Entity Pages
+**Status:** Complete (All 7 pages integrated)  
+**Files:**
+- `frontend/src/pages/AccountPage.jsx` ✅
+- `frontend/src/pages/ContactPage.jsx` ✅
+- `frontend/src/pages/LeadPage.jsx` ✅
+- `frontend/src/pages/OpportunityPage.jsx` ✅
+- `frontend/src/pages/ContractPage.jsx` ✅
+- `frontend/src/pages/OrderPage.jsx` ✅
+- `frontend/src/pages/InvoiceDetailPage.jsx` ✅
+- `frontend/ACTIVITY_INTEGRATION_GUIDE.md` (reference guide)
+
+**Features:**
+- ActivityQuickActions component added to all entity pages
+- ActivityTimeline component added to all entity pages
+- Smart pre-filling based on entity type (who vs what)
+- Consistent styling across all pages
+
+---
 
 ### 🔲 Task 12: Implement To-Do List Page
 - Create ToDoListPage component
@@ -214,11 +241,11 @@ This document tracks the implementation progress of the Activity Management feat
 ## Summary Statistics
 
 **Total Tasks:** 22  
-**Completed:** 9 (41%)  
-**Remaining:** 13 (59%)  
+**Completed:** 11 (50%)  
+**Remaining:** 11 (50%)  
 
 **Backend Progress:** 5/5 tasks complete (100%)  
-**Frontend Progress:** 4/17 tasks complete (24%)  
+**Frontend Progress:** 6/17 tasks complete (35%)  
 
 ---
 

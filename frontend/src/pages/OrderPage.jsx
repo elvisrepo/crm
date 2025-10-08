@@ -1,12 +1,16 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getOrder, generateInvoiceFromOrder } from '../api/client';
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 import styles from './OrderPage.module.css';
 
 const OrderPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { user } = useAuth();
 
     const { data: order, isLoading, isError, error } = useQuery({
         queryKey: ['order', id],
@@ -120,6 +124,20 @@ const OrderPage = () => {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={order}
+                    entityType="order"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="order"
+                    entityId={parseInt(id)}
+                />
             </div>
         </div>
     );

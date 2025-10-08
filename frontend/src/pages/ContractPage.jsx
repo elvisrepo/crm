@@ -1,12 +1,16 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getContract, generateInvoiceFromContract } from '../api/client';
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 import styles from './ContractPage.module.css';
 
 const ContractPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { user } = useAuth();
 
     const { data: contract, isLoading, isError, error } = useQuery({
         queryKey: ['contract', id],
@@ -122,6 +126,20 @@ const ContractPage = () => {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={contract}
+                    entityType="contract"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="contract"
+                    entityId={parseInt(id)}
+                />
             </div>
         </div>
     );

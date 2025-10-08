@@ -13,12 +13,16 @@ import {
 import Modal from '../components/Modal';
 import LineItemForm from '../components/LineItemForm';
 import ProductForm from '../components/ProductForm';
+import ActivityQuickActions from '../components/ActivityQuickActions';
+import ActivityTimeline from '../components/ActivityTimeline';
+import { useAuth } from '../auth/useAuth';
 import styles from './OpportunityPage.module.css';
 
 const OpportunityPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { user } = useAuth();
     const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
     const [isNewProductModalOpen, setNewProductModalOpen] = useState(false);
     const [newlyCreatedProductId, setNewlyCreatedProductId] = useState(null);
@@ -236,6 +240,20 @@ const OpportunityPage = () => {
                     error={createProductMutation.error}
                 />
             </Modal>
+
+            {/* Activity Management Section */}
+            <div className={styles.activitySection}>
+                <h2>Activities</h2>
+                <ActivityQuickActions
+                    entity={opportunity}
+                    entityType="opportunity"
+                    currentUser={user}
+                />
+                <ActivityTimeline
+                    entityType="opportunity"
+                    entityId={parseInt(id)}
+                />
+            </div>
         </div>
     );
 };
