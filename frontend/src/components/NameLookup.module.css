@@ -1,0 +1,69 @@
+/* NameLookup Component Styles */
+
+.nameLookupWrapper {
+  width: 100%;
+}
+
+.entityTypeSelector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.selectorLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.entityTypeDropdown {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.entityTypeDropdown:hover {
+  border-color: #007bff;
+}
+
+.entityTypeDropdown:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.entityTypeDropdown:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+.lookupContainer {
+  width: 100%;
+}
+
+.entityTypeIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 10px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #666;
+}
+
+.entityIcon {
+  font-size: 14px;
+}
+
+.entityLabel {
+  font-weight: 500;
+  text-transform: capitalize;
+}
