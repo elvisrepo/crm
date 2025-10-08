@@ -57,6 +57,11 @@ const Sidebar = () => {
               Payments
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/activities/tasks" className={({ isActive }) => isActive ? styles.active : ''}>
+              To-Do List
+            </NavLink>
+          </li>
 
         </ul>
       </nav>

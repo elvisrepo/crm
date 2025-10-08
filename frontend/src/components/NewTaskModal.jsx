@@ -26,7 +26,6 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
   // Initialize form with default values
   useEffect(() => {
     if (isOpen) {
-      console.log('NewTaskModal - currentUser:', currentUser);
       setFormData({
         subject: defaultValues.subject || '',
         due_date: defaultValues.due_date || '',
@@ -39,7 +38,9 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
       });
       setErrors({});
     }
-  }, [isOpen, defaultValues, currentUser]);
+    // Only re-run when modal opens or when currentUser.id changes (not the whole object)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, currentUser?.id]);
 
   const createMutation = useMutation({
     mutationFn: createActivity,

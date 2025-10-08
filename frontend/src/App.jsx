@@ -30,6 +30,8 @@ import InvoiceListPage from './pages/InvoiceList.jsx';
 import InvoiceDetailPage from './pages/InvoiceDetailPage.jsx';
 import PaymentListPage from './pages/PaymentListPage.jsx';
 import PaymentDetailPage from './pages/PaymentDetailPage.jsx';
+import ToDoListPage from './pages/ToDoListPage';
+import TaskDetailPage from './pages/TaskDetailPage';
 import RequireAuth from './auth/RequireAuth';
 
 const queryClient = new QueryClient();
@@ -74,6 +76,8 @@ const App = () => {
               <Route path="invoices/:id" element={<InvoiceDetailPage />} />
               <Route path="payments" element={<PaymentListPage />} />
               <Route path="payments/:id" element={<PaymentDetailPage />} />
+              <Route path="activities/tasks" element={<ToDoListPage />} />
+              <Route path="activities/:id" element={<TaskDetailPage />} />
             </Route>
           </Route>
         </Routes>

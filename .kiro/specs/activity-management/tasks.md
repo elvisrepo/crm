@@ -286,15 +286,15 @@
   - Test activity creation and timeline refresh on each page
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-- [ ] 12. Implement To-Do List Page
-- [ ] 12.1 Create ToDoListPage Component
+- [x] 12. Implement To-Do List Page
+- [x] 12.1 Create ToDoListPage Component
   - Create ToDoListPage component with route configuration at /activities/tasks
   - Add To-Do List to navigation menu
   - Implement task list state management
   - Add "New Task" button
   - _Requirements: 3.1, 3.7_
 
-- [ ] 12.2 Implement Task List Sidebar Filters
+- [x] 12.2 Implement Task List Sidebar Filters
   - Create sidebar with filter options: All, Starred, Due Today, Overdue
   - Implement filter state management
   - Apply filters to task query (type='Task', status filters)
@@ -302,7 +302,7 @@
   - Display label suggestions (e.g., "Urgent or Pipeline")
   - _Requirements: 3.1, 3.4, 3.7_
 
-- [ ] 12.3 Implement Task List View
+- [x] 12.3 Implement Task List View
   - Display tasks in list format with checkboxes
   - Show task subject, related entity, and due date
   - Implement task sorting (by created date, due date, etc.)
@@ -311,7 +311,7 @@
   - Add checkbox for quick task completion
   - _Requirements: 3.1, 3.4, 3.6_
 
-- [ ] 12.4 Integrate Task Creation from To-Do List
+- [x] 12.4 Integrate Task Creation from To-Do List
   - Connect "New Task" button to NewTaskModal
   - Refresh task list after task creation
   - Test task creation and display workflow
