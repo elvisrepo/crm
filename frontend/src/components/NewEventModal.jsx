@@ -10,7 +10,7 @@ import styles from './NewEventModal.module.css';
 
 const NewEventModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null }) => {
   const queryClient = useQueryClient();
-  
+
   const [formData, setFormData] = useState({
     subject: '',
     description: '',
@@ -73,23 +73,23 @@ const NewEventModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate required fields
     const newErrors = {};
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
     }
-    
+
     // Validate end time is after start time
     if (formData.start_date && formData.start_time && formData.end_date && formData.end_time) {
       const startDateTime = new Date(`${formData.start_date}T${formData.start_time}`);
       const endDateTime = new Date(`${formData.end_date}T${formData.end_time}`);
-      
+
       if (endDateTime <= startDateTime) {
         newErrors.end_time = 'End time must be after start time';
       }
     }
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -121,7 +121,7 @@ const NewEventModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null
     if (formData.name.length > 0) {
       const contacts = formData.name.filter(item => item.entityType === 'contact');
       const leads = formData.name.filter(item => item.entityType === 'lead');
-      
+
       if (contacts.length > 0) {
         activityData.contacts_ids = contacts.map(c => c.id);
       }
@@ -183,7 +183,13 @@ const NewEventModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null
             value={formData.name}
             onChange={(name) => setFormData(prev => ({ ...prev, name }))}
             disabled={createMutation.isPending}
-            accountId={formData.relatedTo?.entityType === 'account' ? formData.relatedTo?.id : null}
+            accountId={
+              formData.relatedTo?.entityType === 'account' 
+                ? formData.relatedTo?.id 
+                : formData.relatedTo?.entityType === 'opportunity' && formData.relatedTo?.account?.id
+                  ? formData.relatedTo.account.id
+                  : null
+            }
           />
         </div>
 

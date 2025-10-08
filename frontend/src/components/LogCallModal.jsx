@@ -148,7 +148,13 @@ const LogCallModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
             value={formData.name}
             onChange={(name) => setFormData(prev => ({ ...prev, name }))}
             disabled={createMutation.isPending}
-            accountId={formData.relatedTo?.entityType === 'account' ? formData.relatedTo?.id : null}
+            accountId={
+              formData.relatedTo?.entityType === 'account' 
+                ? formData.relatedTo?.id 
+                : formData.relatedTo?.entityType === 'opportunity' && formData.relatedTo?.account?.id
+                  ? formData.relatedTo.account.id
+                  : null
+            }
           />
         </div>
 

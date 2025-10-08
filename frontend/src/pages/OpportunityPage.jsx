@@ -16,6 +16,7 @@ import ProductForm from '../components/ProductForm';
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './OpportunityPage.module.css';
 
 const OpportunityPage = () => {
@@ -23,6 +24,7 @@ const OpportunityPage = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
     const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
     const [isNewProductModalOpen, setNewProductModalOpen] = useState(false);
     const [newlyCreatedProductId, setNewlyCreatedProductId] = useState(null);

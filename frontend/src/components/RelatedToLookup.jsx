@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Lookup from './Lookup';
 import styles from './RelatedToLookup.module.css';
 
@@ -9,7 +9,15 @@ const RelatedToLookup = ({
   defaultEntityType = 'account',
   onError
 }) => {
-  const [entityType, setEntityType] = useState(defaultEntityType);
+  // Initialize entityType from value if it exists, otherwise use defaultEntityType
+  const [entityType, setEntityType] = useState(value?.entityType || defaultEntityType);
+
+  // Update entityType when value changes (e.g., when modal opens with pre-filled data)
+  useEffect(() => {
+    if (value?.entityType) {
+      setEntityType(value.entityType);
+    }
+  }, [value?.entityType]);
 
   // Entity type configuration
   const entityConfig = {
@@ -101,7 +109,7 @@ const RelatedToLookup = ({
           <option value="invoice">Invoice</option>
         </select>
       </div>
-      
+
       <div className={styles.lookupContainer}>
         <Lookup
           apiEndpoint={currentConfig.endpoint}
