@@ -4,6 +4,7 @@ import { getOrder, generateInvoiceFromOrder } from '../api/client';
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './OrderPage.module.css';
 
 const OrderPage = () => {
@@ -11,6 +12,7 @@ const OrderPage = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
 
     const { data: order, isLoading, isError, error } = useQuery({
         queryKey: ['order', id],
@@ -51,7 +53,7 @@ const OrderPage = () => {
                     <Link to={`/orders/${order.id}/edit`} className={styles.editButton}>
                         Edit Order
                     </Link>
-                    <button 
+                    <button
                         onClick={() => generateInvoiceMutation.mutate()}
                         className={styles.generateButton}
                         disabled={generateInvoiceMutation.isPending}
@@ -76,7 +78,7 @@ const OrderPage = () => {
                     <span className={styles.detailLabel}>Account:</span>
                     <span className={styles.detailValue}><Link to={`/accounts/${order.account}`}>{order.account_name || '-'}</Link></span>
                 </div>
-                 <div className={styles.detailRow}>
+                <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>Opportunity:</span>
                     <span className={styles.detailValue}><Link to={`/opportunities/${order.opportunity}`}>{order.opportunity_name}</Link></span>
                 </div>
@@ -88,7 +90,7 @@ const OrderPage = () => {
                     <span className={styles.detailLabel}>Order Date:</span>
                     <span className={styles.detailValue}>{order.order_date || '-'}</span>
                 </div>
-                 <div className={styles.detailRow}>
+                <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>Owner:</span>
                     <span className={styles.detailValue}>{order.owner?.first_name} {order.owner?.last_name || '-'}</span>
                 </div>
@@ -132,7 +134,7 @@ const OrderPage = () => {
                 <ActivityQuickActions
                     entity={order}
                     entityType="order"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="order"

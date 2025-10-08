@@ -31,6 +31,19 @@ class UserList(generics.ListCreateAPIView):
      permission_classes = [IsAuthenticated]
      filter_backends = [SearchFilter]
      search_fields = ['email', 'first_name', 'last_name']
+     
+     def get_queryset(self):
+         queryset = User.objects.all()
+         # Support loading all users for dropdown (limit to reasonable number)
+         load_all = self.request.query_params.get('_load_all')
+         search_term = self.request.query_params.get('search')
+         
+         if load_all and not search_term:
+             # Only return limited results if no search term
+             return queryset.order_by('email')[:100]
+         
+         # If there's a search term, let SearchFilter handle it (don't slice before filtering)
+         return queryset
     
 from django.db import transaction
 

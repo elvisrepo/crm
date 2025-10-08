@@ -4,6 +4,7 @@ import { getContact, deleteContact } from "../api/client";
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './ContactPage.module.css'; // Import styles
 import { Link } from "react-router-dom";
 
@@ -12,6 +13,7 @@ const ContactPage = () => {
      const queryClient = useQueryClient()
      const navigate = useNavigate()
      const { user } = useAuth();
+     const { data: currentUser } = useCurrentUser();
 
     const { data: contact, isLoading, isError, error } = useQuery({
         queryKey: ['contact', id],
@@ -124,7 +126,7 @@ const ContactPage = () => {
                 <ActivityQuickActions
                     entity={contact}
                     entityType="contact"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="contact"

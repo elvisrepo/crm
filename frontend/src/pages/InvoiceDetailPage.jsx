@@ -9,6 +9,7 @@ import PaymentForm from '../components/PaymentForm';
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 
 Modal.setAppElement('#root');
 
@@ -16,6 +17,7 @@ const InvoiceDetailPage = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const { data: invoice, isLoading, isError, error } = useQuery({
@@ -173,7 +175,7 @@ const InvoiceDetailPage = () => {
                 <ActivityQuickActions
                     entity={invoice}
                     entityType="invoice"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="invoice"

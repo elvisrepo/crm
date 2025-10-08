@@ -4,6 +4,7 @@ import { getLead, deleteLead } from "../api/client";
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './LeadPage.module.css';
 
 export default function LeadPage() {
@@ -11,6 +12,7 @@ export default function LeadPage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
 
     const { data: lead, isLoading, isError, error } = useQuery({
         queryKey: ['lead', id],
@@ -79,7 +81,7 @@ export default function LeadPage() {
                 <ActivityQuickActions
                     entity={lead}
                     entityType="lead"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="lead"

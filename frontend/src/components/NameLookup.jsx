@@ -3,19 +3,21 @@ import Lookup from './Lookup';
 import styles from './NameLookup.module.css';
 
 const NameLookup = ({
-  value,
+  value = [],
   onChange,
   disabled = false,
   defaultEntityType = 'contact',
+  accountId = null,
   onError
 }) => {
   const [entityType, setEntityType] = useState(defaultEntityType);
+  const [currentSelection, setCurrentSelection] = useState(null);
 
   // Reset selection when entity type changes
   const handleEntityTypeChange = (e) => {
     const newType = e.target.value;
     setEntityType(newType);
-    onChange(null); // Clear selection when switching types
+    onChange([]); // Clear all selections when switching types
   };
 
   // Format display text based on entity type
@@ -33,21 +35,39 @@ const NameLookup = ({
     return entityType === 'contact' ? '/contacts/' : '/leads/';
   };
 
+  // Get additional filters for the lookup
+  const getAdditionalFilters = () => {
+    const filters = {};
+    // If we have an accountId prop and we're searching contacts, filter by account
+    if (accountId && entityType === 'contact') {
+      filters.account_id = accountId;
+    }
+    return filters;
+  };
+
   // Get placeholder text
   const getPlaceholder = () => {
     return entityType === 'contact' ? 'Search contacts...' : 'Search leads...';
   };
 
-  // Handle selection with entity type metadata
-  const handleChange = (selectedItem) => {
-    if (selectedItem) {
-      onChange({
-        ...selectedItem,
-        entityType
-      });
-    } else {
-      onChange(null);
+  // Handle adding a new contact/lead
+  const handleSelect = (selectedItem) => {
+    if (!selectedItem) return;
+
+    // Check if item is already in the list
+    const isAlreadyAdded = value.some(item => item.id === selectedItem.id);
+    
+    if (!isAlreadyAdded) {
+      onChange([...value, { ...selectedItem, entityType }]);
     }
+    
+    // Reset the lookup
+    setCurrentSelection(null);
+  };
+
+  // Handle removing a contact/lead
+  const handleRemove = (itemId) => {
+    onChange(value.filter(item => item.id !== itemId));
   };
 
   return (
@@ -73,21 +93,42 @@ const NameLookup = ({
           apiEndpoint={getApiEndpoint()}
           displayField={getDisplayField}
           placeholder={getPlaceholder()}
-          value={value}
-          onChange={handleChange}
+          value={currentSelection}
+          onChange={handleSelect}
           disabled={disabled}
           onError={onError}
+          additionalFilters={getAdditionalFilters()}
+          excludeIds={value.map(item => item.id)}
         />
       </div>
 
-      {value && (
-        <div className={styles.entityTypeIndicator}>
-          <span className={styles.entityIcon}>
-            {entityType === 'contact' ? '👤' : '🎯'}
-          </span>
-          <span className={styles.entityLabel}>
-            {entityType === 'contact' ? 'Contact' : 'Lead'}
-          </span>
+      {value.length > 0 && (
+        <div className={styles.selectedList}>
+          <div className={styles.selectedLabel}>
+            Selected ({value.length}):
+          </div>
+          <div className={styles.selectedChips}>
+            {value.map((item) => (
+              <div key={item.id} className={styles.selectedChip}>
+                <span className={styles.chipIcon}>
+                  {item.entityType === 'contact' ? '👤' : '🎯'}
+                </span>
+                <span className={styles.chipName}>
+                  {getDisplayField(item)}
+                </span>
+                {!disabled && (
+                  <button
+                    type="button"
+                    className={styles.removeButton}
+                    onClick={() => handleRemove(item.id)}
+                    aria-label={`Remove ${getDisplayField(item)}`}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

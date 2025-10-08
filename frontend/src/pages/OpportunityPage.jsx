@@ -131,7 +131,7 @@ const OpportunityPage = () => {
                 <h1>{opportunity.name}</h1>
                 <div className={styles.actions}>
                     {opportunity.stage === 'closed_won' && (
-                        <button 
+                        <button
                             onClick={() => createOrderMutation.mutate()}
                             className={styles.generateOrderButton}
                             disabled={createOrderMutation.isLoading}
@@ -150,7 +150,7 @@ const OpportunityPage = () => {
 
             {/* Opportunity Details Card */}
             <div className={styles.detailCard}>
-                 <div className={styles.detailRow}>
+                <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>Total Value:</span>
                     <span className={`${styles.detailValue} ${styles.totalValue}`}>${totalValue.toFixed(2)}</span>
                 </div>
@@ -247,7 +247,7 @@ const OpportunityPage = () => {
                 <ActivityQuickActions
                     entity={opportunity}
                     entityType="opportunity"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="opportunity"

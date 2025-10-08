@@ -22,7 +22,7 @@ const ActivityTimeline = ({ entityType, entityId }) => {
   // Build filter object based on entity type
   const getFilters = () => {
     const filters = {};
-    
+
     // Map entity type to the correct filter parameter
     const entityFilterMap = {
       account: 'account_id',
@@ -33,17 +33,17 @@ const ActivityTimeline = ({ entityType, entityId }) => {
       order: 'order_id',
       invoice: 'invoice_id'
     };
-    
+
     const filterKey = entityFilterMap[entityType];
     if (filterKey) {
       filters[filterKey] = entityId;
     }
-    
+
     // Add type filter if not 'all'
     if (typeFilter !== 'all') {
       filters.type = typeFilter;
     }
-    
+
     return filters;
   };
 
@@ -79,11 +79,11 @@ const ActivityTimeline = ({ entityType, entityId }) => {
     const past = {};
 
     activities.forEach(activity => {
-      const activityDate = activity.due_date 
+      const activityDate = activity.due_date
         ? new Date(activity.due_date)
-        : activity.start_time 
-        ? new Date(activity.start_time)
-        : null;
+        : activity.start_time
+          ? new Date(activity.start_time)
+          : null;
 
       if (!activityDate) {
         // No date, put in past
@@ -98,9 +98,9 @@ const ActivityTimeline = ({ entityType, entityId }) => {
         upcoming.push(activity);
       } else {
         // Past activity - group by month
-        const monthKey = activityDate.toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'long' 
+        const monthKey = activityDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long'
         });
         if (!past[monthKey]) past[monthKey] = [];
         past[monthKey].push(activity);
@@ -220,8 +220,8 @@ const ActivityTimeline = ({ entityType, entityId }) => {
         const isExpanded = expandedSections[monthKey] !== false; // Default to expanded
         return (
           <div key={monthKey} className={styles.timelineSection}>
-            <h3 
-              className={styles.sectionHeader} 
+            <h3
+              className={styles.sectionHeader}
               onClick={() => toggleSection(monthKey)}
               style={{ cursor: 'pointer' }}
             >

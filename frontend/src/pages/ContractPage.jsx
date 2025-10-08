@@ -4,6 +4,7 @@ import { getContract, generateInvoiceFromContract } from '../api/client';
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './ContractPage.module.css';
 
 const ContractPage = () => {
@@ -11,6 +12,7 @@ const ContractPage = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
 
     const { data: contract, isLoading, isError, error } = useQuery({
         queryKey: ['contract', id],
@@ -134,7 +136,7 @@ const ContractPage = () => {
                 <ActivityQuickActions
                     entity={contract}
                     entityType="contract"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="contract"

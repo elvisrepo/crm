@@ -11,10 +11,15 @@ const UserLookup = ({
   // Format display text for users
   const getDisplayField = (user) => {
     if (!user) return '';
-    const username = user.username || '';
+    const firstName = user.first_name || '';
+    const lastName = user.last_name || '';
     const email = user.email || '';
-    return email ? `${username} (${email})` : username;
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName ? `${fullName} (${email})` : email;
   };
+
+  // Add a filter to trigger initial load of all users (like NameLookup does)
+  const additionalFilters = { _load_all: 'true' };
 
   return (
     <div className={styles.userLookupWrapper}>
@@ -26,6 +31,7 @@ const UserLookup = ({
         onChange={onChange}
         disabled={disabled}
         onError={onError}
+        additionalFilters={additionalFilters}
       />
       {value && (
         <div className={styles.userIndicator}>

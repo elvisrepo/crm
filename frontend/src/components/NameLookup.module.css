@@ -47,23 +47,69 @@
   width: 100%;
 }
 
-.entityTypeIndicator {
+.selectedList {
+  margin-top: 12px;
+}
+
+.selectedLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.selectedChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selectedChip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 8px;
-  padding: 4px 10px;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  font-size: 12px;
-  color: #666;
+  padding: 6px 10px;
+  background-color: #e7f3ff;
+  border: 1px solid #007bff;
+  border-radius: 16px;
+  font-size: 13px;
+  color: #0056b3;
 }
 
-.entityIcon {
+.chipIcon {
   font-size: 14px;
 }
 
-.entityLabel {
-  font-weight: 500;
-  text-transform: capitalize;
+.chipName {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: #0056b3;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  margin-left: 2px;
+}
+
+.removeButton:hover {
+  background-color: rgba(0, 123, 255, 0.2);
+}
+
+.removeButton:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 1px;
 }

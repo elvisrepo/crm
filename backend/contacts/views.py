@@ -15,7 +15,14 @@ class ContactList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         # Only show active contacts by default
-        return Contact.objects.filter(is_active=True)
+        queryset = Contact.objects.filter(is_active=True)
+        
+        # Filter by account if account_id is provided in query params
+        account_id = self.request.query_params.get('account_id')
+        if account_id:
+            queryset = queryset.filter(account_id=account_id)
+        
+        return queryset
 
     def perform_create(self, serializer):
         # Automatically set the owner to the requesting user

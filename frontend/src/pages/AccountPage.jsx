@@ -4,6 +4,7 @@ import { getAccount, deleteAccount } from "../api/client";
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import { useAuth } from '../auth/useAuth';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './AccountPage.module.css';
 
 const AccountPage = () => {
@@ -11,6 +12,7 @@ const AccountPage = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
 
     const { data: account, isLoading, isError, error } = useQuery({
         queryKey: ['account', id],
@@ -153,7 +155,7 @@ const AccountPage = () => {
                 <ActivityQuickActions
                     entity={account}
                     entityType="account"
-                    currentUser={user}
+                    currentUser={currentUser}
                 />
                 <ActivityTimeline
                     entityType="account"

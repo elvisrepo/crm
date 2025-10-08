@@ -30,10 +30,11 @@ const ActivityQuickActions = ({ entity, entityType, currentUser }) => {
 
     if (isWhoEntity) {
       // For "who" entities (Contact, Lead), pre-fill the Name field
-      defaults.name = {
+      // NameLookup expects an array
+      defaults.name = [{
         ...entity,
         entityType
-      };
+      }];
     } else if (isWhatEntity) {
       // For "what" entities (Account, Opportunity, etc.), pre-fill the Related To field
       defaults.relatedTo = {

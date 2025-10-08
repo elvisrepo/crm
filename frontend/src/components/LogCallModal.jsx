@@ -14,7 +14,7 @@ const LogCallModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
     subject: 'Call',
     comments: '',
     assigned_to: null,
-    name: null,
+    name: [],
     relatedTo: null
   });
 
@@ -23,11 +23,12 @@ const LogCallModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
   // Initialize form with default values
   useEffect(() => {
     if (isOpen) {
+      console.log('LogCallModal - currentUser:', currentUser);
       setFormData({
         subject: defaultValues.subject || 'Call',
         comments: defaultValues.comments || '',
-        assigned_to: defaultValues.assigned_to || currentUser,
-        name: defaultValues.name || null,
+        assigned_to: defaultValues.assigned_to || currentUser || null,
+        name: defaultValues.name || [],
         relatedTo: defaultValues.relatedTo || null
       });
       setErrors({});
@@ -81,12 +82,13 @@ const LogCallModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
       assigned_to_id: formData.assigned_to?.id || null
     };
 
-    // Add "who" relationship (contact or lead)
-    if (formData.name) {
-      if (formData.name.entityType === 'contact') {
-        activityData.contact_id = formData.name.id;
-      } else if (formData.name.entityType === 'lead') {
-        activityData.lead_id = formData.name.id;
+    // Add "who" relationship (contact or lead) - use first selected if multiple
+    if (formData.name.length > 0) {
+      const firstContact = formData.name[0];
+      if (firstContact.entityType === 'contact') {
+        activityData.contact_id = firstContact.id;
+      } else if (firstContact.entityType === 'lead') {
+        activityData.lead_id = firstContact.id;
       }
     }
 
@@ -143,6 +145,7 @@ const LogCallModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
             value={formData.name}
             onChange={(name) => setFormData(prev => ({ ...prev, name }))}
             disabled={createMutation.isPending}
+            accountId={formData.relatedTo?.entityType === 'account' ? formData.relatedTo?.id : null}
           />
         </div>
 
