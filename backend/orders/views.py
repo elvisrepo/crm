@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
 from django.db import transaction
 from datetime import date, timedelta
 import uuid
@@ -18,6 +19,8 @@ class OrderList(generics.ListAPIView):
     """
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['status', 'account__name']
 
     def get_queryset(self):
         """

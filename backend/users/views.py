@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
 from users.models import User
 from users.serializers import UserSerializer
 from rest_framework.views import APIView
@@ -28,6 +29,8 @@ class UserList(generics.ListCreateAPIView):
      queryset = User.objects.all()
      serializer_class = UserSerializer
      permission_classes = [IsAuthenticated]
+     filter_backends = [SearchFilter]
+     search_fields = ['email', 'first_name', 'last_name']
     
 from django.db import transaction
 

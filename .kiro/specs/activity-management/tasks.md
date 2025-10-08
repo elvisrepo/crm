@@ -36,57 +36,57 @@
   - Test all API methods with sample data
   - _Requirements: 1.2, 2.2, 3.1, 3.2, 5.1, 6.2, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-- [ ] 5. Add Backend Search Functionality for Lookups
-- [ ] 5.1 Add Search to Contacts API
+- [x] 5. Add Backend Search Functionality for Lookups
+- [x] 5.1 Add Search to Contacts API
   - Add SearchFilter to ContactList view in backend/contacts/views.py
   - Configure search_fields for first_name, last_name, email
   - Test search endpoint: /contacts/?search=john
   - Verify search returns filtered results
   - _Requirements: 1.9, 2.7, 11.4_
 
-- [ ] 5.2 Add Search to Accounts API
+- [x] 5.2 Add Search to Accounts API
   - Add SearchFilter to AccountList view in backend/accounts/views.py
   - Configure search_fields for name, website
   - Test search endpoint: /accounts/?search=acme
   - Verify search returns filtered results
   - _Requirements: 1.9, 2.7, 11.4_
 
-- [ ] 5.3 Add Search to Users API
+- [x] 5.3 Add Search to Users API
   - Add SearchFilter to User list view (or create if doesn't exist)
   - Configure search_fields for username, email, first_name, last_name
   - Test search endpoint: /users/?search=john
   - Verify search returns filtered results
   - _Requirements: 1.1, 2.1_
 
-- [ ] 5.4 Add Search to Opportunities API
+- [x] 5.4 Add Search to Opportunities API
   - Add SearchFilter to OpportunityList view
   - Configure search_fields for name
   - Test search endpoint: /opportunities/?search=deal
   - Verify search returns filtered results
   - _Requirements: 1.9, 2.7_
 
-- [ ] 5.5 Add Search to Contracts API
+- [x] 5.5 Add Search to Contracts API
   - Add SearchFilter to ContractList view
   - Configure search_fields for relevant fields
   - Test search endpoint: /contracts/?search=term
   - Verify search returns filtered results
   - _Requirements: 1.9, 2.7_
 
-- [ ] 5.6 Add Search to Orders API
+- [x] 5.6 Add Search to Orders API
   - Add SearchFilter to OrderList view
   - Configure search_fields for relevant fields
   - Test search endpoint: /orders/?search=order
   - Verify search returns filtered results
   - _Requirements: 1.9, 2.7_
 
-- [ ] 5.7 Add Search to Invoices API
+- [x] 5.7 Add Search to Invoices API
   - Add SearchFilter to InvoiceList view
   - Configure search_fields for invoice_number
   - Test search endpoint: /invoices/?search=inv
   - Verify search returns filtered results
   - _Requirements: 1.9, 2.7_
 
-- [ ] 5.8 Add Search to Leads API
+- [x] 5.8 Add Search to Leads API
   - Add SearchFilter to LeadList view
   - Configure search_fields for first_name, last_name, company, email
   - Test search endpoint: /leads/?search=smith

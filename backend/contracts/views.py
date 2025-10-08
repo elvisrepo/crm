@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
 from django.db import transaction
 from django.utils import timezone
 from datetime import date, timedelta
@@ -19,6 +20,8 @@ class ContractList(generics.ListAPIView):
     """
     serializer_class = ContractSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['status', 'account__name']
 
     def get_queryset(self):
         """

@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.filters import SearchFilter
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from rest_framework.response import Response
@@ -19,6 +20,8 @@ class OpportunityList(generics.ListCreateAPIView):
     """API view for listing and creating opportunities."""
     serializer_class = OpportunitySerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['name']
 
     def get_queryset(self):
         """Users can only see their own active opportunities."""

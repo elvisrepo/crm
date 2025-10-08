@@ -2,6 +2,7 @@ from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter
 
 from common.mixins import OptimisticLockingSoftDeleteMixin
 from .models import Lead
@@ -16,6 +17,8 @@ class LeadList(generics.ListCreateAPIView):
     """
     serializer_class = LeadSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['first_name', 'last_name', 'company', 'email']
 
     def get_queryset(self):
         """

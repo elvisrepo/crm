@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter
 from django.db import transaction
 from .models import Invoice
 from .serializers import InvoiceSerializer
@@ -10,6 +11,8 @@ from payments.serializers import PaymentSerializer
 class InvoiceList(generics.ListAPIView):
     serializer_class = InvoiceSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['invoice_number']
 
     def get_queryset(self):
         """

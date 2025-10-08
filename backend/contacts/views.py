@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
 from django.db import transaction
 from .models import Contact
 from .serializers import ContactSerializer
@@ -9,6 +10,8 @@ from common.mixins import OptimisticLockingSoftDeleteMixin # Import the mixin
 class ContactList(generics.ListCreateAPIView):
     serializer_class = ContactSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['first_name', 'last_name', 'email']
 
     def get_queryset(self):
         # Only show active contacts by default
