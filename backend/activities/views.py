@@ -14,10 +14,16 @@ class ActivityFilter(filters.FilterSet):
     FilterSet for Activity model supporting filtering by:
     - type, status, priority, assigned_to
     - All related entities (account, opportunity, contract, order, invoice, contact, lead)
+    - Many-to-many relationships (contacts, leads)
     - Date range filtering (start_date, end_date)
     """
     start_date = filters.DateFilter(field_name='start_time', lookup_expr='gte')
     end_date = filters.DateFilter(field_name='start_time', lookup_expr='lte')
+    
+    # Custom filter for many-to-many contacts field
+    contacts = filters.NumberFilter(method='filter_contacts')
+    # Custom filter for many-to-many leads field
+    leads = filters.NumberFilter(method='filter_leads')
     
     class Meta:
         model = Activity
@@ -34,6 +40,14 @@ class ActivityFilter(filters.FilterSet):
             'contact': ['exact'],
             'lead': ['exact'],
         }
+    
+    def filter_contacts(self, queryset, name, value):
+        """Filter activities that have the specified contact in the contacts M2M field."""
+        return queryset.filter(Q(contact_id=value) | Q(contacts__id=value)).distinct()
+    
+    def filter_leads(self, queryset, name, value):
+        """Filter activities that have the specified lead in the leads M2M field."""
+        return queryset.filter(Q(lead_id=value) | Q(leads__id=value)).distinct()
 
 
 class ActivityList(generics.ListCreateAPIView):
@@ -67,7 +81,7 @@ class ActivityList(generics.ListCreateAPIView):
             'invoice',
             'contact',
             'lead'
-        ).prefetch_related('attendees')
+        ).prefetch_related('attendees', 'contacts', 'leads')
         
         # If user is not admin, filter to only show their activities, Do we want this behaviour? in bigger organizations maybe.
         if not user.is_staff:
@@ -112,4 +126,4 @@ class ActivityDetail(OptimisticLockingMixin, generics.RetrieveUpdateDestroyAPIVi
             'invoice',
             'contact',
             'lead'
-        ).prefetch_related('attendees')
+        ).prefetch_related('attendees', 'contacts', 'leads')

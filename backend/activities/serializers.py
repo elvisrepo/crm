@@ -71,6 +71,8 @@ class ActivitySerializer(serializers.ModelSerializer):
     invoice = InvoiceSummarySerializer(read_only=True)
     contact = ContactSummarySerializer(read_only=True)
     lead = LeadSummarySerializer(read_only=True)
+    contacts = ContactSummarySerializer(many=True, read_only=True)
+    leads = LeadSummarySerializer(many=True, read_only=True)
     attendees = UserSummarySerializer(many=True, read_only=True)
 
     # Writable ID fields for foreign key relationships (for deserialization - receiving from frontend)
@@ -137,6 +139,20 @@ class ActivitySerializer(serializers.ModelSerializer):
         many=True,
         required=False
     )
+    contacts_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Contact.objects.all(),
+        source='contacts',
+        write_only=True,
+        many=True,
+        required=False
+    )
+    leads_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Lead.objects.all(),
+        source='leads',
+        write_only=True,
+        many=True,
+        required=False
+    )
 
     # Computed fields for simplified UI rendering
     related_to_type = serializers.SerializerMethodField()
@@ -159,6 +175,8 @@ class ActivitySerializer(serializers.ModelSerializer):
             'invoice', 'invoice_id',
             'contact', 'contact_id',
             'lead', 'lead_id',
+            'contacts', 'contacts_ids',
+            'leads', 'leads_ids',
             'attendees', 'attendees_ids',
             'related_to_type', 'related_to_name',
             'name_type', 'name_display',
@@ -222,7 +240,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         return None
 
     def validate(self, data):
-        """Validate that only one 'what' and one 'who' relationship is set.
+        """Validate that only one 'what' relationship is set, and handle 'who' relationships.
         data = dictionary of validated field values (IDs already converted to objects)
         """
         # Check "what" relationships
@@ -234,13 +252,17 @@ class ActivitySerializer(serializers.ModelSerializer):
                 "Only one 'Related To' relationship can be set (account, opportunity, contract, order, or invoice)."
             )
         
-        # Check "who" relationships
-        who_fields = ['contact', 'lead']
-        who_count = sum(1 for field in who_fields if data.get(field) is not None)
+        # Check "who" relationships - allow multiple via contacts/leads ManyToMany
+        # But don't allow mixing single (contact/lead) with multiple (contacts/leads)
+        has_single_contact = data.get('contact') is not None
+        has_single_lead = data.get('lead') is not None
+        has_multiple_contacts = len(data.get('contacts', [])) > 0
+        has_multiple_leads = len(data.get('leads', [])) > 0
         
-        if who_count > 1:
+        # Can't mix contact types (contacts vs leads)
+        if (has_single_contact or has_multiple_contacts) and (has_single_lead or has_multiple_leads):
             raise serializers.ValidationError(
-                "Only one 'Name' relationship can be set (contact or lead)."
+                "Cannot mix contacts and leads in the 'Name' field."
             )
         
         # Validate end_time is after start_time for events

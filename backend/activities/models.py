@@ -61,9 +61,23 @@ class Activity(models.Model):
     order = models.ForeignKey('orders.Order', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
     invoice = models.ForeignKey('invoices.Invoice', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
 
-    # "Who" relationship (people)
+    # "Who" relationship (people) - Legacy single relationships (kept for backward compatibility)
     contact = models.ForeignKey('contacts.Contact', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
     lead = models.ForeignKey('leads.Lead', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
+    
+    # "Who" relationship (people) - New many-to-many relationships for multiple contacts/leads
+    contacts = models.ManyToManyField(
+        'contacts.Contact',
+        related_name='related_activities',
+        blank=True,
+        help_text="Multiple contacts related to this activity (Name field)."
+    )
+    leads = models.ManyToManyField(
+        'leads.Lead',
+        related_name='related_activities',
+        blank=True,
+        help_text="Multiple leads related to this activity (Name field)."
+    )
 
     version = models.IntegerField(default=1, help_text="Version number for optimistic locking.")
     created_at = models.DateTimeField(auto_now_add=True)

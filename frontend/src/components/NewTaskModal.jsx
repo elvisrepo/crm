@@ -89,13 +89,16 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
       assigned_to_id: formData.assigned_to?.id || null
     };
 
-    // Add "who" relationship (contact or lead) - use first selected if multiple
+    // Add "who" relationship (contacts or leads) - send all selected as arrays
     if (formData.name.length > 0) {
-      const firstContact = formData.name[0];
-      if (firstContact.entityType === 'contact') {
-        activityData.contact_id = firstContact.id;
-      } else if (firstContact.entityType === 'lead') {
-        activityData.lead_id = firstContact.id;
+      const contacts = formData.name.filter(item => item.entityType === 'contact');
+      const leads = formData.name.filter(item => item.entityType === 'lead');
+      
+      if (contacts.length > 0) {
+        activityData.contacts_ids = contacts.map(c => c.id);
+      }
+      if (leads.length > 0) {
+        activityData.leads_ids = leads.map(l => l.id);
       }
     }
 

@@ -23,15 +23,15 @@ const ActivityTimeline = ({ entityType, entityId }) => {
   const getFilters = () => {
     const filters = {};
 
-    // Map entity type to the correct filter parameter
+    // Map entity type to the correct filter parameter (without _id suffix for Django)
     const entityFilterMap = {
-      account: 'account_id',
-      contact: 'contact_id',
-      lead: 'lead_id',
-      opportunity: 'opportunity_id',
-      contract: 'contract_id',
-      order: 'order_id',
-      invoice: 'invoice_id'
+      account: 'account',
+      contact: 'contacts',  // Use many-to-many field for filtering
+      lead: 'leads',        // Use many-to-many field for filtering
+      opportunity: 'opportunity',
+      contract: 'contract',
+      order: 'order',
+      invoice: 'invoice'
     };
 
     const filterKey = entityFilterMap[entityType];
