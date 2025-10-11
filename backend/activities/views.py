@@ -37,17 +37,15 @@ class ActivityFilter(filters.FilterSet):
             'contract': ['exact'],
             'order': ['exact'],
             'invoice': ['exact'],
-            'contact': ['exact'],
-            'lead': ['exact'],
         }
     
     def filter_contacts(self, queryset, name, value):
         """Filter activities that have the specified contact in the contacts M2M field."""
-        return queryset.filter(Q(contact_id=value) | Q(contacts__id=value)).distinct()
+        return queryset.filter(contacts__id=value).distinct()
     
     def filter_leads(self, queryset, name, value):
         """Filter activities that have the specified lead in the leads M2M field."""
-        return queryset.filter(Q(lead_id=value) | Q(leads__id=value)).distinct()
+        return queryset.filter(leads__id=value).distinct()
 
 
 class ActivityList(generics.ListCreateAPIView):
@@ -78,9 +76,7 @@ class ActivityList(generics.ListCreateAPIView):
             'opportunity',
             'contract',
             'order',
-            'invoice',
-            'contact',
-            'lead'
+            'invoice'
         ).prefetch_related('attendees', 'contacts', 'leads')
         
         # If user is not admin, filter to only show their activities, Do we want this behaviour? in bigger organizations maybe.
@@ -123,7 +119,5 @@ class ActivityDetail(OptimisticLockingMixin, generics.RetrieveUpdateDestroyAPIVi
             'opportunity',
             'contract',
             'order',
-            'invoice',
-            'contact',
-            'lead'
+            'invoice'
         ).prefetch_related('attendees', 'contacts', 'leads')

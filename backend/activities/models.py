@@ -61,11 +61,7 @@ class Activity(models.Model):
     order = models.ForeignKey('orders.Order', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
     invoice = models.ForeignKey('invoices.Invoice', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
 
-    # "Who" relationship (people) - Legacy single relationships (kept for backward compatibility)
-    contact = models.ForeignKey('contacts.Contact', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
-    lead = models.ForeignKey('leads.Lead', related_name='activities', on_delete=models.CASCADE, null=True, blank=True)
-    
-    # "Who" relationship (people) - New many-to-many relationships for multiple contacts/leads
+    # "Who" relationship (people) - Many-to-many relationships for multiple contacts/leads
     contacts = models.ManyToManyField(
         'contacts.Contact',
         related_name='related_activities',
@@ -85,22 +81,12 @@ class Activity(models.Model):
 
       # --- Dynamic Handling Configuration ---
     WHAT_FIELDS = ['account', 'opportunity', 'contract', 'order', 'invoice']
-    WHO_FIELDS = ['contact', 'lead']
 
     @property
     def what_object(self):
         """Returns the related 'what' object dynamically."""
         for field_name in self.WHAT_FIELDS:
             obj = getattr(self, field_name, None)
-            if obj:
-                return obj
-        return None
-
-    @property
-    def who_object(self):
-        """Returns the related 'who' object dynamically."""
-        for field_name in self.WHO_FIELDS:
-            obj = getattr(self, field_name, None)  # self.account  e.g.
             if obj:
                 return obj
         return None
@@ -120,8 +106,6 @@ class Activity(models.Model):
             models.Index(fields=['contract']),
             models.Index(fields=['order']),
             models.Index(fields=['invoice']),
-            models.Index(fields=['contact']),
-            models.Index(fields=['lead']),
         ]
 
         # Q objects: Build complex logical conditions (AND, OR, NOT)
@@ -141,11 +125,5 @@ class Activity(models.Model):
                 ) | Q(account__isnull=True, opportunity__isnull=True, contract__isnull=True, order__isnull=True, invoice__isnull=False),
                 name='only_one_what_fk'
             ),
-            # Ensures that at most one "who" relationship is set (DB level).
-            CheckConstraint(
-                check=Q(contact__isnull=True, lead__isnull=True) | 
-                      Q(contact__isnull=False, lead__isnull=True) | 
-                      Q(contact__isnull=True, lead__isnull=False),
-                name='only_one_who_fk'
-            ),
+
         ]

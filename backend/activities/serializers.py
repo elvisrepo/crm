@@ -69,8 +69,6 @@ class ActivitySerializer(serializers.ModelSerializer):
     contract = ContractSummarySerializer(read_only=True)
     order = OrderSummarySerializer(read_only=True)
     invoice = InvoiceSummarySerializer(read_only=True)
-    contact = ContactSummarySerializer(read_only=True)
-    lead = LeadSummarySerializer(read_only=True)
     contacts = ContactSummarySerializer(many=True, read_only=True)
     leads = LeadSummarySerializer(many=True, read_only=True)
     attendees = UserSummarySerializer(many=True, read_only=True)
@@ -80,7 +78,9 @@ class ActivitySerializer(serializers.ModelSerializer):
     assigned_to_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),  # Validates ID exists in User table
         source='assigned_to',  # Maps to model's 'assigned_to' field
-        write_only=True
+        write_only=True,
+        required=False,
+        allow_null=True
     )
     account_id = serializers.PrimaryKeyRelatedField(
         queryset=Account.objects.all(),  # Validates ID exists in Account table
@@ -118,20 +118,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
-    contact_id = serializers.PrimaryKeyRelatedField(
-        queryset=Contact.objects.all(),
-        source='contact',
-        write_only=True,
-        allow_null=True,
-        required=False
-    )
-    lead_id = serializers.PrimaryKeyRelatedField(
-        queryset=Lead.objects.all(),
-        source='lead',
-        write_only=True,
-        allow_null=True,
-        required=False
-    )
     attendees_ids = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
         source='attendees',
@@ -157,8 +143,10 @@ class ActivitySerializer(serializers.ModelSerializer):
     # Computed fields for simplified UI rendering
     related_to_type = serializers.SerializerMethodField()
     related_to_name = serializers.SerializerMethodField()
-    name_type = serializers.SerializerMethodField()
-    name_display = serializers.SerializerMethodField()
+    assigned_to_username = serializers.SerializerMethodField()
+    contact_names = serializers.SerializerMethodField()
+    lead_names = serializers.SerializerMethodField()
+    created_by_username = serializers.SerializerMethodField()
 
 
 
@@ -173,13 +161,11 @@ class ActivitySerializer(serializers.ModelSerializer):
             'contract', 'contract_id',
             'order', 'order_id',
             'invoice', 'invoice_id',
-            'contact', 'contact_id',
-            'lead', 'lead_id',
             'contacts', 'contacts_ids',
             'leads', 'leads_ids',
             'attendees', 'attendees_ids',
             'related_to_type', 'related_to_name',
-            'name_type', 'name_display',
+            'assigned_to_username', 'contact_names', 'lead_names', 'created_by_username',
             'version', 'created_at', 'updated_at'
         ]
 
@@ -216,28 +202,32 @@ class ActivitySerializer(serializers.ModelSerializer):
             return str(what_obj)  # Fallback
         return None
 
-
-
-    def get_name_type(self, obj):
-        """Return the type of the 'who' relationship.
-        Example: If related to Contact → returns 'contact'
-        """
-        who_obj = obj.who_object
-        if who_obj:
-            return who_obj.__class__.__name__.lower()
+    def get_assigned_to_username(self, obj):
+        """Return the assigned user's display name."""
+        if obj.assigned_to:
+            full_name = f"{obj.assigned_to.first_name} {obj.assigned_to.last_name}".strip()
+            return full_name if full_name else obj.assigned_to.email
         return None
 
-    def get_name_display(self, obj):
-        """Return the display name of the 'who' relationship.
-        Example: Contact/Lead → 'John Doe'
-        """
-        who_obj = obj.who_object
-        if who_obj:
-            # Handle contacts and leads (both have first_name/last_name)
-            if hasattr(who_obj, 'first_name') and hasattr(who_obj, 'last_name'):
-                return f"{who_obj.first_name} {who_obj.last_name}"
-            return str(who_obj)
+    def get_contact_names(self, obj):
+        """Return list of contact names."""
+        return [f"{c.first_name} {c.last_name}" for c in obj.contacts.all()]
+
+    def get_lead_names(self, obj):
+        """Return list of lead names."""
+        return [f"{l.first_name} {l.last_name}" for l in obj.leads.all()]
+
+    def get_created_by_username(self, obj):
+        """Return the creator's display name (same as assigned_to for now)."""
+        # Note: Activity model doesn't have a created_by field, using assigned_to
+        if obj.assigned_to:
+            full_name = f"{obj.assigned_to.first_name} {obj.assigned_to.last_name}".strip()
+            return full_name if full_name else obj.assigned_to.email
         return None
+
+
+
+
 
     def validate(self, data):
         """Validate that only one 'what' relationship is set, and handle 'who' relationships.
@@ -253,14 +243,11 @@ class ActivitySerializer(serializers.ModelSerializer):
             )
         
         # Check "who" relationships - allow multiple via contacts/leads ManyToMany
-        # But don't allow mixing single (contact/lead) with multiple (contacts/leads)
-        has_single_contact = data.get('contact') is not None
-        has_single_lead = data.get('lead') is not None
         has_multiple_contacts = len(data.get('contacts', [])) > 0
         has_multiple_leads = len(data.get('leads', [])) > 0
         
         # Can't mix contact types (contacts vs leads)
-        if (has_single_contact or has_multiple_contacts) and (has_single_lead or has_multiple_leads):
+        if has_multiple_contacts and has_multiple_leads:
             raise serializers.ValidationError(
                 "Cannot mix contacts and leads in the 'Name' field."
             )
@@ -319,13 +306,18 @@ class ActivityTimelineSerializer(serializers.ModelSerializer):
         return None
     
     def get_name_display(self, obj):
-        """Return the display name of the 'who' relationship."""
-        who_obj = obj.who_object
-        if who_obj:
-            if hasattr(who_obj, 'first_name') and hasattr(who_obj, 'last_name'):
-                return f"{who_obj.first_name} {who_obj.last_name}"
-            return str(who_obj)
-        return None
+        """Return the display names of the 'who' relationships (contacts/leads)."""
+        names = []
+        
+        # Get all contacts
+        for contact in obj.contacts.all():
+            names.append(f"{contact.first_name} {contact.last_name}")
+        
+        # Get all leads
+        for lead in obj.leads.all():
+            names.append(f"{lead.first_name} {lead.last_name}")
+        
+        return ", ".join(names) if names else None
     
     def get_type_icon(self, obj):
         """Return an icon identifier based on activity type."""
