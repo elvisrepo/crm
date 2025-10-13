@@ -2,7 +2,6 @@
 
 ## Mermaid ERD
 
-```mermaid
 erDiagram
     users {
         int id PK
@@ -317,7 +316,6 @@ erDiagram
     contracts ||--o{ activities : "what (optional)"
     orders ||--o{ activities : "what (optional)"
     invoices ||--o{ activities : "what (optional)"
-```
 
 ## Key Changes in Activities
 
