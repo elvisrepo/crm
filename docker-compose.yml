@@ -1,7 +1,5 @@
 # crm-project/docker-compose.yml
 
-version: '3.8'
-
 services:
   api:
     build: ./backend
