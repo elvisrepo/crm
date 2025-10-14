@@ -66,82 +66,101 @@ const ContractPage = () => {
                 </div>
             )}
 
-            <div className={styles.detailCard}>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Total Per Cycle:</span>
-                    <span className={`${styles.detailValue} ${styles.totalValue}`}>${contract.total_amount_per_cycle}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Account:</span>
-                    <span className={styles.detailValue}><Link to={`/accounts/${contract.account}`}>{contract.account_name || '-'}</Link></span>
-                </div>
-                 <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Opportunity:</span>
-                    <span className={styles.detailValue}><Link to={`/opportunities/${contract.opportunity}`}>{contract.opportunity_name}</Link></span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Status:</span>
-                    <span className={styles.detailValue}>{contract.status}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Start Date:</span>
-                    <span className={styles.detailValue}>{contract.start_date || '-'}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>End Date:</span>
-                    <span className={styles.detailValue}>{contract.end_date || '-'}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Billing Cycle:</span>
-                    <span className={styles.detailValue}>{contract.billing_cycle}</span>
-                </div>
-            </div>
+            {/* Three Column Layout */}
+            <div className={styles.threeColumnGrid}>
+                {/* Column 1: About / Contract Details */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>About</h2>
+                        <div className={styles.field}>
+                            <label>Total Per Cycle</label>
+                            <span className={styles.totalValue}>${contract.total_amount_per_cycle}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Status</label>
+                            <span>{contract.status}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Start Date</label>
+                            <span>{contract.start_date || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>End Date</label>
+                            <span>{contract.end_date || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Billing Cycle</label>
+                            <span>{contract.billing_cycle}</span>
+                        </div>
+                    </div>
 
-            <div className={styles.lineItemsCard}>
-                <div className={styles.cardHeader}>
-                    <h2>Line Items</h2>
+                    <div className={styles.detailCard}>
+                        <h2>Related Records</h2>
+                        <div className={styles.field}>
+                            <label>Account</label>
+                            <span>
+                                <Link to={`/accounts/${contract.account}`}>{contract.account_name || '-'}</Link>
+                            </span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Opportunity</label>
+                            <span>
+                                <Link to={`/opportunities/${contract.opportunity}`}>{contract.opportunity_name}</Link>
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <table className={styles.lineItemsTable}>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price Per Cycle</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {contract.line_items?.length > 0 ? (
-                            contract.line_items.map(item => (
-                                <tr key={item.id}>
-                                    <td>{item.product.name}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>${parseFloat(item.price_per_cycle).toFixed(2)}</td>
-                                    <td>${(item.quantity * parseFloat(item.price_per_cycle)).toFixed(2)}</td>
-                                    
+
+                {/* Column 2: Activities */}
+                <div className={styles.column}>
+                    <div className={styles.activityCard}>
+                        <h2>Activities</h2>
+                        <ActivityQuickActions
+                            entity={contract}
+                            entityType="contract"
+                            currentUser={currentUser}
+                        />
+                        <ActivityTimeline
+                            entityType="contract"
+                            entityId={parseInt(id)}
+                        />
+                    </div>
+                </div>
+
+                {/* Column 3: Line Items */}
+                <div className={styles.column}>
+                    <div className={styles.lineItemsCard}>
+                        <div className={styles.cardHeader}>
+                            <h2>Line Items</h2>
+                        </div>
+                        <table className={styles.lineItemsTable}>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="4" className={styles.noItems}>No line items for this contract.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* Activity Management Section */}
-            <div className={styles.activitySection}>
-                <h2>Activities</h2>
-                <ActivityQuickActions
-                    entity={contract}
-                    entityType="contract"
-                    currentUser={currentUser}
-                />
-                <ActivityTimeline
-                    entityType="contract"
-                    entityId={parseInt(id)}
-                />
+                            </thead>
+                            <tbody>
+                                {contract.line_items?.length > 0 ? (
+                                    contract.line_items.map(item => (
+                                        <tr key={item.id}>
+                                            <td>{item.product.name}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>${parseFloat(item.price_per_cycle).toFixed(2)}</td>
+                                            <td>${(item.quantity * parseFloat(item.price_per_cycle)).toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className={styles.noItems}>No line items.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     );

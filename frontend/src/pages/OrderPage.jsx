@@ -69,77 +69,97 @@ const OrderPage = () => {
                 </div>
             )}
 
-            <div className={styles.detailCard}>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Total Value:</span>
-                    <span className={`${styles.detailValue} ${styles.totalValue}`}>${order.total_amount}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Account:</span>
-                    <span className={styles.detailValue}><Link to={`/accounts/${order.account}`}>{order.account_name || '-'}</Link></span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Opportunity:</span>
-                    <span className={styles.detailValue}><Link to={`/opportunities/${order.opportunity}`}>{order.opportunity_name}</Link></span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Status:</span>
-                    <span className={styles.detailValue}>{order.status}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Order Date:</span>
-                    <span className={styles.detailValue}>{order.order_date || '-'}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Owner:</span>
-                    <span className={styles.detailValue}>{order.owner?.first_name} {order.owner?.last_name || '-'}</span>
-                </div>
-            </div>
+            {/* Three Column Layout */}
+            <div className={styles.threeColumnGrid}>
+                {/* Column 1: About / Order Details */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>About</h2>
+                        <div className={styles.field}>
+                            <label>Total Value</label>
+                            <span className={styles.totalValue}>${order.total_amount}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Status</label>
+                            <span>{order.status}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Order Date</label>
+                            <span>{order.order_date || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Owner</label>
+                            <span>{order.owner?.first_name} {order.owner?.last_name || '-'}</span>
+                        </div>
+                    </div>
 
-            <div className={styles.lineItemsCard}>
-                <div className={styles.cardHeader}>
-                    <h2>Line Items</h2>
+                    <div className={styles.detailCard}>
+                        <h2>Related Records</h2>
+                        <div className={styles.field}>
+                            <label>Account</label>
+                            <span>
+                                <Link to={`/accounts/${order.account}`}>{order.account_name || '-'}</Link>
+                            </span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Opportunity</label>
+                            <span>
+                                <Link to={`/opportunities/${order.opportunity}`}>{order.opportunity_name}</Link>
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <table className={styles.lineItemsTable}>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price at Purchase</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {order.line_items?.length > 0 ? (
-                            order.line_items.map(item => (
-                                <tr key={item.id}>
-                                    <td>{item.product.name}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>${parseFloat(item.price_at_purchase).toFixed(2)}</td>
-                                    <td>${(item.quantity * parseFloat(item.price_at_purchase)).toFixed(2)}</td>
+
+                {/* Column 2: Activities */}
+                <div className={styles.column}>
+                    <div className={styles.activityCard}>
+                        <h2>Activities</h2>
+                        <ActivityQuickActions
+                            entity={order}
+                            entityType="order"
+                            currentUser={currentUser}
+                        />
+                        <ActivityTimeline
+                            entityType="order"
+                            entityId={parseInt(id)}
+                        />
+                    </div>
+                </div>
+
+                {/* Column 3: Line Items */}
+                <div className={styles.column}>
+                    <div className={styles.lineItemsCard}>
+                        <div className={styles.cardHeader}>
+                            <h2>Line Items</h2>
+                        </div>
+                        <table className={styles.lineItemsTable}>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="4" className={styles.noItems}>No line items for this order.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* Activity Management Section */}
-            <div className={styles.activitySection}>
-                <h2>Activities</h2>
-                <ActivityQuickActions
-                    entity={order}
-                    entityType="order"
-                    currentUser={currentUser}
-                />
-                <ActivityTimeline
-                    entityType="order"
-                    entityId={parseInt(id)}
-                />
+                            </thead>
+                            <tbody>
+                                {order.line_items?.length > 0 ? (
+                                    order.line_items.map(item => (
+                                        <tr key={item.id}>
+                                            <td>{item.product.name}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>${parseFloat(item.price_at_purchase).toFixed(2)}</td>
+                                            <td>${(item.quantity * parseFloat(item.price_at_purchase)).toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className={styles.noItems}>No line items.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     );

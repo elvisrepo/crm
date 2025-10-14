@@ -1,13 +1,14 @@
 .container {
     padding: 2rem;
-    background-color: #f9fafb;
-    min-height: 100vh;
+    background-color: #f9f9f9;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -89,32 +90,64 @@
     cursor: not-allowed;
 }
 
-.detailCard, .contactsCard {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+/* Three Column Layout */
+.threeColumnGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
     margin-bottom: 2rem;
 }
 
-.detailRow {
+@media (max-width: 1200px) {
+    .threeColumnGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.column {
     display: flex;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e5e7eb;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.detailRow:last-child {
-    border-bottom: none;
+.detailCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.detailLabel {
-    font-weight: 500;
-    color: #6b7280;
-    width: 150px;
+.detailCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.detailValue {
-    color: #111827;
+.field {
+    margin-bottom: 1rem;
+}
+
+.field label {
+    display: block;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.field span {
+    font-size: 1rem;
+    color: #333;
+}
+
+.field a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.field a:hover {
+    text-decoration: underline;
 }
 
 .totalValue {
@@ -188,12 +221,27 @@
     color: #6b7280;
 }
 
+.activityCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 500px;
+}
+
+.activityCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
 .lineItemsCard {
     background-color: white;
     padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .lineItemsTable {
@@ -215,15 +263,4 @@
     text-transform: uppercase;
 }
 
-/* Activity Section */
-.activitySection {
-    margin-top: 3rem;
-}
 
-.activitySection h2 {
-    font-size: 1.75rem;
-    color: #333;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #007bff;
-}
