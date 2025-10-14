@@ -10,10 +10,10 @@ import { Link } from "react-router-dom";
 
 const ContactPage = () => {
     const { id } = useParams();
-     const queryClient = useQueryClient()
-     const navigate = useNavigate()
-     const { user } = useAuth();
-     const { data: currentUser } = useCurrentUser();
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
+    const { user } = useAuth();
+    const { data: currentUser } = useCurrentUser();
 
     const { data: contact, isLoading, isError, error } = useQuery({
         queryKey: ['contact', id],
@@ -21,21 +21,21 @@ const ContactPage = () => {
     });
 
     const deleteContactMutation = useMutation({
-     mutationFn: ({ id, version}) => deleteContact(id,version),
-     onSuccess: () => {
-        queryClient.invalidateQueries( {queryKey: ['contacts']})
-        navigate('/contacts')
-     },
-     onError: (error) => {
+        mutationFn: ({ id, version }) => deleteContact(id, version),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['contacts'] })
+            navigate('/contacts')
+        },
+        onError: (error) => {
             console.error("Error deleting contact:", error);
             alert(`Failed to delete contact: ${error.message || 'An unexpected error occurred.'}`);
         },
     })
 
     const handleDelete = () => {
-        if (window.confirm(`Are you sure you want to delete contact ${contact?.first_name} ${contact?.last_name}?`)){
+        if (window.confirm(`Are you sure you want to delete contact ${contact?.first_name} ${contact?.last_name}?`)) {
             if (contact?.id && contact?.version) {
-                    deleteContactMutation.mutate({id:contact.id, version: contact.version})
+                deleteContactMutation.mutate({ id: contact.id, version: contact.version })
             } else {
                 alert("Contact data is incomplete for deletion.");
             }
@@ -156,6 +156,23 @@ const ContactPage = () => {
                                 ) : 'N/A'}
                             </span>
                         </div>
+                    </div>
+
+                    <div className={styles.detailCard}>
+                        <h2>Related Opportunities</h2>
+                        {contact.account?.opportunities && contact.account.opportunities.length > 0 ? (
+                            <ul>
+                                {contact.account.opportunities.map(opp => (
+                                    <li key={opp.id}>
+                                        <Link to={`/opportunities/${opp.id}`}>
+                                            {opp.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No opportunities for this account.</p>
+                        )}
                     </div>
                 </div>
             </div>
