@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { getContact, deleteContact } from "../api/client";
+import { getContact, deleteContact, createOpportunity, getAccounts } from "../api/client";
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
+import Modal from '../components/Modal';
+import OpportunityForm from '../components/OpportunityForm';
 import { useAuth } from '../auth/useAuth';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './ContactPage.module.css'; // Import styles
@@ -14,10 +17,17 @@ const ContactPage = () => {
     const navigate = useNavigate()
     const { user } = useAuth();
     const { data: currentUser } = useCurrentUser();
+    const [isNewOpportunityModalOpen, setIsNewOpportunityModalOpen] = useState(false);
 
     const { data: contact, isLoading, isError, error } = useQuery({
         queryKey: ['contact', id],
         queryFn: () => getContact(id),
+    });
+
+    const { data: accounts = [] } = useQuery({
+        queryKey: ['accounts'],
+        queryFn: getAccounts,
+        enabled: isNewOpportunityModalOpen
     });
 
     const deleteContactMutation = useMutation({
@@ -31,6 +41,28 @@ const ContactPage = () => {
             alert(`Failed to delete contact: ${error.message || 'An unexpected error occurred.'}`);
         },
     })
+
+    const createOpportunityMutation = useMutation({
+        mutationFn: (opportunityData) => {
+            const dataToSubmit = {
+                ...opportunityData,
+                account_id: opportunityData.account_id || contact?.account?.id
+            };
+            return createOpportunity(dataToSubmit);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+            queryClient.invalidateQueries({ queryKey: ['contact', id] });
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            if (contact?.account?.id) {
+                queryClient.invalidateQueries({ queryKey: ['account', contact.account.id] });
+            }
+            setIsNewOpportunityModalOpen(false);
+        },
+        onError: (err) => {
+            console.error('Error creating opportunity:', err);
+        }
+    });
 
     const handleDelete = () => {
         if (window.confirm(`Are you sure you want to delete contact ${contact?.first_name} ${contact?.last_name}?`)) {
@@ -72,6 +104,9 @@ const ContactPage = () => {
             <div className={styles.header}>
                 <h1>{contact.first_name} {contact.last_name}</h1>
                 <div className={styles.actions}>
+                    <button onClick={() => setIsNewOpportunityModalOpen(true)} className={`${styles.primaryButton} ${styles.button}`}>
+                        New Opportunity
+                    </button>
                     <Link to={`/contacts/${id}/edit`} className={`${styles.editButton} ${styles.button}`}>Edit</Link>
                     <button
                         onClick={handleDelete}
@@ -176,6 +211,18 @@ const ContactPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* New Opportunity Modal */}
+            <Modal isOpen={isNewOpportunityModalOpen} onClose={() => setIsNewOpportunityModalOpen(false)}>
+                <OpportunityForm
+                    onSubmit={createOpportunityMutation.mutate}
+                    onCancel={() => setIsNewOpportunityModalOpen(false)}
+                    isLoading={createOpportunityMutation.isLoading}
+                    error={createOpportunityMutation.error}
+                    accounts={accounts}
+                    defaultAccountId={contact?.account?.id}
+                />
+            </Modal>
         </div>
     );
 };

@@ -66,6 +66,7 @@ const AccountPage = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['opportunities'] });
             queryClient.invalidateQueries({ queryKey: ['account', id] });
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
             setIsNewOpportunityModalOpen(false);
         },
         onError: (err) => {
