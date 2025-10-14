@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { createContact, getContacts } from '../api/client';
 import Lookup from './Lookup';
-import NewContactModal from './NewContactModal';
+import Modal from './Modal';
+import NewContactForm from './NewContactForm';
 import styles from './NameLookup.module.css';
 
 const NameLookup = ({
@@ -11,9 +14,41 @@ const NameLookup = ({
   accountId = null,
   onError
 }) => {
+  const queryClient = useQueryClient();
   const [entityType, setEntityType] = useState(defaultEntityType);
   const [currentSelection, setCurrentSelection] = useState(null);
   const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
+
+  const { data: contacts = [] } = useQuery({
+    queryKey: ['contacts'],
+    queryFn: getContacts,
+    enabled: isNewContactModalOpen
+  });
+
+  const createContactMutation = useMutation({
+    mutationFn: (contactData) => {
+      // Ensure account_id is set from accountId if provided
+      const dataToSubmit = {
+        ...contactData,
+        account_id: contactData.account_id || accountId
+      };
+      return createContact(dataToSubmit);
+    },
+    onSuccess: (newContact) => {
+      // Invalidate queries
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
+      
+      // Automatically add the newly created contact to the selection
+      const updatedValue = [...value, { ...newContact, entityType: 'contact' }];
+      onChange(updatedValue);
+      
+      // Close the modal
+      setIsNewContactModalOpen(false);
+    },
+    onError: (err) => {
+      console.error('Error creating contact:', err);
+    }
+  });
 
   // Reset selection when entity type changes
   const handleEntityTypeChange = (e) => {
@@ -72,14 +107,6 @@ const NameLookup = ({
     setIsNewContactModalOpen(true);
   };
 
-  // Handle when a new contact is created
-  const handleContactCreated = (newContact) => {
-    // Automatically add the newly created contact to the selection
-    const updatedValue = [...value, { ...newContact, entityType: 'contact' }];
-    onChange(updatedValue);
-    setIsNewContactModalOpen(false);
-  };
-
   // Handle removing a contact/lead
   const handleRemove = (itemId) => {
     onChange(value.filter(item => item.id !== itemId));
@@ -121,12 +148,16 @@ const NameLookup = ({
       </div>
 
       {/* New Contact Modal */}
-      <NewContactModal
-        isOpen={isNewContactModalOpen}
-        onClose={() => setIsNewContactModalOpen(false)}
-        onContactCreated={handleContactCreated}
-        defaultAccountId={accountId}
-      />
+      <Modal isOpen={isNewContactModalOpen} onClose={() => setIsNewContactModalOpen(false)}>
+        <NewContactForm
+          onSubmit={createContactMutation.mutate}
+          onCancel={() => setIsNewContactModalOpen(false)}
+          isLoading={createContactMutation.isLoading}
+          error={createContactMutation.error}
+          contacts={contacts}
+          defaultAccountId={accountId}
+        />
+      </Modal>
 
       {value.length > 0 && (
         <div className={styles.selectedList}>
