@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAccount, deleteAccount, createContact, getContacts } from "../api/client";
+import { getAccount, deleteAccount, createContact, getContacts, createOpportunity, getAccounts } from "../api/client";
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
 import Modal from '../components/Modal';
 import NewContactForm from '../components/NewContactForm';
+import OpportunityForm from '../components/OpportunityForm';
 import { useAuth } from '../auth/useAuth';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './AccountPage.module.css';
@@ -17,6 +18,7 @@ const AccountPage = () => {
     const { user } = useAuth();
     const { data: currentUser } = useCurrentUser();
     const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
+    const [isNewOpportunityModalOpen, setIsNewOpportunityModalOpen] = useState(false);
 
     const { data: account, isLoading, isError, error } = useQuery({
         queryKey: ['account', id],
@@ -27,6 +29,12 @@ const AccountPage = () => {
         queryKey: ['contacts'],
         queryFn: getContacts,
         enabled: isNewContactModalOpen
+    });
+
+    const { data: accounts = [] } = useQuery({
+        queryKey: ['accounts'],
+        queryFn: getAccounts,
+        enabled: isNewOpportunityModalOpen
     });
 
     const createContactMutation = useMutation({
@@ -44,6 +52,24 @@ const AccountPage = () => {
         },
         onError: (err) => {
             console.error('Error creating contact:', err);
+        }
+    });
+
+    const createOpportunityMutation = useMutation({
+        mutationFn: (opportunityData) => {
+            const dataToSubmit = {
+                ...opportunityData,
+                account_id: opportunityData.account_id || parseInt(id)
+            };
+            return createOpportunity(dataToSubmit);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+            queryClient.invalidateQueries({ queryKey: ['account', id] });
+            setIsNewOpportunityModalOpen(false);
+        },
+        onError: (err) => {
+            console.error('Error creating opportunity:', err);
         }
     });
 
@@ -96,9 +122,9 @@ const AccountPage = () => {
                     <button onClick={() => setIsNewContactModalOpen(true)} className={styles.primaryButton}>
                         New Contact
                     </button>
-                    <Link to={`/opportunities/new?account=${id}`} className={styles.primaryButton}>
+                    <button onClick={() => setIsNewOpportunityModalOpen(true)} className={styles.primaryButton}>
                         New Opportunity
-                    </Link>
+                    </button>
                     <Link to={`/accounts/${id}/edit`} className={styles.primaryButton}>
                         Edit
                     </Link>
@@ -224,6 +250,18 @@ const AccountPage = () => {
                     isLoading={createContactMutation.isLoading}
                     error={createContactMutation.error}
                     contacts={contacts}
+                    defaultAccountId={parseInt(id)}
+                />
+            </Modal>
+
+            {/* New Opportunity Modal */}
+            <Modal isOpen={isNewOpportunityModalOpen} onClose={() => setIsNewOpportunityModalOpen(false)}>
+                <OpportunityForm
+                    onSubmit={createOpportunityMutation.mutate}
+                    onCancel={() => setIsNewOpportunityModalOpen(false)}
+                    isLoading={createOpportunityMutation.isLoading}
+                    error={createOpportunityMutation.error}
+                    accounts={accounts}
                     defaultAccountId={parseInt(id)}
                 />
             </Modal>

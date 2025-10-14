@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import styles from './OpportunityForm.module.css';
 
-const OpportunityForm = ({ initialData, onSubmit, onCancel, isLoading, error, accounts }) => {
+const OpportunityForm = ({ initialData, onSubmit, onCancel, isLoading, error, accounts, defaultAccountId = null }) => {
     const isEditMode = Boolean(initialData);
 
     const [formData, setFormData] = useState({
         name: '',
-        account_id: '',
+        account_id: defaultAccountId || '',
         stage: 'prospecting',
         close_date: '',
         description: '',
@@ -66,6 +66,7 @@ const OpportunityForm = ({ initialData, onSubmit, onCancel, isLoading, error, ac
                     value={formData.account_id}
                     onChange={handleChange}
                     required
+                    disabled={defaultAccountId !== null}
                 >
                     <option value="">Select an Account</option>
                     {accounts?.map(account => (
