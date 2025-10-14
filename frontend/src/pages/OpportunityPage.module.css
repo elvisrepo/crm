@@ -1,13 +1,14 @@
 .container {
     padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    background-color: #f9f9f9;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -85,31 +86,64 @@
     cursor: not-allowed;
 }
 
-.detailCard {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+/* Three Column Layout */
+.threeColumnGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
-.detailRow {
+@media (max-width: 1200px) {
+    .threeColumnGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.column {
     display: flex;
-    padding: 1rem 0;
-    border-bottom: 1px solid #f3f4f6;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.detailRow:last-child {
-    border-bottom: none;
+.detailCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.detailLabel {
-    font-weight: 600;
-    color: #374151;
-    width: 200px;
+.detailCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.detailValue {
-    color: #6b7280;
+.field {
+    margin-bottom: 1rem;
+}
+
+.field label {
+    display: block;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.field span {
+    font-size: 1rem;
+    color: #333;
+}
+
+.field a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.field a:hover {
+    text-decoration: underline;
 }
 
 .totalValue {
@@ -118,12 +152,27 @@
     color: #28a745;
 }
 
+.activityCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 500px;
+}
+
+.activityCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
 .lineItemsCard {
-    margin-top: 2rem;
     background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
 }
 
 .cardHeader {
@@ -193,15 +242,4 @@
     cursor: not-allowed;
 }
 
-/* Activity Section */
-.activitySection {
-    margin-top: 3rem;
-}
 
-.activitySection h2 {
-    font-size: 1.75rem;
-    color: #333;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #007bff;
-}

@@ -35,10 +35,25 @@
     color: white;
 }
 
-.detailsGrid {
+/* Three Column Layout */
+.threeColumnGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Responsive: Stack on smaller screens */
+@media (max-width: 1200px) {
+    .threeColumnGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .detailCard {
@@ -96,15 +111,19 @@
     text-decoration: underline;
 }
 
-/* Activity Section */
-.activitySection {
-    margin-top: 3rem;
+/* Activity Card (in middle column) */
+.activityCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 500px;
 }
 
-.activitySection h2 {
-    font-size: 1.75rem;
-    color: #333;
-    margin-bottom: 1.5rem;
+.activityCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #007bff;
+    margin-bottom: 1rem;
 }

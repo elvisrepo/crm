@@ -150,74 +150,108 @@ const OpportunityPage = () => {
                 </div>
             </div>
 
-            {/* Opportunity Details Card */}
-            <div className={styles.detailCard}>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Total Value:</span>
-                    <span className={`${styles.detailValue} ${styles.totalValue}`}>${totalValue.toFixed(2)}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Account:</span>
-                    <span className={styles.detailValue}>{opportunity.account?.name || '-'}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Stage:</span>
-                    <span className={styles.detailValue}>{opportunity.stage}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Close Date:</span>
-                    <span className={styles.detailValue}>{opportunity.close_date || '-'}</span>
-                </div>
-                <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>Owner:</span>
-                    <span className={styles.detailValue}>{opportunity.owner?.first_name} {opportunity.owner?.last_name || '-'}</span>
-                </div>
-            </div>
+            {/* Three Column Layout */}
+            <div className={styles.threeColumnGrid}>
+                {/* Column 1: About / Opportunity Details */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>About</h2>
+                        <div className={styles.field}>
+                            <label>Total Value</label>
+                            <span className={styles.totalValue}>${totalValue.toFixed(2)}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Stage</label>
+                            <span>{opportunity.stage}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Close Date</label>
+                            <span>{opportunity.close_date || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Owner</label>
+                            <span>{opportunity.owner?.first_name} {opportunity.owner?.last_name || '-'}</span>
+                        </div>
+                    </div>
 
-            {/* Line Items Card */}
-            <div className={styles.lineItemsCard}>
-                <div className={styles.cardHeader}>
-                    <h2>Products</h2>
-                    <button onClick={() => setAddProductModalOpen(true)} className={styles.addButton}>
-                        Add Product
-                    </button>
+                    <div className={styles.detailCard}>
+                        <h2>Related Account</h2>
+                        <div className={styles.field}>
+                            <label>Account</label>
+                            <span>
+                                {opportunity.account ? (
+                                    <Link to={`/accounts/${opportunity.account.id}`}>
+                                        {opportunity.account.name}
+                                    </Link>
+                                ) : '-'}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <table className={styles.lineItemsTable}>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Sale Price</th>
-                            <th>Total</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {opportunity.line_items?.length > 0 ? (
-                            opportunity.line_items.map(item => (
-                                <tr key={item.id}>
-                                    <td>{item.product.name}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>${parseFloat(item.sale_price).toFixed(2)}</td>
-                                    <td>${(item.quantity * parseFloat(item.sale_price)).toFixed(2)}</td>
-                                    <td>
-                                        <button
-                                            onClick={() => handleDeleteLineItem(item)}
-                                            className={styles.deleteItemButton}
-                                            disabled={deleteLineItemMutation.isLoading}
-                                        >
-                                            Remove
-                                        </button>
-                                    </td>
+
+                {/* Column 2: Activities */}
+                <div className={styles.column}>
+                    <div className={styles.activityCard}>
+                        <h2>Activities</h2>
+                        <ActivityQuickActions
+                            entity={opportunity}
+                            entityType="opportunity"
+                            currentUser={currentUser}
+                        />
+                        <ActivityTimeline
+                            entityType="opportunity"
+                            entityId={parseInt(id)}
+                        />
+                    </div>
+                </div>
+
+                {/* Column 3: Products */}
+                <div className={styles.column}>
+                    <div className={styles.lineItemsCard}>
+                        <div className={styles.cardHeader}>
+                            <h2>Products</h2>
+                            <button onClick={() => setAddProductModalOpen(true)} className={styles.addButton}>
+                                Add Product
+                            </button>
+                        </div>
+                        <table className={styles.lineItemsTable}>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="5" className={styles.noItems}>No products have been added to this opportunity yet.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                {opportunity.line_items?.length > 0 ? (
+                                    opportunity.line_items.map(item => (
+                                        <tr key={item.id}>
+                                            <td>{item.product.name}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>${parseFloat(item.sale_price).toFixed(2)}</td>
+                                            <td>${(item.quantity * parseFloat(item.sale_price)).toFixed(2)}</td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleDeleteLineItem(item)}
+                                                    className={styles.deleteItemButton}
+                                                    disabled={deleteLineItemMutation.isLoading}
+                                                >
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="5" className={styles.noItems}>No products added yet.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             {/* Modal for adding a line item */}
@@ -243,19 +277,7 @@ const OpportunityPage = () => {
                 />
             </Modal>
 
-            {/* Activity Management Section */}
-            <div className={styles.activitySection}>
-                <h2>Activities</h2>
-                <ActivityQuickActions
-                    entity={opportunity}
-                    entityType="opportunity"
-                    currentUser={currentUser}
-                />
-                <ActivityTimeline
-                    entityType="opportunity"
-                    entityId={parseInt(id)}
-                />
-            </div>
+
         </div>
     );
 };

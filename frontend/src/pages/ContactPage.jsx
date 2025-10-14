@@ -83,55 +83,81 @@ const ContactPage = () => {
                 </div>
             </div>
 
-            <div className={styles.detailsGrid}>
-                <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Title:</span>
-                    <span className={styles.detailValue}>{contact.title || 'N/A'}</span>
-                </div>
-                <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Email:</span>
-                    <span className={styles.detailValue}>{contact.email || 'N/A'}</span>
-                </div>
-                <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Phone:</span>
-                    <span className={styles.detailValue}>{contact.phone || 'N/A'}</span>
-                </div>
-                <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Account:</span>
-                    <span className={styles.detailValue}>{contact.account?.name || 'N/A'}</span>
-                </div>
-                <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Owner:</span>
-                    <span className={styles.detailValue}>{contact.owner?.first_name} {contact.owner?.last_name || 'N/A'}</span>
-                </div>
-                <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Status:</span>
-                    <span className={styles.detailValue}>{contact.is_active ? 'Active' : 'Inactive'}</span>
-                </div>
-                <div className={styles.detailItemFull}>
-                    <span className={styles.detailLabel}>Description:</span>
-                    <span className={styles.detailValue}>{contact.description || 'N/A'}</span>
-                </div>
-                 <div className={styles.detailItemFull}>
-                    <span className={styles.detailLabel}>Reports to:</span>
-                    <span className={styles.detailValue}>
-                        {contact.reports_to ? `${contact.reports_to.first_name} ${contact.reports_to.last_name}` : 'N/A'}
-                    </span>
-                </div>
-            </div>
+            {/* Three Column Layout */}
+            <div className={styles.threeColumnGrid}>
+                {/* Column 1: About / Contact Details */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>About</h2>
+                        <div className={styles.field}>
+                            <label>Title</label>
+                            <span>{contact.title || 'N/A'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Email</label>
+                            <span>{contact.email || 'N/A'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Phone</label>
+                            <span>{contact.phone || 'N/A'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Status</label>
+                            <span>{contact.is_active ? 'Active' : 'Inactive'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Description</label>
+                            <span>{contact.description || 'N/A'}</span>
+                        </div>
+                    </div>
 
-            {/* Activity Management Section */}
-            <div className={styles.activitySection}>
-                <h2>Activities</h2>
-                <ActivityQuickActions
-                    entity={contact}
-                    entityType="contact"
-                    currentUser={currentUser}
-                />
-                <ActivityTimeline
-                    entityType="contact"
-                    entityId={parseInt(id)}
-                />
+                    <div className={styles.detailCard}>
+                        <h2>Hierarchy</h2>
+                        <div className={styles.field}>
+                            <label>Reports to</label>
+                            <span>
+                                {contact.reports_to ? `${contact.reports_to.first_name} ${contact.reports_to.last_name}` : 'N/A'}
+                            </span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Owner</label>
+                            <span>{contact.owner?.first_name} {contact.owner?.last_name || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Column 2: Activities */}
+                <div className={styles.column}>
+                    <div className={styles.activityCard}>
+                        <h2>Activities</h2>
+                        <ActivityQuickActions
+                            entity={contact}
+                            entityType="contact"
+                            currentUser={currentUser}
+                        />
+                        <ActivityTimeline
+                            entityType="contact"
+                            entityId={parseInt(id)}
+                        />
+                    </div>
+                </div>
+
+                {/* Column 3: Related Records */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>Related Account</h2>
+                        <div className={styles.field}>
+                            <label>Account</label>
+                            <span>
+                                {contact.account ? (
+                                    <Link to={`/accounts/${contact.account.id}`}>
+                                        {contact.account.name}
+                                    </Link>
+                                ) : 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

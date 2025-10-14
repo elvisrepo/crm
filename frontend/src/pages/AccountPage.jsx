@@ -65,103 +65,110 @@ const AccountPage = () => {
                 </div>
             </div>
 
-            <div className={styles.detailsGrid}>
-                <div className={styles.detailCard}>
-                    <h2>Account Details</h2>
-                    <div className={styles.field}>
-                        <label>Description</label>
-                        <span className={styles.description}>{account?.description || '-'}</span>
+            {/* Three Column Layout */}
+            <div className={styles.threeColumnGrid}>
+                {/* Column 1: About / Account Details */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>About</h2>
+                        <div className={styles.field}>
+                            <label>Description</label>
+                            <span className={styles.description}>{account?.description || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Phone</label>
+                            <span>{account?.phone || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Website</label>
+                            <span>{account?.website ? <a href={account.website} target="_blank" rel="noopener noreferrer">{account.website}</a> : '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Type</label>
+                            <span>{account?.type}</span>
+                        </div>
                     </div>
-                    <div className={styles.field}>
-                        <label>Phone</label>
-                        <span>{account?.phone || '-'}</span>
+
+                    <div className={styles.detailCard}>
+                        <h2>Address Information</h2>
+                        <div className={styles.field}>
+                            <label>Billing Address</label>
+                            <span>{account?.billing_address || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Shipping Address</label>
+                            <span>{account?.shipping_address || '-'}</span>
+                        </div>
                     </div>
-                    <div className={styles.field}>
-                        <label>Website</label>
-                        <span>{account?.website ? <a href={account.website} target="_blank" rel="noopener noreferrer">{account.website}</a> : '-'}</span>
-                    </div>
-                    <div className={styles.field}>
-                        <label>Type</label>
-                        <span>{account?.type}</span>
+
+                    <div className={styles.detailCard}>
+                        <h2>Hierarchy & Ownership</h2>
+                        <div className={styles.field}>
+                            <label>Owner</label>
+                            <span>{account?.owner || '-'}</span>
+                        </div>
+                        <div className={styles.field}>
+                            <label>Parent Account</label>
+                            <span>{account?.parent_account || '-'}</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className={styles.detailCard}>
-                    <h2>Address Information</h2>
-                    <div className={styles.field}>
-                        <label>Billing Address</label>
-                        <span>{account?.billing_address || '-'}</span>
-                    </div>
-                    <div className={styles.field}>
-                        <label>Shipping Address</label>
-                        <span>{account?.shipping_address || '-'}</span>
+                {/* Column 2: Activities */}
+                <div className={styles.column}>
+                    <div className={styles.activityCard}>
+                        <h2>Activities</h2>
+                        <ActivityQuickActions
+                            entity={account}
+                            entityType="account"
+                            currentUser={currentUser}
+                        />
+                        <ActivityTimeline
+                            entityType="account"
+                            entityId={parseInt(id)}
+                        />
                     </div>
                 </div>
 
-                <div className={styles.detailCard}>
-                    <h2>Hierarchy & Ownership</h2>
-                     <div className={styles.field}>
-                        <label>Owner</label>
-                        <span>{account?.owner || '-'}</span>
+                {/* Column 3: Related Records */}
+                <div className={styles.column}>
+                    <div className={`${styles.detailCard} ${styles.relatedContactsCard}`}>
+                        <h2>Related Contacts</h2>
+                        {account?.contacts && account.contacts.length > 0 ? (
+                            <ul>
+                                {account.contacts.map(contact => (
+                                    <li key={contact.id}>
+                                        <Link to={`/contacts/${contact.id}`}>
+                                            {contact.first_name} {contact.last_name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No contacts associated with this account.</p>
+                        )}
                     </div>
-                    <div className={styles.field}>
-                        <label>Parent Account</label>
-                        <span>{account?.parent_account || '-'}</span>
+
+                    <div className={styles.detailCard}>
+                        <h2>Related Opportunities</h2>
+                        {account?.opportunities && account.opportunities.length > 0 ? (
+                            <ul>
+                                {account.opportunities.map((opp) => (
+                                    <li key={opp.id}>
+                                        <Link to={`/opportunities/${opp.id}`}>
+                                            {opp.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No opportunities associated with this account.</p>
+                        )}
                     </div>
-
-                   
-                </div>
-
-                {/* New section for Related Contacts */}
-                {/* New section for Related Contacts */}
-                <div className={`${styles.detailCard} ${styles.relatedContactsCard}`}>
-                    <h2>Related Contacts</h2>
-                    {account?.contacts && account.contacts.length > 0 ? (
-                        <ul>
-                            {account.contacts.map(contact => (
-                                <li key={contact.id}>
-                                    <Link to={`/contacts/${contact.id}`}>
-                                        {contact.first_name} {contact.last_name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No contacts associated with this account.</p>
-                    )}
-                </div>
-
-                <div className={styles.detailCard}>
-                    <h2>Related Opportunities</h2>
-                    {account?.opportunities && account.opportunities.length > 0 ? (
-                        <ul>
-                            {account.opportunities.map((opp) => (
-                                <li key={opp.id}>
-                                    <Link to={`/opportunities/${opp.id}`}>
-                                        {opp.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No opportunities associated with this account.</p>
-                    )}
                 </div>
             </div>
 
-            {/* Activity Management Section */}
-            <div className={styles.activitySection}>
-                <h2>Activities</h2>
-                <ActivityQuickActions
-                    entity={account}
-                    entityType="account"
-                    currentUser={currentUser}
-                />
-                <ActivityTimeline
-                    entityType="account"
-                    entityId={parseInt(id)}
-                />
-            </div>
+
         </div>
     );
 }

@@ -1,13 +1,14 @@
 .container {
     padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    background-color: #f9f9f9;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
     margin-bottom: 2rem;
     flex-wrap: wrap;
     gap: 1rem;
@@ -69,26 +70,39 @@
     cursor: not-allowed;
 }
 
-.detailsGrid {
+/* Three Column Layout */
+.threeColumnGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 1200px) {
+    .threeColumnGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
 }
 
 .detailCard {
-    background: white;
+    background-color: white;
     padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .detailCard h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.25rem;
-    color: #1f2937;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0.75rem;
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .field {
@@ -105,23 +119,35 @@
 
 .field span, .field p {
     font-size: 1rem;
-    color: #374151;
-}
-
-.field p {
-    white-space: pre-wrap;
-    line-height: 1.5;
-}
-
-/* Activity Section */
-.activitySection {
-    margin-top: 3rem;
-}
-
-.activitySection h2 {
-    font-size: 1.75rem;
     color: #333;
-    margin-bottom: 1.5rem;
+}
+
+.field a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.field a:hover {
+    text-decoration: underline;
+}
+
+.activityCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 500px;
+}
+
+.activityCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #007bff;
+    margin-bottom: 1rem;
+}
+
+.placeholder {
+    color: #999;
+    font-style: italic;
 }

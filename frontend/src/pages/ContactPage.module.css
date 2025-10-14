@@ -1,61 +1,120 @@
-/* frontend/src/pages/ContactPage.module.css */
-
 .container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    background-color: #f9f9f9;
 }
 
 .header {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .header h1 {
-    margin: 0;
-    font-size: 32px;
+    font-size: 2rem;
     color: #333;
 }
 
-.detailsGrid {
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.editButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Three Column Layout */
+.threeColumnGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns */
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
-.detailItem {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #eee;
+@media (max-width: 1200px) {
+    .threeColumnGrid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.detailItemFull {
-    grid-column: 1 / -1; /* Spans across all columns */
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #eee;
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.detailLabel {
-    font-weight: bold;
+.detailCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.detailCard h2 {
+    font-size: 1.5rem;
     color: #555;
-    display: block; /* Make label take full width */
-    margin-bottom: 5px;
-    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.detailValue {
+.field {
+    margin-bottom: 1rem;
+}
+
+.field label {
+    display: block;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.field span {
+    font-size: 1rem;
     color: #333;
-    font-size: 16px;
-    word-wrap: break-word; /* Break long words */
+}
+
+.field a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.field a:hover {
+    text-decoration: underline;
+}
+
+.activityCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 500px;
+}
+
+.activityCard h2 {
+    font-size: 1.5rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .loading, .error, .notFound {
@@ -67,17 +126,4 @@
 
 .error {
     color: #dc3545;
-}
-
-/* Activity Section */
-.activitySection {
-    margin-top: 3rem;
-}
-
-.activitySection h2 {
-    font-size: 1.75rem;
-    color: #333;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #007bff;
 }

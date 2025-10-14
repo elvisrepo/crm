@@ -50,43 +50,57 @@ export default function LeadPage() {
                 </div>
             </div>
 
-            <div className={styles.detailsGrid}>
-                <div className={styles.detailCard}>
-                    <h2>Lead Information</h2>
-                    <div className={styles.field}><label>Company</label><span>{lead.company}</span></div>
-                    <div className={styles.field}><label>Title</label><span>{lead.title || '-'}</span></div>
-                    <div className={styles.field}><label>Email</label><span>{lead.email || '-'}</span></div>
-                    <div className={styles.field}><label>Phone</label><span>{lead.phone || '-'}</span></div>
-                    <div className={styles.field}><label>Website</label><span>{lead.website ? <a href={lead.website} target="_blank" rel="noopener noreferrer">{lead.website}</a> : '-'}</span></div>
+            {/* Three Column Layout */}
+            <div className={styles.threeColumnGrid}>
+                {/* Column 1: About / Lead Details */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>About</h2>
+                        <div className={styles.field}><label>Company</label><span>{lead.company}</span></div>
+                        <div className={styles.field}><label>Title</label><span>{lead.title || '-'}</span></div>
+                        <div className={styles.field}><label>Email</label><span>{lead.email || '-'}</span></div>
+                        <div className={styles.field}><label>Phone</label><span>{lead.phone || '-'}</span></div>
+                        <div className={styles.field}><label>Website</label><span>{lead.website ? <a href={lead.website} target="_blank" rel="noopener noreferrer">{lead.website}</a> : '-'}</span></div>
+                    </div>
+
+                    <div className={styles.detailCard}>
+                        <h2>Address Information</h2>
+                        <div className={styles.field}><label>Billing Address</label><span>{lead.billing_address || '-'}</span></div>
+                        <div className={styles.field}><label>Shipping Address</label><span>{lead.shipping_address || '-'}</span></div>
+                    </div>
+
+                    <div className={styles.detailCard}>
+                        <h2>Status & Source</h2>
+                        <div className={styles.field}><label>Status</label><span>{lead.status}</span></div>
+                        <div className={styles.field}><label>Lead Source</label><span>{lead.lead_source || '-'}</span></div>
+                        <div className={styles.field}><label>Industry</label><span>{lead.industry || '-'}</span></div>
+                        <div className={styles.field}><label>Owner</label><span>{lead.owner_username}</span></div>
+                    </div>
                 </div>
 
-                <div className={styles.detailCard}>
-                    <h2>Address Information</h2>
-                    <div className={styles.field}><label>Billing Address</label><p>{lead.billing_address || '-'}</p></div>
-                    <div className={styles.field}><label>Shipping Address</label><p>{lead.shipping_address || '-'}</p></div>
+                {/* Column 2: Activities */}
+                <div className={styles.column}>
+                    <div className={styles.activityCard}>
+                        <h2>Activities</h2>
+                        <ActivityQuickActions
+                            entity={lead}
+                            entityType="lead"
+                            currentUser={currentUser}
+                        />
+                        <ActivityTimeline
+                            entityType="lead"
+                            entityId={parseInt(id)}
+                        />
+                    </div>
                 </div>
 
-                <div className={styles.detailCard}>
-                    <h2>Status & Source</h2>
-                    <div className={styles.field}><label>Status</label><span>{lead.status}</span></div>
-                    <div className={styles.field}><label>Lead Source</label><span>{lead.lead_source || '-'}</span></div>
-                    <div className={styles.field}><label>Industry</label><span>{lead.industry || '-'}</span></div>
-                    <div className={styles.field}><label>Owner</label><span>{lead.owner_username}</span></div>
+                {/* Column 3: Additional Info (placeholder for future use) */}
+                <div className={styles.column}>
+                    <div className={styles.detailCard}>
+                        <h2>Notes</h2>
+                        <p className={styles.placeholder}>Additional information can be added here.</p>
+                    </div>
                 </div>
-            </div>
-
-            {/* Activity Management Section */}
-            <div className={styles.activitySection}>
-                <h2>Activities</h2>
-                <ActivityQuickActions
-                    entity={lead}
-                    entityType="lead"
-                    currentUser={currentUser}
-                />
-                <ActivityTimeline
-                    entityType="lead"
-                    entityId={parseInt(id)}
-                />
             </div>
         </div>
     );
