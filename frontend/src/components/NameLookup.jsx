@@ -37,11 +37,11 @@ const NameLookup = ({
     onSuccess: (newContact) => {
       // Invalidate queries
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
-      
+
       // Automatically add the newly created contact to the selection
       const updatedValue = [...value, { ...newContact, entityType: 'contact' }];
       onChange(updatedValue);
-      
+
       // Close the modal
       setIsNewContactModalOpen(false);
     },

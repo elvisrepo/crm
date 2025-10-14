@@ -7,32 +7,112 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
+    background-color: #f8f9fa;
+    padding: 1rem 1.5rem;
+    margin: -2rem -2rem 2rem -2rem;
+    border-bottom: 1px solid #dee2e6;
 }
 
-.header h1 {
-    font-size: 2rem;
-    color: #333;
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.actions button {
-    margin-left: 1rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
+.entityIcon {
+    width: 48px;
+    height: 48px;
+    background-color: #5b7cdb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconText {
+    font-size: 24px;
+}
+
+.entityInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.entityLabel {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.entityName {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.actionButton {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
-.editButton {
-    background-color: #007bff;
+.actionButton:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.buttonIcon {
+    font-size: 1.25rem;
+}
+
+.primaryButton {
+    background-color: white;
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.primaryButton:hover {
+    background-color: #0d6efd;
     color: white;
 }
 
-.deleteButton {
-    background-color: #dc3545;
-    color: white;
+.dropdownButton {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6c757d;
+}
+
+.dropdownButton:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.dropdownButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Three Column Layout */
@@ -60,7 +140,7 @@
     background-color: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .detailCard h2 {
@@ -88,7 +168,8 @@
 }
 
 .description {
-    white-space: pre-wrap; /* Preserves whitespace and line breaks */
+    white-space: pre-wrap;
+    /* Preserves whitespace and line breaks */
 }
 
 .relatedContactsCard ul {
@@ -116,7 +197,7 @@
     background-color: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     min-height: 500px;
 }
 

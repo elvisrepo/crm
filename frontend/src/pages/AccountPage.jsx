@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAccount, deleteAccount } from "../api/client";
+import { getAccount, deleteAccount, createContact, getContacts } from "../api/client";
 import ActivityQuickActions from '../components/ActivityQuickActions';
 import ActivityTimeline from '../components/ActivityTimeline';
+import Modal from '../components/Modal';
+import NewContactForm from '../components/NewContactForm';
 import { useAuth } from '../auth/useAuth';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import styles from './AccountPage.module.css';
@@ -13,10 +16,35 @@ const AccountPage = () => {
     const queryClient = useQueryClient();
     const { user } = useAuth();
     const { data: currentUser } = useCurrentUser();
+    const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
 
     const { data: account, isLoading, isError, error } = useQuery({
         queryKey: ['account', id],
         queryFn: () => getAccount(id),
+    });
+
+    const { data: contacts = [] } = useQuery({
+        queryKey: ['contacts'],
+        queryFn: getContacts,
+        enabled: isNewContactModalOpen
+    });
+
+    const createContactMutation = useMutation({
+        mutationFn: (contactData) => {
+            const dataToSubmit = {
+                ...contactData,
+                account_id: contactData.account_id || parseInt(id)
+            };
+            return createContact(dataToSubmit);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['contacts'] });
+            queryClient.invalidateQueries({ queryKey: ['account', id] });
+            setIsNewContactModalOpen(false);
+        },
+        onError: (err) => {
+            console.error('Error creating contact:', err);
+        }
     });
 
     const deleteAccountMutation = useMutation({
@@ -52,15 +80,35 @@ const AccountPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>{account?.name}</h1>
+                <div className={styles.headerLeft}>
+                    <div className={styles.entityIcon}>
+                        <span className={styles.iconText}>🏢</span>
+                    </div>
+                    <div className={styles.entityInfo}>
+                        <div className={styles.entityLabel}>Account</div>
+                        <h1 className={styles.entityName}>{account?.name}</h1>
+                    </div>
+                </div>
                 <div className={styles.actions}>
-                    <Link to={`/accounts/${id}/edit`} className={`${styles.editButton} ${styles.button}`}>Edit</Link>
+                    <button className={styles.actionButton}>
+                        <span className={styles.buttonIcon}>👤</span>
+                    </button>
+                    <button onClick={() => setIsNewContactModalOpen(true)} className={styles.primaryButton}>
+                        New Contact
+                    </button>
+                    <Link to={`/opportunities/new?account=${id}`} className={styles.primaryButton}>
+                        New Opportunity
+                    </Link>
+                    <Link to={`/accounts/${id}/edit`} className={styles.primaryButton}>
+                        Edit
+                    </Link>
                     <button
                         onClick={handleDelete}
-                        className={`${styles.deleteButton} ${styles.button}`}
+                        className={styles.dropdownButton}
                         disabled={deleteAccountMutation.isLoading}
+                        title="More actions"
                     >
-                        {deleteAccountMutation.isLoading ? 'Deleting...' : 'Delete'}
+                        ▼
                     </button>
                 </div>
             </div>
@@ -168,7 +216,17 @@ const AccountPage = () => {
                 </div>
             </div>
 
-
+            {/* New Contact Modal */}
+            <Modal isOpen={isNewContactModalOpen} onClose={() => setIsNewContactModalOpen(false)}>
+                <NewContactForm
+                    onSubmit={createContactMutation.mutate}
+                    onCancel={() => setIsNewContactModalOpen(false)}
+                    isLoading={createContactMutation.isLoading}
+                    error={createContactMutation.error}
+                    contacts={contacts}
+                    defaultAccountId={parseInt(id)}
+                />
+            </Modal>
         </div>
     );
 }
