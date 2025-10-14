@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccounts } from "../api/client";
 
 // Correct prop destructuring
-const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
+const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts, defaultAccountId = null }) => {
 
     const { data: accounts = [] } = useQuery({
         queryKey: ['accounts'],
@@ -15,7 +15,7 @@ const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
         first_name: '',
         last_name: '',
         title: '', // Add this line
-        account: '', // This should be the account ID
+        account: defaultAccountId || '', // Pre-fill with defaultAccountId if provided
         reports_to: '', // This should be the contact ID
         email: '',
         phone: '',
@@ -29,8 +29,7 @@ const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         // Ensure account and reports_to are numbers if the backend expects them as such
         const dataToSend = {
             ...formData,
@@ -44,7 +43,7 @@ const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.form}>
             <h2>New Contact</h2>
 
             {error && <div className={styles.errorMessage}>{error.message}</div>}
@@ -120,6 +119,7 @@ const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
                     value={formData.account}
                     onChange={handleChange}
                     required
+                    disabled={defaultAccountId !== null}
                 >
                     <option value="">Select an Account</option>
                     {accounts.map(account => (
@@ -168,14 +168,15 @@ const NewContactForm = ({ onSubmit, onCancel, isLoading, error, contacts }) => {
                     Cancel
                 </button>
                 <button
-                    type="submit"
+                    type="button"
+                    onClick={handleSubmit}
                     className={`${styles.button} ${styles.submitButton}`}
                     disabled={isLoading}
                 >
                     {isLoading ? 'Saving...' : 'Create Contact'}
                 </button>
             </div>
-        </form>
+        </div>
     );
 };
 

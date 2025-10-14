@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Lookup from './Lookup';
+import NewContactModal from './NewContactModal';
 import styles from './NameLookup.module.css';
 
 const NameLookup = ({
@@ -12,6 +13,7 @@ const NameLookup = ({
 }) => {
   const [entityType, setEntityType] = useState(defaultEntityType);
   const [currentSelection, setCurrentSelection] = useState(null);
+  const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
 
   // Reset selection when entity type changes
   const handleEntityTypeChange = (e) => {
@@ -56,13 +58,26 @@ const NameLookup = ({
 
     // Check if item is already in the list
     const isAlreadyAdded = value.some(item => item.id === selectedItem.id);
-    
+
     if (!isAlreadyAdded) {
       onChange([...value, { ...selectedItem, entityType }]);
     }
-    
+
     // Reset the lookup
     setCurrentSelection(null);
+  };
+
+  // Handle opening the new contact modal
+  const handleCreateNew = () => {
+    setIsNewContactModalOpen(true);
+  };
+
+  // Handle when a new contact is created
+  const handleContactCreated = (newContact) => {
+    // Automatically add the newly created contact to the selection
+    const updatedValue = [...value, { ...newContact, entityType: 'contact' }];
+    onChange(updatedValue);
+    setIsNewContactModalOpen(false);
   };
 
   // Handle removing a contact/lead
@@ -87,7 +102,7 @@ const NameLookup = ({
           <option value="lead">Lead</option>
         </select>
       </div>
-      
+
       <div className={styles.lookupContainer}>
         <Lookup
           apiEndpoint={getApiEndpoint()}
@@ -99,8 +114,19 @@ const NameLookup = ({
           onError={onError}
           additionalFilters={getAdditionalFilters()}
           excludeIds={value.map(item => item.id)}
+          showCreateNew={entityType === 'contact'}
+          createNewLabel="New Contact"
+          onCreateNew={handleCreateNew}
         />
       </div>
+
+      {/* New Contact Modal */}
+      <NewContactModal
+        isOpen={isNewContactModalOpen}
+        onClose={() => setIsNewContactModalOpen(false)}
+        onContactCreated={handleContactCreated}
+        defaultAccountId={accountId}
+      />
 
       {value.length > 0 && (
         <div className={styles.selectedList}>

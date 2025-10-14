@@ -149,6 +149,42 @@
   background-color: #e0f0ff;
 }
 
+/* Create New Option */
+.createNewOption {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #007bff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 2px solid #e0e0e0;
+  background-color: #f8f9fa;
+  transition: background-color 0.15s ease;
+}
+
+.createNewOption:hover {
+  background-color: #e7f3ff;
+}
+
+.createNewIcon {
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+}
+
+.createNewText {
+  flex: 1;
+}
+
 /* Scrollbar styling for dropdown */
 .dropdown::-webkit-scrollbar {
   width: 8px;

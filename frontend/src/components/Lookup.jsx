@@ -4,7 +4,7 @@ import api from '../api/client';
 
 const Lookup = ({
   apiEndpoint,
-  searchParam = 'search',
+  searchParam = 'search', 
   displayField,
   placeholder = 'Search...',
   value,
@@ -12,7 +12,10 @@ const Lookup = ({
   disabled = false,
   additionalFilters = {},
   excludeIds = [],
-  onError
+  onError,
+  showCreateNew = false,
+  createNewLabel = 'Create New',
+  onCreateNew
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
@@ -280,6 +283,18 @@ const Lookup = ({
                 </li>
               ))}
             </ul>
+          )}
+          {!error && showCreateNew && onCreateNew && (
+            <div 
+              className={styles.createNewOption}
+              onClick={() => {
+                setIsOpen(false);
+                onCreateNew();
+              }}
+            >
+              <span className={styles.createNewIcon}>+</span>
+              <span className={styles.createNewText}>{createNewLabel}</span>
+            </div>
           )}
         </div>
       )}

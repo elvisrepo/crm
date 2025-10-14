@@ -24,7 +24,7 @@ const ContactsPage = () => {
 
     const createContactMutation = useMutation({
         mutationFn: createContact,
-        onSuccess : () => {
+        onSuccess: () => {
             queryClient.invalidateQueries(['contacts'])
             setIsModalOpen(false)
         }
@@ -107,12 +107,12 @@ const ContactsPage = () => {
             <div className={styles.summary}>
                 Showing {filteredContacts.length} of {contacts.length} contacts
             </div>
-                           
+
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <NewContactForm
                     onSubmit={createContactMutation.mutate}
-                    onCancel = {() =>  setIsModalOpen(false)}
-                    isLoading = {createContactMutation.isLoading}
+                    onCancel={() => setIsModalOpen(false)}
+                    isLoading={createContactMutation.isLoading}
                     error={createContactMutation.error}
                     contacts={contacts}
                     accounts={accounts}
