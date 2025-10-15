@@ -349,6 +349,11 @@ export async function createOrderFromOpportunity(opportunityId) {
     return response.data;
 }
 
+export async function createContractFromOpportunity(opportunityId) {
+    const response = await api.post(`/opportunities/${opportunityId}/generate-contract/`);
+    return response.data;
+}
+
 export async function updateOrder(id, orderData) {
     const response = await api.patch(`/orders/${id}/`, orderData);
     return response.data;

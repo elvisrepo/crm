@@ -8,7 +8,8 @@ import {
     createProduct,
     addLineItemToOpportunity,
     deleteLineItem,
-    createOrderFromOpportunity
+    createOrderFromOpportunity,
+    createContractFromOpportunity
 } from '../api/client';
 import Modal from '../components/Modal';
 import LineItemForm from '../components/LineItemForm';
@@ -89,6 +90,14 @@ const OpportunityPage = () => {
         },
     });
 
+    const createContractMutation = useMutation({
+        mutationFn: () => createContractFromOpportunity(id),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['contracts']);
+            navigate(`/contracts/${data.id}`);
+        },
+    });
+
     const handleDeleteOpportunity = () => {
         if (window.confirm('Are you sure you want to delete this opportunity?')) {
             deleteOpportunityMutation.mutate({ id: opportunity.id, version: opportunity.version });
@@ -133,13 +142,22 @@ const OpportunityPage = () => {
                 <h1>{opportunity.name}</h1>
                 <div className={styles.actions}>
                     {opportunity.stage === 'closed_won' && (
-                        <button
-                            onClick={() => createOrderMutation.mutate()}
-                            className={styles.generateOrderButton}
-                            disabled={createOrderMutation.isLoading}
-                        >
-                            {createOrderMutation.isLoading ? 'Generating Order...' : 'Generate Order'}
-                        </button>
+                        <>
+                            <button
+                                onClick={() => createOrderMutation.mutate()}
+                                className={styles.generateOrderButton}
+                                disabled={createOrderMutation.isLoading}
+                            >
+                                {createOrderMutation.isLoading ? 'Generating Order...' : 'Generate Order'}
+                            </button>
+                            <button
+                                onClick={() => createContractMutation.mutate()}
+                                className={styles.generateContractButton}
+                                disabled={createContractMutation.isLoading}
+                            >
+                                {createContractMutation.isLoading ? 'Generating Contract...' : 'Generate Contract'}
+                            </button>
+                        </>
                     )}
                     <Link to={`/opportunities/${opportunity.id}/edit`} className={styles.editButton}>
                         Edit Opportunity
