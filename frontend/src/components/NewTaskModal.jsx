@@ -9,7 +9,7 @@ import styles from './NewTaskModal.module.css';
 
 const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null }) => {
   const queryClient = useQueryClient();
-  
+
   const [formData, setFormData] = useState({
     subject: '',
     due_date: '',
@@ -70,13 +70,13 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate required fields
     const newErrors = {};
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
     }
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -97,7 +97,7 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
     if (formData.name.length > 0) {
       const contacts = formData.name.filter(item => item.entityType === 'contact');
       const leads = formData.name.filter(item => item.entityType === 'lead');
-      
+
       if (contacts.length > 0) {
         activityData.contacts_ids = contacts.map(c => c.id);
       }
@@ -168,9 +168,10 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
               }
             }}
             disabled={createMutation.isPending}
+            disableLeadOption={!!formData.relatedTo}
             accountId={
-              formData.relatedTo?.entityType === 'account' 
-                ? formData.relatedTo?.id 
+              formData.relatedTo?.entityType === 'account'
+                ? formData.relatedTo?.id
                 : formData.relatedTo?.entityType === 'opportunity' && formData.relatedTo?.account?.id
                   ? formData.relatedTo.account.id
                   : null

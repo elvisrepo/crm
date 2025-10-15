@@ -12,10 +12,11 @@ const NameLookup = ({
   disabled = false,
   defaultEntityType = 'contact',
   accountId = null,
-  onError
+  onError,
+  disableLeadOption = false
 }) => {
   const queryClient = useQueryClient();
-  
+
   // Determine initial entity type from value if it exists, otherwise use defaultEntityType
   const getInitialEntityType = () => {
     if (value.length > 0 && value[0].entityType) {
@@ -23,7 +24,7 @@ const NameLookup = ({
     }
     return defaultEntityType;
   };
-  
+
   const [entityType, setEntityType] = useState(getInitialEntityType());
   const [currentSelection, setCurrentSelection] = useState(null);
   const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
@@ -34,6 +35,13 @@ const NameLookup = ({
       setEntityType(value[0].entityType);
     }
   }, [value, entityType]);
+
+  // If lead option is disabled and current type is lead, switch to contact
+  useEffect(() => {
+    if (disableLeadOption && entityType === 'lead') {
+      setEntityType('contact');
+    }
+  }, [disableLeadOption, entityType]);
 
   const { data: contacts = [] } = useQuery({
     queryKey: ['contacts'],
@@ -142,7 +150,7 @@ const NameLookup = ({
           className={styles.entityTypeDropdown}
         >
           <option value="contact">Contact</option>
-          <option value="lead">Lead</option>
+          <option value="lead" disabled={disableLeadOption}>Lead</option>
         </select>
       </div>
 
