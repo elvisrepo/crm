@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { createContact, getContacts } from '../api/client';
 import Lookup from './Lookup';
@@ -15,9 +15,25 @@ const NameLookup = ({
   onError
 }) => {
   const queryClient = useQueryClient();
-  const [entityType, setEntityType] = useState(defaultEntityType);
+  
+  // Determine initial entity type from value if it exists, otherwise use defaultEntityType
+  const getInitialEntityType = () => {
+    if (value.length > 0 && value[0].entityType) {
+      return value[0].entityType;
+    }
+    return defaultEntityType;
+  };
+  
+  const [entityType, setEntityType] = useState(getInitialEntityType());
   const [currentSelection, setCurrentSelection] = useState(null);
   const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
+
+  // Update entity type when value changes (e.g., when modal opens with pre-filled lead)
+  useEffect(() => {
+    if (value.length > 0 && value[0].entityType && value[0].entityType !== entityType) {
+      setEntityType(value[0].entityType);
+    }
+  }, [value, entityType]);
 
   const { data: contacts = [] } = useQuery({
     queryKey: ['contacts'],

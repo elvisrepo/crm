@@ -65,6 +65,9 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
     }
   };
 
+  // Check if any lead is selected in the Name field
+  const hasLead = formData.name.some(item => item.entityType === 'lead');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -154,7 +157,16 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
           <label htmlFor="name">Name</label>
           <NameLookup
             value={formData.name}
-            onChange={(name) => setFormData(prev => ({ ...prev, name }))}
+            onChange={(name) => {
+              // Check if a lead is being added
+              const hasLeadInNew = name.some(item => item.entityType === 'lead');
+              // If a lead is added, clear the Related To field
+              if (hasLeadInNew && formData.relatedTo) {
+                setFormData(prev => ({ ...prev, name, relatedTo: null }));
+              } else {
+                setFormData(prev => ({ ...prev, name }));
+              }
+            }}
             disabled={createMutation.isPending}
             accountId={
               formData.relatedTo?.entityType === 'account' 
@@ -171,8 +183,13 @@ const NewTaskModal = ({ isOpen, onClose, defaultValues = {}, currentUser = null 
           <RelatedToLookup
             value={formData.relatedTo}
             onChange={(relatedTo) => setFormData(prev => ({ ...prev, relatedTo }))}
-            disabled={createMutation.isPending}
+            disabled={createMutation.isPending || hasLead}
           />
+          {hasLead && (
+            <div className={styles.infoMessage}>
+              You can't relate an account, opportunity, or other object to a task already related to a lead.
+            </div>
+          )}
         </div>
 
         <div className={styles.formRow}>
