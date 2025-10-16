@@ -58,6 +58,11 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/reports/payment-matrix" className={({ isActive }) => isActive ? styles.active : ''}>
+              Payment Report
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/activities/tasks" className={({ isActive }) => isActive ? styles.active : ''}>
               To-Do List
             </NavLink>

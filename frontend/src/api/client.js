@@ -207,7 +207,7 @@ export async function getContacts() {
 }
 
 export async function createContact(contactData) {
-    const response = await api.post('/contacts/',contactData)
+    const response = await api.post('/contacts/', contactData)
     return response.data
 
 }
@@ -224,10 +224,10 @@ export async function updateContact(id, contactData) {
 
 export async function deleteContact(id, version) {
     const response = await api.delete(`/contacts/${id}/`, {
-        data : {version}
-       
+        data: { version }
+
     })
-     return response.data
+    return response.data
 }
 
 // Opportunities API methods
@@ -432,17 +432,22 @@ export async function deletePayment({ id, version }) {
     return response.data;
 }
 
+export async function getPaymentMatrix(year) {
+    const response = await api.get(`/reports/payment-matrix/?year=${year}`);
+    return response.data;
+}
+
 // Activity API methods
 export async function getActivities(filters = {}) {
     const params = new URLSearchParams();
-    
+
     // Add all filter parameters to the query string
     Object.entries(filters).forEach(([key, value]) => {
         if (value !== null && value !== undefined && value !== '') {
             params.append(key, value);
         }
     });
-    
+
     const queryString = params.toString();
     const url = queryString ? `/activities/?${queryString}` : '/activities/';
     const response = await api.get(url);

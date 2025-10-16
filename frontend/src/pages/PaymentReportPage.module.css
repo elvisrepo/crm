@@ -1,0 +1,171 @@
+.container {
+    padding: 20px;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.controls label {
+    font-weight: 600;
+    color: #555;
+}
+
+.yearSelect {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: white;
+}
+
+.yearSelect:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.tableContainer {
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.paymentTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+.paymentTable thead {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.paymentTable th {
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 600;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+}
+
+.companyHeader {
+    text-align: left !important;
+    min-width: 200px;
+    position: sticky;
+    left: 0;
+    background-color: #f8f9fa;
+    z-index: 11;
+}
+
+.paymentTable td {
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    font-size: 13px;
+}
+
+.companyCell {
+    text-align: left;
+    font-weight: 500;
+    min-width: 200px;
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 5;
+}
+
+.paid {
+    background-color: #d4edda;
+    color: #155724;
+    font-weight: 500;
+}
+
+.unpaid {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.totalRow {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+.totalRow .companyCell {
+    background-color: #e9ecef;
+}
+
+.totalColumn {
+    border-left: 2px solid #495057 !important;
+    font-weight: 600;
+}
+
+.totalCell {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+
+.error {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+}
+
+.noData {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .paymentTable {
+        font-size: 12px;
+    }
+    
+    .paymentTable th,
+    .paymentTable td {
+        padding: 8px 6px;
+    }
+}
